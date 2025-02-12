@@ -3,4 +3,6 @@ pandas
 numpy
 yfinance
 plotly
-sqlite3
+#sqlite3
+requests
+BeautifulSoup4
