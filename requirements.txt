@@ -1,0 +1,8 @@
+streamlit
+pandas
+numpy
+yfinance
+plotly
+#sqlite3
+requests
+BeautifulSoup4
