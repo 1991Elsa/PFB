@@ -19,3 +19,5 @@ def tickers_nasdaq():
         if data_row.startswith('NASDAQ:'):
             tickers.append(data_row.replace('NASDAQ:', ''))
     return tickers
+
+
