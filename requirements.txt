@@ -3,4 +3,4 @@ pandas
 numpy
 yfinance
 plotly
-sqlalchemy
+sqlite3
