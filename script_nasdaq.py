@@ -1,3 +1,4 @@
+
 """
 
 En este script se define una funcion para extraer los diferentes datos de los 
@@ -7,7 +8,7 @@ Tengase en cuenta:
 
 Indice bursátil: Nasdaq 100 (NQ=F)
 Componentes: Listado de empresas (tickers_nasdaq)
-Variables: Price    Close    High    Low    Open    Volume 
+Variables: Price	Close	High	Low	Open	Volume 
 
 **Esta funcion sirve tanto cuando hacemos:
 
@@ -15,8 +16,6 @@ ticker = "NQ=F"
 ticker = tikers_nasdaq
 
 Devuelve un DataFrame se le puede hacer .head()
-
-
 
 """
 
