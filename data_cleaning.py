@@ -1,10 +1,6 @@
 import pandas as pd
 import numpy as np
 
-df_info = pd.read_csv("nasdaq_info")
-df_historic = pd.read_csv("nasdaq_historic")
-
-
 #df_historic
 #df_historic.info()
 #df_historic.describe()
