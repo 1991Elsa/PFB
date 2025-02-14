@@ -46,38 +46,39 @@ nasdaq_tickers_info = pd.DataFrame()
 
 # Obtener la información de cada ticker individualmente y almacenarla
 for ticker in tickers:
-    ticker_info = get_ticker_info(ticker)
-    dic_info = {
-        'Ticker': ticker_info.get('symbol', ticker), 
-        'ShortName': ticker_info.get('shortName', 'N/A'), 
-        'Sector': ticker_info.get('sector', 'N/A'),
-        'Industry': ticker_info.get('industry', 'N/A'),
-        'Country': ticker_info.get('country', 'N/A'),
-        'FullTimeEmployees': ticker_info.get('fullTimeEmployees', 'N/A'),
-        'MarketCap': ticker_info.get('marketCap', 'N/A'), # capitalización de mercado
-        'TotalRevenue': ticker_info.get('totalRevenue', 'N/A'), # ingresos totales
-        'NetIncomeToCommon': ticker_info.get('netIncomeToCommon', 'N/A'), # ingresos netos
-        'TrailingEPS': ticker_info.get('trailingEps', 'N/A'), # EPS (ganancias por acción)
-        'ForwardEPS': ticker_info.get('forwardEps', 'N/A'), # EPS futuro
-        'TrailingPE': ticker_info.get('trailingPE', 'N/A'), # PER (Price-to-Earnings Ratio)
-        'ForwardPE': ticker_info.get('forwardPE', 'N/A'), # PER futuro
-        'ReturnOnAssets': ticker_info.get('returnOnAssets', 'N/A'), # esto es el retorno sobre los activos ROA (Return on Assets)
-        'ReturnOnEquity': ticker_info.get('returnOnEquity', 'N/A'), # esto es el retorno sobre el patrimonio ROA (Return on Equity)
-        'DebtToEquity': ticker_info.get('debtToEquity', 'N/A'), # esto es la deuda sobre el patrimonio
-        'FreeCashflow': ticker_info.get('freeCashflow', 'N/A'), # esto es el flujo de caja libre
-        'DividendRate': ticker_info.get('dividendRate', 'N/A'), # esto es la tasa de dividendos
-        'DividendYield': ticker_info.get('dividendYield', 'N/A'), # esto es el rendimiento de los dividendos
-        'PayoutRatio': ticker_info.get('payoutRatio', 'N/A'), # Ratio de pago
-        'Beta': ticker_info.get('beta', 'N/A'), # esto es una medida de la volatilidad de un activo en comparación con el mercado en general
-        'GrossMargins': ticker_info.get('grossMargins', 'N/A'), # márgenes brutos
-        'OperatingMargins': ticker_info.get('operatingMargins', 'N/A'), # márgenes operativos
-        'ProfitMargins': ticker_info.get('profitMargins', 'N/A'), # márgenes de beneficio
-        'Timestamp_extraction': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    }
-    df_info = pd.DataFrame([dic_info])
+    if ticker != 'NDX':
+        ticker_info = get_ticker_info(ticker)
+        dic_info = {
+            'Ticker': ticker_info.get('symbol', ticker), 
+            'ShortName': ticker_info.get('shortName', 'N/A'), 
+            'Sector': ticker_info.get('sector', 'N/A'),
+            'Industry': ticker_info.get('industry', 'N/A'),
+            'Country': ticker_info.get('country', 'N/A'),
+            'FullTimeEmployees': ticker_info.get('fullTimeEmployees', 'N/A'),
+            'MarketCap': ticker_info.get('marketCap', 'N/A'), # capitalización de mercado
+            'TotalRevenue': ticker_info.get('totalRevenue', 'N/A'), # ingresos totales
+            'NetIncomeToCommon': ticker_info.get('netIncomeToCommon', 'N/A'), # ingresos netos
+            'TrailingEPS': ticker_info.get('trailingEps', 'N/A'), # EPS (ganancias por acción)
+            'ForwardEPS': ticker_info.get('forwardEps', 'N/A'), # EPS futuro
+            'TrailingPE': ticker_info.get('trailingPE', 'N/A'), # PER (Price-to-Earnings Ratio)
+            'ForwardPE': ticker_info.get('forwardPE', 'N/A'), # PER futuro
+            'ReturnOnAssets': ticker_info.get('returnOnAssets', 'N/A'), # esto es el retorno sobre los activos ROA (Return on Assets)
+            'ReturnOnEquity': ticker_info.get('returnOnEquity', 'N/A'), # esto es el retorno sobre el patrimonio ROA (Return on Equity)
+            'DebtToEquity': ticker_info.get('debtToEquity', 'N/A'), # esto es la deuda sobre el patrimonio
+            'FreeCashflow': ticker_info.get('freeCashflow', 'N/A'), # esto es el flujo de caja libre
+            'DividendRate': ticker_info.get('dividendRate', 'N/A'), # esto es la tasa de dividendos
+            'DividendYield': ticker_info.get('dividendYield', 'N/A'), # esto es el rendimiento de los dividendos
+            'PayoutRatio': ticker_info.get('payoutRatio', 'N/A'), # Ratio de pago
+            'Beta': ticker_info.get('beta', 'N/A'), # esto es una medida de la volatilidad de un activo en comparación con el mercado en general
+            'GrossMargins': ticker_info.get('grossMargins', 'N/A'), # márgenes brutos
+            'OperatingMargins': ticker_info.get('operatingMargins', 'N/A'), # márgenes operativos
+            'ProfitMargins': ticker_info.get('profitMargins', 'N/A'), # márgenes de beneficio
+            'Timestamp_extraction': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        }
+        df_info = pd.DataFrame([dic_info])
 
-    # Añadir la información al DataFrame de todos los tickers
-    nasdaq_tickers_info = pd.concat([nasdaq_tickers_info, df_info], ignore_index=True)
+        # Añadir la información al DataFrame de todos los tickers
+        nasdaq_tickers_info = pd.concat([nasdaq_tickers_info, df_info], ignore_index=True)
 
 # Mostrar las primeras filas de los DataFrames resultantes
 print(nasdaq_tickers_info.head())
