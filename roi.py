@@ -36,4 +36,3 @@ def roi(ticker, fecha_inicial, fecha_final, df = nasdaq_tickers_historic):
     roi_value = ((precio_final - precio_inicial) / precio_inicial) * 100
 
     return round(roi_value, 2)
-
