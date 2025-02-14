@@ -8,6 +8,7 @@ from tickers_nasdaq import tickers_nasdaq
 
 
 
+
 def get_datos_historicos(tickers, start_date="2020-01-01"):
     end_date = datetime.now().strftime('%Y-%m-%d')
     datos = yf.download(tickers, start=start_date, end=end_date, progress=False, group_by="ticker")
@@ -73,9 +74,6 @@ def get_ticker_info(tickers):
             nasdaq_tickers_info = pd.concat([nasdaq_tickers_info, df_info], ignore_index=True)
     return nasdaq_tickers_info
 
-# Mostrar las primeras filas de los DataFrames resultantes
-print(nasdaq_tickers_info.head())
-print(nasdaq_tickers_historic.head().to_string(index=False))
 
 
 

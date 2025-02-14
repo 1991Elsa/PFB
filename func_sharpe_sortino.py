@@ -3,7 +3,7 @@ import pandas as pd
 from funcion_extraccion_info_historicos import nasdaq_tickers_historic
 
 
-def sharpe_ratio(ticker, df=nasdaq_tickers_historic, risk_free_rate=0.02):
+def sharpe_ratio(ticker, df, risk_free_rate=0.02):
     """
     Calcula el Ratio de Sharpe para un activo en base a sus datos históricos.
 
