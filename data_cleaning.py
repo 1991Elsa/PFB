@@ -23,11 +23,5 @@ def clean_data(df):
     return df
 
 
-df_historic = clean_data(df_historic)
-df_info = clean_data(df_info)
-
-df_info.to_csv("data_info", index=False)
-df_historic.to_csv("data_historic", index=False)
-
 
 
