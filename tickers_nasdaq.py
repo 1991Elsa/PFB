@@ -14,6 +14,7 @@ def tickers_nasdaq():
 
 
     tickers = []
+    tickers.append('NDX')
     for row in soup.find_all('tr', {'class': 'row-RdUXZpkv'}):
         data_row = row.get('data-rowkey', '')
         if data_row.startswith('NASDAQ:'):
