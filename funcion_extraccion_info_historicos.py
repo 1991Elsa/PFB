@@ -5,6 +5,7 @@ from datetime import datetime
 import pandas as pd
 import numpy as np
 from tickers_nasdaq import tickers_nasdaq
+from data_cleaning import clean_data
 
 
 
@@ -74,6 +75,6 @@ def get_ticker_info(tickers):
             nasdaq_tickers_info = pd.concat([nasdaq_tickers_info, df_info], ignore_index=True)
     return nasdaq_tickers_info
 
-
-
+df_nasdaq_tickers_info_clean = clean_data(nasdaq_tickers_info)
+df_nasdaq_tickers_historic_clean = clean_data(nasdaq_tickers_historic)
 
