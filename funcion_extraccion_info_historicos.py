@@ -79,6 +79,5 @@ nasdaq_tickers_info = obtener_informacion_tickers(tickers)
 df_nasdaq_tickers_info_clean = clean_data(nasdaq_tickers_info)
 df_nasdaq_tickers_historic_clean = clean_data(nasdaq_tickers_historic)
 
-# Inspeccionar los DataFrames limpiados
-print(df_nasdaq_tickers_info_clean.columns)
-print(df_nasdaq_tickers_historic_clean.columns)
+df_nasdaq_tickers_info_clean.to_csv('nasdaq_tickers_info_clean.csv', index=False)
+df_nasdaq_tickers_historic_clean.to_csv('nasdaq_tickers_historic_clean.csv', index=False)
