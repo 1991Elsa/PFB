@@ -10,8 +10,7 @@ CREATE TABLE IF NOT EXISTS historic (
     Low FLOAT NOT NULL,
     Open FLOAT NOT NULL,
     Volume BIGINT NOT NULL,
-    PRIMARY KEY (Date, Ticker),
-    UNIQUE (Ticker)
+    PRIMARY KEY (Date, Ticker)
 );
 
 CREATE TABLE IF NOT EXISTS company_info (
@@ -25,6 +24,10 @@ CREATE TABLE IF NOT EXISTS company_info (
     TotalRevenue BIGINT,
     NetIncomeToCommon BIGINT,
     TrailingEPS FLOAT,
+    ForwardEPS FLOAT,  
+    TrailingPE FLOAT,  
+    ForwardPE FLOAT,   
+    ReturnOnAssets FLOAT,
     ReturnOnEquity FLOAT,
     DebtToEquity FLOAT,
     FreeCashflow BIGINT,
@@ -35,7 +38,8 @@ CREATE TABLE IF NOT EXISTS company_info (
     GrossMargins FLOAT,
     OperatingMargins FLOAT,
     ProfitMargins FLOAT,
-    ebitdaMargins FLOAT
+    ebitdaMargins FLOAT,
+    Timestamp_extraction TIMESTAMP 
 );
 
 SHOW TABLES;
