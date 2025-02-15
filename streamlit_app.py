@@ -125,9 +125,9 @@ def main():
 
     col1, col2, col3, col4, col5 = st.columns(5) 
     with col4:
-        fecha_inicio = st.date_input("Selecciona la fecha de inicio", pd.to_datetime("2020-01-01"))
+        fecha_inicio = st.date_input("Selecciona la fecha de inicio", pd.to_datetime(min(nasdaq_tickers_historic["Date"])))
     with col5:
-        fecha_fin = st.date_input("Selecciona la fecha de fin", pd.Timestamp.now()) 
+        fecha_fin = st.date_input("Selecciona la fecha de fin", pd.to_datetime(max(nasdaq_tickers_historic["Date"])))
 
 
 
