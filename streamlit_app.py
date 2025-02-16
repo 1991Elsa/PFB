@@ -154,7 +154,44 @@ def main():
         with col:
             st.write(f"**{label}:** {value}")
 
-    st.plotly_chart(nasdaq_tickers_historic(selected_ticker, fecha_inicio, fecha_fin), use_container_width=True)
+    # Convertir fechas seleccionadas a formato compatible con el DataFrame
+    fecha_inicio = pd.to_datetime(fecha_inicio)
+    fecha_fin = pd.to_datetime(fecha_fin)
+
+    # Filtrar datos según el ticker y el rango de fechas
+    df_filtrado = nasdaq_tickers_historic[
+        (nasdaq_tickers_historic["Ticker"] == selected_ticker) &
+        (nasdaq_tickers_historic["Date"] >= fecha_inicio) &
+        (nasdaq_tickers_historic["Date"] <= fecha_fin)
+    ]
+
+    # Verificar si hay datos para mostrar
+    if df_filtrado.empty:
+        st.warning("No hay datos disponibles para el rango seleccionado.")
+    else:
+        # Crear el gráfico de velas
+        fig = go.Figure(data=[
+            go.Candlestick(
+                x=df_filtrado["Date"],
+                open=df_filtrado["Open"],
+                high=df_filtrado["High"],
+                low=df_filtrado["Low"],
+                close=df_filtrado["Close"],
+                name=selected_ticker
+            )
+        ])
+
+        # Personalizar el diseño
+        fig.update_layout(
+            title=f"Gráfico de Velas Japonesas - {selected_ticker}",
+            xaxis_title="Fecha",
+            yaxis_title="Precio",
+            xaxis_rangeslider_visible=False,
+            template="plotly_dark"
+        )
+
+        # Mostrar el gráfico en Streamlit
+        st.plotly_chart(fig, use_container_width=True)
     
     
 if __name__ == "__main__":  
