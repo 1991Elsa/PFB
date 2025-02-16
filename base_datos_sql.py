@@ -1,26 +1,23 @@
-from sqlalchemy import create_engine, text, MetaData, Table, Column, String, Integer, Float, DateTime, Date
+from sqlalchemy import text, create_engine, insert
 import pandas as pd
+import numpy as np
+from conect_engine import get_engine, get_engine_database
+from tablas_metadata import metadata, tickers_info_table, tickers_historic_table  
 
-# Reemplaza con tu propia configuración
-username = 'root'
-password = 'H3m3t3r10!'
-host = 'localhost'
-port = '3306'  # Puerto por defecto de MySQL
-
-# Crear el engine de conexión sin especificar una base de datos
+# Obtener el engine inicial desde config.py
 try:
-    engine = create_engine(f'mysql+pymysql://{username}:{password}@{host}:{port}/')
-    with engine.connect() as connection:
+    initial_engine = get_engine()
+    with initial_engine.connect() as connection:
         result = connection.execute(text("SELECT 1"))
-        print("Conexión establecida con éxito y librerías instaladas correctamente.")
+        print("Conexión inicial establecida con éxito y librerías instaladas correctamente.")
     
-    # Conectarse y crear la base de datos 'yahoo_finance'
-    with engine.connect() as connection:
+    # Conectarse y crear la base de datos 'yahoo_finance' si no existe
+    with initial_engine.connect() as connection:
         connection.execute(text("CREATE DATABASE IF NOT EXISTS yahoo_finance"))
         print("Base de datos yahoo_finance creada con éxito.")
     
     # Ahora conectar al motor especificando la nueva base de datos
-    engine = create_engine(f'mysql+pymysql://{username}:{password}@{host}:{port}/yahoo_finance')
+    engine = get_engine_database()
     # Verificar la conexión a la nueva base de datos
     with engine.connect() as connection:
         result = connection.execute(text("SELECT 1"))
@@ -28,64 +25,12 @@ try:
 except Exception as e:
     print(f"Error al establecer la conexión: {e}")
 
-# Crear el objeto MetaData
-metadata = MetaData()
-
-# Definir la tabla nasdaq_tickers_info_sql con Ticker como clave primaria y Timestamp_extraction como DATETIME
-tickers_info_table = Table('nasdaq_tickers_info_sql', metadata,
-    Column('Ticker', String(10), primary_key=True, unique=True),
-    Column('ShortName', String(100)),
-    Column('Sector', String(50)),
-    Column('Industry', String(50)),
-    Column('Country', String(50)),
-    Column('FullTimeEmployees', Float),
-    Column('MarketCap', Integer),
-    Column('TotalRevenue', Integer),
-    Column('NetIncomeToCommon', Integer),
-    Column('TrailingEPS', Float),
-    Column('ForwardEPS', Float),
-    Column('TrailingPE', Float),
-    Column('ForwardPE', Float),
-    Column('ReturnOnAssets', Float),
-    Column('ReturnOnEquity', Float),
-    Column('DebtToEquity', Float),
-    Column('FreeCashflow', Float),
-    Column('DividendRate', Float),
-    Column('DividendYield', Float),
-    Column('PayoutRatio', Float),
-    Column('Beta', Float),
-    Column('GrossMargins', Float),
-    Column('OperatingMargins', Float),
-    Column('ProfitMargins', Float),
-    Column('ebitdaMargins', Float),
-    Column('Timestamp_extraction', DateTime)  # Tipo DATETIME
-)
-
-# Crear la tabla nasdaq_tickers_info_sql en la base de datos
+# Crear las tablas en la base de datos
 try:
-    tickers_info_table.create(engine)
-    print("Tabla nasdaq_tickers_info_sql creada con éxito.")
+    metadata.create_all(engine, checkfirst=True)
+    print("Tablas creadas con éxito.")
 except Exception as e:
-    print(f"Error al crear la tabla nasdaq_tickers_info_sql: {e}")
-
-# Definir la tabla nasdaq_tickers_historic_sql con Date como DATE
-tickers_historic_table = Table('nasdaq_tickers_historic_sql', metadata,
-    Column('Date', Date),
-    Column('Ticker', String(10)),
-    Column('Close', Float),
-    Column('High', Float),
-    Column('Low', Float),
-    Column('Open', Float),
-    Column('Volume', Float)
-)
-
-# Crear la tabla nasdaq_tickers_historic_sql en la base de datos
-try:
-    tickers_historic_table.create(engine)
-    print("Tabla nasdaq_tickers_historic_sql creada con éxito.")
-except Exception as e:
-    print(f"Error al crear la tabla nasdaq_tickers_historic_sql: {e}")
-
+    print(f"Error al crear las tablas: {e}")
 
 # Leer los DataFrames desde los archivos CSV
 try:
@@ -96,21 +41,37 @@ try:
     df_nasdaq_tickers_info_clean['Timestamp_extraction'] = pd.to_datetime(df_nasdaq_tickers_info_clean['Timestamp_extraction'])
     df_nasdaq_tickers_historic_clean['Date'] = pd.to_datetime(df_nasdaq_tickers_historic_clean['Date']).dt.date
 
-    # Insertar los datos en la tabla nasdaq_tickers_info_sql
+    # Reemplazar NaN por None
+    df_nasdaq_tickers_info_clean = df_nasdaq_tickers_info_clean.replace({np.nan: None})
+    df_nasdaq_tickers_historic_clean = df_nasdaq_tickers_historic_clean.replace({np.nan: None})
+
+    # Desactivar las restricciones de clave foránea temporalmente
+    with engine.connect() as connection:
+        connection.execute(text("SET FOREIGN_KEY_CHECKS=0;"))
+
+    # Insertar los datos en la tabla nasdaq_tickers_info_sql sin cambiar su estructura
     try:
-        df_nasdaq_tickers_info_clean.to_sql(name='nasdaq_tickers_info_sql', con=engine, if_exists='replace', index=False)
+        with engine.begin() as conn:
+            for row in df_nasdaq_tickers_info_clean.to_dict(orient='records'):
+                stmt = insert(tickers_info_table).values(**row)
+                conn.execute(stmt)
         print("Datos insertados en la tabla nasdaq_tickers_info_sql correctamente.")
     except Exception as e:
         print(f"Error al insertar los datos en la tabla nasdaq_tickers_info_sql: {e}")
 
-    # Insertar los datos en la tabla nasdaq_tickers_historic_sql
+    # Insertar los datos en la tabla nasdaq_tickers_historic_sql sin cambiar su estructura
     try:
-        df_nasdaq_tickers_historic_clean.to_sql(name='nasdaq_tickers_historic_sql', con=engine, if_exists='replace', index=False)
+        with engine.begin() as conn:
+            for row in df_nasdaq_tickers_historic_clean.to_dict(orient='records'):
+                stmt = insert(tickers_historic_table).values(**row)
+                conn.execute(stmt)
         print("Datos insertados en la tabla nasdaq_tickers_historic_sql correctamente.")
     except Exception as e:
         print(f"Error al insertar los datos en la tabla nasdaq_tickers_historic_sql: {e}")
 
+    # Reactivar las restricciones de clave foránea
+    with engine.connect() as connection:
+        connection.execute(text("SET FOREIGN_KEY_CHECKS=1;"))
+
 except Exception as e:
     print(f"Error al leer los archivos CSV o insertar los datos en las tablas: {e}")
-
-

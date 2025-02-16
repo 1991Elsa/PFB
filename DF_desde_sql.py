@@ -1,19 +1,26 @@
 import pandas as pd
 import numpy as np
-
-from sqlalchemy import create_engine
 import sklearn
-from config_engine import configuracion_engine
+from conect_engine import get_engine, get_engine_database  # Importar las funciones
 
-password, username, host, port = configuracion_engine("Dunidu")
+# Crear el engine y conectar a la base de datos yahoo_finance
+engine = get_engine_database()
 
+# Verificar la conexión
+try:
+    connection = engine.connect()
+    connection.close()
+    print("Conexión establecida con éxito a la base de datos yahoo_finance.")
+except Exception as e:
+    print(f"Error al establecer la conexión: {e}")
 
-engine = create_engine(f"mysql+pymysql://{username}:{password}@{host}:{port}/yahoo_finance")
-connection = engine.connect()
-connection.close()
-
-df_historic = pd.read_sql_table(table_name="historic", con=engine)
-df_info = pd.read_sql_table(table_name="information", con=engine)
-
-print(df_historic)
-print(df_info)
+# Leer las tablas SQL en DataFrames de pandas
+try:
+    df_historic = pd.read_sql_table(table_name="nasdaq_tickers_historic_sql", con=engine)
+    df_info = pd.read_sql_table(table_name="nasdaq_tickers_info_sql", con=engine)
+    
+    # Imprimir los DataFrames
+    print(df_historic)
+    print(df_info)
+except Exception as e:
+    print(f"Error al leer las tablas SQL: {e}")
