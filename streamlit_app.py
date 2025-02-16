@@ -7,7 +7,8 @@ import pandas as pd
 import numpy as np
 from tickers_nasdaq import tickers_nasdaq
 from data_cleaning import clean_data
-
+from roi import roi
+from func_sharpe_sortino import sharpe_ratio, sortino_ratio
 
 
 def get_datos_historicos(tickers, start_date="2020-01-01"):
@@ -192,6 +193,29 @@ def main():
 
         # Mostrar el gráfico en Streamlit
         st.plotly_chart(fig, use_container_width=True)
+
+    # Calcular el ROI
+    roi_value = roi(selected_ticker, fecha_inicio, fecha_fin, df = nasdaq_tickers_historic)
+    st.write(f"**ROI:**")
+    if roi_value > 0:
+        st.success(f'Invertir en esa acción durante ese período habría generado una ganancia del {roi_value}%')
+    elif roi_value < 0:
+        st.error(f'Si hubieras invertido en esa acción, habrías perdido un {roi_value}% de tu inversión.')
+
+    #calcular sharpe ratio
+    sharpe_value = sharpe_ratio(selected_ticker, fecha_inicio, fecha_fin, df = nasdaq_tickers_historic)
+    st.write(f"**Sharpe Ratio:** {sharpe_value}")
+    if sharpe_value > 1:
+        st.success('Buena inversión ajustada al riesgo')
+    elif sharpe_value < 1:
+        st.warning('Riesgo alto en relación con el retorno')
+    elif sharpe_value > 2:
+        st.success('Excelente inversión')
+    elif sharpe_value > 3:
+        st.success('Inversión excepcional')
+
+##introducir riesgo
+
     
     
 if __name__ == "__main__":  
