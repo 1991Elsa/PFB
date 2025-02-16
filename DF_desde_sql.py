@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import sklearn
-from conect_engine import get_engine, get_engine_database  # Importar las funciones
+from conect_engine import get_engine, get_engine_database 
 
 # Crear el engine y conectar a la base de datos yahoo_finance
 engine = get_engine_database()

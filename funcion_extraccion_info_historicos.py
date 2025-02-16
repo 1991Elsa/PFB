@@ -73,22 +73,27 @@ def obtener_informacion_tickers(tickers):
 
     return nasdaq_tickers_info
 
+
 # Obtener la lista de tickers del NASDAQ
 
 tickers = tickers_nasdaq()
+
 
 # Obtener los datos históricos de todos los tickers del NASDAQ
 
 nasdaq_tickers_historic = get_datos_historicos(tickers)
 
+
 # Obtener la información de los tickers
 
 nasdaq_tickers_info = obtener_informacion_tickers(tickers)
+
 
 # Limpiar los DataFrames
 
 df_nasdaq_tickers_info_clean = clean_data(nasdaq_tickers_info)
 df_nasdaq_tickers_historic_clean = clean_data(nasdaq_tickers_historic)
+
 
 # Guardar los DataFrames como archivos CSV
 
