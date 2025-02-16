@@ -86,6 +86,7 @@ try:
 except Exception as e:
     print(f"Error al crear la tabla nasdaq_tickers_historic_sql: {e}")
 
+
 # Leer los DataFrames desde los archivos CSV
 try:
     df_nasdaq_tickers_info_clean = pd.read_csv('nasdaq_tickers_info_clean.csv')
@@ -111,3 +112,5 @@ try:
 
 except Exception as e:
     print(f"Error al leer los archivos CSV o insertar los datos en las tablas: {e}")
+
+
