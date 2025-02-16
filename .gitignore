@@ -1,6 +1,6 @@
 venv/
 .env 
 entorno/
-config_engine
 env/
 
+#.config_engine
