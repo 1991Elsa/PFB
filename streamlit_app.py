@@ -106,6 +106,7 @@ import pandas as pd
 import yfinance as yf   
 from PIL import Image
 import plotly.graph_objects as go
+import mplfinance as mpf
 from modules.pfb_page_config_dict import PAGE_CONFIG
 #from funcion_extraccion_info_historicos import *
 
@@ -136,22 +137,25 @@ def main():
     tickers_nasdaq_no_ndx.remove('NDX')
  
 
-    selected_ticker = st.selectbox("Selecciona el número de tickers a mostrar", options = tickers_nasdaq_no_ndx)
+    selected_ticker = st.selectbox("Selecciona el ticker a mostrar", options = tickers_nasdaq_no_ndx)
     info = nasdaq_tickers_info[nasdaq_tickers_info["Ticker"] == selected_ticker]
-    short_name, sector, industry, country = [
+    short_name, sector, industry, country, MarketCap = [
         info[col].values[0] if not info[col].empty else "No disponible"
-        for col in ["ShortName", "Sector", "Industry", "Country"]
+        for col in ["ShortName", "Sector", "Industry", "Country", "MarketCap"]
     ]
 
     
-    cols = st.columns(4)
-    labels = ["Nombre corto", "Sector", "Industria", "País"]
-    values = [short_name, sector, industry, country]
+    cols = st.columns(5)
+    labels = ["Nombre", "Sector", "Industria", "País", 'MarketCap']
+    values = [short_name, sector, industry, country, f'{MarketCap / 1_000_000:,.0f} $M'
+]
 
     for col, label, value in zip(cols, labels, values):
         with col:
             st.write(f"**{label}:** {value}")
 
+    st.plotly_chart(nasdaq_tickers_historic(selected_ticker, fecha_inicio, fecha_fin), use_container_width=True)
+    
     
 if __name__ == "__main__":  
     main() 
