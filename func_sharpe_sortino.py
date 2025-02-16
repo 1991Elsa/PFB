@@ -54,6 +54,8 @@ def sharpe_ratio(ticker, start_date, end_date, df= nasdaq_tickers_historic, risk
 >2 → 🚀 Excelente inversión
 >3 → ⭐ Inversión excepcional
 <1 → ⚠️ Riesgo alto en relación con el retorno
+
+
 '''
 
 
