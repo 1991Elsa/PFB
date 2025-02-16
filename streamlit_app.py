@@ -112,6 +112,7 @@ from modules.pfb_page_config_dict import PAGE_CONFIG
 #from funcion_extraccion_info_historicos import *
 
 
+
 st.set_page_config(**PAGE_CONFIG) 
 
 #info_tickers = nasdaq_tickers_info
@@ -184,7 +185,7 @@ def main():
 
         # Personalizar el diseño
         fig.update_layout(
-            title=f"Gráfico de Velas Japonesas - {selected_ticker}",
+            title=f"Gráfico de Velas Japonesas - {selected_ticker} de {fecha_inicio.strftime('%d-%m-%Y')} a {fecha_fin.strftime('%d-%m-%Y')}",
             xaxis_title="Fecha",
             yaxis_title="Precio",
             xaxis_rangeslider_visible=False,
@@ -194,29 +195,104 @@ def main():
         # Mostrar el gráfico en Streamlit
         st.plotly_chart(fig, use_container_width=True)
 
-    # Calcular el ROI
-    roi_value = roi(selected_ticker, fecha_inicio, fecha_fin, df = nasdaq_tickers_historic)
-    st.write(f"**ROI:**")
-    if roi_value > 0:
-        st.success(f'Invertir en esa acción durante ese período habría generado una ganancia del {roi_value}%')
-    elif roi_value < 0:
-        st.error(f'Si hubieras invertido en esa acción, habrías perdido un {roi_value}% de tu inversión.')
 
-    #calcular sharpe ratio
-    sharpe_value = sharpe_ratio(selected_ticker, fecha_inicio, fecha_fin, df = nasdaq_tickers_historic)
-    st.write(f"**Sharpe Ratio:** {sharpe_value}")
-    if sharpe_value > 1:
-        st.success('Buena inversión ajustada al riesgo')
-    elif sharpe_value < 1:
-        st.warning('Riesgo alto en relación con el retorno')
-    elif sharpe_value > 2:
-        st.success('Excelente inversión')
-    elif sharpe_value > 3:
-        st.success('Inversión excepcional')
 
-##introducir riesgo
+    #Mostrar la evolucion los ultimos dias
+    nasdaq_tickers_historic["Date"] = pd.to_datetime(nasdaq_tickers_historic["Date"])
+    ultima_fecha = nasdaq_tickers_historic["Date"].max()
 
+    fecha_hace_1_dia= ultima_fecha - pd.Timedelta(days=1)
+    fecha_hace_7_dias = ultima_fecha - pd.Timedelta(days=7)
+    fecha_hace_1_mes = ultima_fecha - pd.Timedelta(days=30)
+    fecha_hace_1_anyo = ultima_fecha - pd.Timedelta(days=365)
+
+
+    df_ticker = nasdaq_tickers_historic[nasdaq_tickers_historic["Ticker"] == selected_ticker]
+    precio_fin = df_ticker[df_ticker["Date"] == ultima_fecha]["Close"].values
+    precio_1_dia = df_ticker[df_ticker["Date"] == fecha_hace_1_dia]["Close"].values
+    precio_7_dias = df_ticker[df_ticker["Date"] == fecha_hace_7_dias]["Close"].values
+    precio_1_mes = df_ticker[df_ticker["Date"] == fecha_hace_1_mes]["Close"].values
+    precio_1_anyo= df_ticker[df_ticker["Date"] == fecha_hace_1_anyo]["Close"].values
     
+
+    variacion_1_dia = ((precio_fin - precio_1_dia) / precio_1_dia) * 100
+    variacion_7_dias = ((precio_fin - precio_7_dias) / precio_7_dias) * 100
+    variacion_1_mes = ((precio_fin - precio_1_mes) / precio_1_mes) * 100
+    variacion_1_anyo = ((precio_fin - precio_1_anyo) / precio_1_anyo) * 100
+
+    st.subheader("Evolución de los últimos días")
+    evo_col1, evo_col2, evo_col3, evo_col4, evo_col5, evo_col6 = st.columns(6)
+    with evo_col1:
+        st.write(f"24h: {variacion_1_dia[0]:.2f} %")
+    
+    with evo_col2:
+        st.write(f"7 dias: {variacion_7_dias[0]:.2f} %")
+
+    with evo_col3:
+        st.write(f"30 dias: {variacion_1_mes[0]:.2f} %")
+
+    with evo_col4:
+        st.write(f"1 año: {variacion_1_anyo[0]:.2f} %")
+
+
+    st.write('\n')
+    st.write('\n')
+
+    with st.expander("Mostrar metricas", expanded=False):
+        # Calcular el ROI
+        roi_value = roi(selected_ticker, fecha_inicio, fecha_fin, df = nasdaq_tickers_historic)
+        st.write(f"**ROI:**")
+        if roi_value > 0:
+            st.success(f'Invertir en esa acción durante ese período habría generado una ganancia del {roi_value}%')
+        elif roi_value < 0:
+            st.error(f'Si hubieras invertido en esa acción, habrías perdido un {roi_value}% de tu inversión.')
+        st.write('\n')
+
+        #calcular sharpe ratio
+        col_risk1, col_risk2, col_risk3, col_risk4, col_risk5 = st.columns(5)
+        with col_risk5:
+            risk= st.number_input("Introducir riesgo personalizado (%)", min_value=0.0, max_value=100.0, value=20.00, step=0.01)
+            risk = risk / 100
+
+        col_sortino, col_sharpe = st.columns(2)
+
+        with col_sharpe:
+            sharpe_value = sharpe_ratio(selected_ticker, fecha_inicio, fecha_fin, df = nasdaq_tickers_historic, risk_free_rate=risk)
+            st.write(f"**Sharpe Ratio:** {sharpe_value}")
+            if sharpe_value > 1:
+                st.success('Buena inversión ajustada al riesgo')
+            elif sharpe_value < 1:
+                st.warning('Riesgo alto en relación con el retorno')
+            elif sharpe_value > 2:
+                st.success('Excelente inversión')
+            elif sharpe_value > 3:
+                st.success('Inversión excepcional')
+            
+
+        with col_sortino:
+            sortino_ratio_value = sortino_ratio(selected_ticker, fecha_inicio, fecha_fin, df = nasdaq_tickers_historic, risk_free_rate=risk)
+            st.write(f"**Sortino Ratio:** {sortino_ratio_value}")
+            if sortino_ratio_value > 1:
+                st.success('Buena inversión ajustada al riesgo')
+            elif sortino_ratio_value < 1:
+                st.warning('Riesgo alto en relación con el retorno')
+            elif sortino_ratio_value > 2:
+                st.success('Excelente inversión')
+            elif sortino_ratio_value > 3:
+                st.success('Inversión excepcional')
+
+        st.write('\n')   
+        st.write('\n')  
+        st.write('\n')
+        st.subheader(f"**Explicacion de los ratios**")
+        st.write(f'**ROI**: Return on Investment, es el retorno de la inversión.')
+        st.write(f'**Sharpe Ratio**: Es una medida de la rentabilidad ajustada al riesgo.')
+        st.write(f'**Sortino Ratio**: Es una medida de la rentabilidad ajustada al riesgo, pero solo tiene en cuenta los rendimientos negativos.')
+        st.write('Riesgo: Es el riesgo personalizado para la inversión a realizar.')
+
+                        
+
+        
     
 if __name__ == "__main__":  
     main() 
