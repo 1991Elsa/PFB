@@ -40,3 +40,4 @@ tickers_historic_table = Table('nasdaq_tickers_historic_sql', metadata,
     Column('Open', Float),
     Column('Volume', Float)
 )
+
