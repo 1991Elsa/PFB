@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from obtencion_data_y_bbdd import tickers
 
 #funcion para sacar el ROI
 def roi(ticker, fecha_inicial, fecha_final, df):

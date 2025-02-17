@@ -3,4 +3,10 @@ venv/
 entorno/
 env/
 
-connect_engine.py
+connect_engine
+
+.ipynb_checkpoints
+
+
+nasdaq_tickers_historic_clean.csv
+nasdaq_tickers_info_clean.csv
