@@ -1,83 +1,113 @@
-import requests
-from bs4 import BeautifulSoup
-import yfinance as yf
-from datetime import datetime
+from sqlalchemy import create_engine, text, MetaData, Table, Column, String, Integer, Float, DateTime, Date
 import pandas as pd
-import numpy as np
-from tickers_nasdaq import tickers_nasdaq
-from data_cleaning import clean_data
+from create_engine import create_engine
+
+password = create_engine()
 
 
 
-def get_datos_historicos(tickers, start_date="2020-01-01"):
-    end_date = datetime.now().strftime('%Y-%m-%d')
-    datos = yf.download(tickers, start=start_date, end=end_date, progress=False, group_by="ticker")
-    if isinstance(datos.columns, pd.MultiIndex):
-        datos.columns = ['_'.join(col).strip() for col in datos.columns]
-    datos = datos.copy()
-    datos.reset_index(inplace=True)
-    datos = datos.melt(id_vars=['Date'], var_name="Variable", value_name="Valor")
-    datos[['Ticker', 'Metric']] = datos['Variable'].str.rsplit('_', n=1, expand=True)
-    datos = datos.pivot(index=['Date', 'Ticker'], columns='Metric', values='Valor').reset_index()
-    return datos
+# Crear el engine de conexión sin especificar una base de datos
+try:
+    engine = create_engine(f'mysql+pymysql://{username}:{password}@{host}:{port}/')
+    with engine.connect() as connection:
+        result = connection.execute(text("SELECT 1"))
+        print("Conexión establecida con éxito y librerías instaladas correctamente.")
+    
+    # Conectarse y crear la base de datos 'yahoo_finance'
+    with engine.connect() as connection:
+        connection.execute(text("CREATE DATABASE IF NOT EXISTS yahoo_finance"))
+        print("Base de datos yahoo_finance creada con éxito.")
+    
+    # Ahora conectar al motor especificando la nueva base de datos
+    engine = create_engine(f'mysql+pymysql://{username}:{password}@{host}:{port}/yahoo_finance')
+    # Verificar la conexión a la nueva base de datos
+    with engine.connect() as connection:
+        result = connection.execute(text("SELECT 1"))
+        print("Conexión establecida con éxito a la base de datos yahoo_finance y librerías instaladas correctamente.")
+except Exception as e:
+    print(f"Error al establecer la conexión: {e}")
 
-def get_ticker_info(ticker):
-    ticker_info = yf.Ticker(ticker).info
-    return ticker_info
+# Crear el objeto MetaData
+metadata = MetaData()
 
-# Obtener la lista de tickers del NASDAQ
-tickers = tickers_nasdaq()
+# Definir la tabla nasdaq_tickers_info_sql con Ticker como clave primaria y Timestamp_extraction como DATETIME
+tickers_info_table = Table('nasdaq_tickers_info_sql', metadata,
+    Column('Ticker', String(10), primary_key=True, unique=True),
+    Column('ShortName', String(100)),
+    Column('Sector', String(50)),
+    Column('Industry', String(50)),
+    Column('Country', String(50)),
+    Column('FullTimeEmployees', Float),
+    Column('MarketCap', Integer),
+    Column('TotalRevenue', Integer),
+    Column('NetIncomeToCommon', Integer),
+    Column('TrailingEPS', Float),
+    Column('ForwardEPS', Float),
+    Column('TrailingPE', Float),
+    Column('ForwardPE', Float),
+    Column('ReturnOnAssets', Float),
+    Column('ReturnOnEquity', Float),
+    Column('DebtToEquity', Float),
+    Column('FreeCashflow', Float),
+    Column('DividendRate', Float),
+    Column('DividendYield', Float),
+    Column('PayoutRatio', Float),
+    Column('Beta', Float),
+    Column('GrossMargins', Float),
+    Column('OperatingMargins', Float),
+    Column('ProfitMargins', Float),
+    Column('ebitdaMargins', Float),
+    Column('Timestamp_extraction', DateTime)  # Tipo DATETIME
+)
 
-# Obtener los datos históricos de todos los tickers del NASDAQ
-nasdaq_tickers_historic = get_datos_historicos(tickers)
+# Crear la tabla nasdaq_tickers_info_sql en la base de datos
+try:
+    tickers_info_table.create(engine)
+    print("Tabla nasdaq_tickers_info_sql creada con éxito.")
+except Exception as e:
+    print(f"Error al crear la tabla nasdaq_tickers_info_sql: {e}")
 
-# Inicializar un DataFrame para almacenar la información de los tickers
-nasdaq_tickers_info = pd.DataFrame()
+# Definir la tabla nasdaq_tickers_historic_sql con Date como DATE
+tickers_historic_table = Table('nasdaq_tickers_historic_sql', metadata,
+    Column('Date', Date),
+    Column('Ticker', String(10)),
+    Column('Close', Float),
+    Column('High', Float),
+    Column('Low', Float),
+    Column('Open', Float),
+    Column('Volume', Float)
+)
 
-# Obtener la información de cada ticker individualmente y almacenarla
-def obtener_informacion_tickers(tickers):
-    nasdaq_tickers_info = pd.DataFrame()
-    for ticker in tickers:
-        if ticker != 'NDX':
-            ticker_info = get_ticker_info(ticker)
-            dic_info = {
-                'Ticker': ticker_info.get('symbol', ticker), 
-                'ShortName': ticker_info.get('shortName', 'N/A'), 
-                'Sector': ticker_info.get('sector', 'N/A'),
-                'Industry': ticker_info.get('industry', 'N/A'),
-                'Country': ticker_info.get('country', 'N/A'),
-                'FullTimeEmployees': ticker_info.get('fullTimeEmployees', 'N/A'),
-                'MarketCap': ticker_info.get('marketCap', 'N/A'), 
-                'TotalRevenue': ticker_info.get('totalRevenue', 'N/A'), 
-                'NetIncomeToCommon': ticker_info.get('netIncomeToCommon', 'N/A'),
-                'TrailingEPS': ticker_info.get('trailingEps', 'N/A'),
-                'ForwardEPS': ticker_info.get('forwardEps', 'N/A'),
-                'TrailingPE': ticker_info.get('trailingPE', 'N/A'),
-                'ForwardPE': ticker_info.get('forwardPE', 'N/A'),
-                'ReturnOnAssets': ticker_info.get('returnOnAssets', 'N/A'), 
-                'ReturnOnEquity': ticker_info.get('returnOnEquity', 'N/A'), 
-                'DebtToEquity': ticker_info.get('debtToEquity', 'N/A'), 
-                'FreeCashflow': ticker_info.get('freeCashflow', 'N/A'), 
-                'DividendRate': ticker_info.get('dividendRate', 'N/A'), 
-                'DividendYield': ticker_info.get('dividendYield', 'N/A'),
-                'PayoutRatio': ticker_info.get('payoutRatio', 'N/A'), 
-                'Beta': ticker_info.get('beta', 'N/A'), 
-                'GrossMargins': ticker_info.get('grossMargins', 'N/A'), 
-                'OperatingMargins': ticker_info.get('operatingMargins', 'N/A'), 
-                'ProfitMargins': ticker_info.get('profitMargins', 'N/A'),
-                'ebitdaMargins': ticker_info.get('ebitdaMargins', 'N/A'), 
-                'Timestamp_extraction': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            }
-            df_info = pd.DataFrame([dic_info])
-            nasdaq_tickers_info = pd.concat([nasdaq_tickers_info, df_info], ignore_index=True)
-    return nasdaq_tickers_info
+# Crear la tabla nasdaq_tickers_historic_sql en la base de datos
+try:
+    tickers_historic_table.create(engine)
+    print("Tabla nasdaq_tickers_historic_sql creada con éxito.")
+except Exception as e:
+    print(f"Error al crear la tabla nasdaq_tickers_historic_sql: {e}")
 
-# Corrección: Llamada a la nueva función obtener_informacion_tickers
-nasdaq_tickers_info = obtener_informacion_tickers(tickers)
 
-# Limpiar los DataFrames
-df_nasdaq_tickers_info_clean = clean_data(nasdaq_tickers_info)
-df_nasdaq_tickers_historic_clean = clean_data(nasdaq_tickers_historic)
+# Leer los DataFrames desde los archivos CSV
+try:
+    df_nasdaq_tickers_info_clean = pd.read_csv('nasdaq_tickers_info_clean.csv')
+    df_nasdaq_tickers_historic_clean = pd.read_csv('nasdaq_tickers_historic_clean.csv')
 
-df_nasdaq_tickers_info_clean.to_csv('nasdaq_tickers_info_clean.csv', index=False)
-df_nasdaq_tickers_historic_clean.to_csv('nasdaq_tickers_historic_clean.csv', index=False)
+    # Asegurarse de que las columnas 'Timestamp_extraction' y 'Date' son del tipo correcto
+    df_nasdaq_tickers_info_clean['Timestamp_extraction'] = pd.to_datetime(df_nasdaq_tickers_info_clean['Timestamp_extraction'])
+    df_nasdaq_tickers_historic_clean['Date'] = pd.to_datetime(df_nasdaq_tickers_historic_clean['Date']).dt.date
+
+    # Insertar los datos en la tabla nasdaq_tickers_info_sql
+    try:
+        df_nasdaq_tickers_info_clean.to_sql(name='nasdaq_tickers_info_sql', con=engine, if_exists='replace', index=False)
+        print("Datos insertados en la tabla nasdaq_tickers_info_sql correctamente.")
+    except Exception as e:
+        print(f"Error al insertar los datos en la tabla nasdaq_tickers_info_sql: {e}")
+
+    # Insertar los datos en la tabla nasdaq_tickers_historic_sql
+    try:
+        df_nasdaq_tickers_historic_clean.to_sql(name='nasdaq_tickers_historic_sql', con=engine, if_exists='replace', index=False)
+        print("Datos insertados en la tabla nasdaq_tickers_historic_sql correctamente.")
+    except Exception as e:
+        print(f"Error al insertar los datos en la tabla nasdaq_tickers_historic_sql: {e}")
+
+except Exception as e:
+    print(f"Error al leer los archivos CSV o insertar los datos en las tablas: {e}")
