@@ -14,13 +14,15 @@ try:
 except Exception as e:
     print(f"Error al establecer la conexión: {e}")
 
-# Leer las tablas SQL en DataFrames de pandas
+# Realizar las consultas SQL para descargar los DataFrames
+query_historic = "SELECT * FROM nasdaq_tickers_historic_sql"
+query_info = "SELECT * FROM nasdaq_tickers_info_sql"
+
 try:
-    df_historic = pd.read_sql_table(table_name="nasdaq_tickers_historic_sql", con=engine)
-    df_info = pd.read_sql_table(table_name="nasdaq_tickers_info_sql", con=engine)
+    df_historic = pd.read_sql_query(query_historic, con=engine)
+    df_info = pd.read_sql_query(query_info, con=engine)
     
-    # Imprimir los DataFrames
-    print(df_historic)
-    print(df_info)
+    print("DataFrames descargados con éxito.")  
+
 except Exception as e:
-    print(f"Error al leer las tablas SQL: {e}")
+    print(f"Error al ejecutar las consultas SQL: {e}")
