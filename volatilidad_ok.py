@@ -16,13 +16,13 @@ def calcular_volatilidad(df_nasdaq_tickers_historic_clean, periodo="diario"):
     df_nasdaq_tickers_historic_clean['Date'] = pd.to_datetime(df_nasdaq_tickers_historic_clean['Date'])
 
     # Calcular rendimientos diarios
-    df_nasdaq_tickers_historic_clean['Rentabilidad'] = df_nasdaq_tickers_historic_clean.groupby('Ticker')['Close'].pct_change()
+    df_nasdaq_tickers_historic_clean['Rentabilidad'] = df_nasdaq_tickers_historic_clean.groupby('Ticker')['Close'].pct_change(fill_method=None)
 
     if periodo == "mensual":
         # Convertir las fechas al inicio del mes
         df_nasdaq_tickers_historic_clean['Month'] = df_nasdaq_tickers_historic_clean['Date'].dt.to_period('M')
         # Calcular la variación mensual de cierre
-        datos_mensuales = df_nasdaq_tickers_historic_clean.groupby(['Ticker', 'Month'])['Close'].last().pct_change()
+        datos_mensuales = df_nasdaq_tickers_historic_clean.groupby(['Ticker', 'Month'])['Close'].last().pct_change(fill_method=None)
         volatilidad = datos_mensuales.groupby('Ticker').std().reset_index()
     elif periodo == "diario":
         # Calcular la desviación estándar de los rendimientos diarios
