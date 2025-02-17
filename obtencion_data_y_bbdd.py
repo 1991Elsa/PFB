@@ -148,6 +148,11 @@ def clean_data(df):
 
     return df
 
+# Guardar los DataFrames como archivos CSV
+
+df_nasdaq_tickers_info_clean.to_csv('nasdaq_tickers_info_clean.csv', index=False)
+df_nasdaq_tickers_historic_clean.to_csv('nasdaq_tickers_historic_clean.csv', index=False)
+
 # Creacion de la tabla en MySQL
 def creacion_bbdd(df_info_clean, df_historic_clean):
     try:
@@ -179,8 +184,8 @@ def creacion_bbdd(df_info_clean, df_historic_clean):
 
     # Leer los DataFrames desde los archivos CSV
     try:
-        df_nasdaq_tickers_info_clean = df_info_clean
-        df_nasdaq_tickers_historic_clean = df_historic_clean
+        df_nasdaq_tickers_info_clean = pd.read_csv('nasdaq_tickers_info_clean.csv')
+        df_nasdaq_tickers_historic_clean = pd.read_csv('nasdaq_tickers_historic_clean.csv')
 
         # Asegurarse de que las columnas 'Timestamp_extraction' y 'Date' son del tipo correcto
         df_nasdaq_tickers_info_clean['Timestamp_extraction'] = pd.to_datetime(df_nasdaq_tickers_info_clean['Timestamp_extraction'])
