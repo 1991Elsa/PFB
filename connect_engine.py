@@ -4,7 +4,7 @@ def get_engine():
     username = 'root'
     password = '2021'
     host = 'localhost'
-    port = '2021'
+    port = '3306'
     
     engine = create_engine(f'mysql+pymysql://{username}:{password}@{host}:{port}/')
     return engine

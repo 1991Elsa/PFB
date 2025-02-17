@@ -177,7 +177,7 @@ def creacion_bbdd(df_info_clean, df_historic_clean):
     except Exception as e:
         print(f"Error al crear las tablas: {e}")
 
-    # Leer los DataFrames desde los archivos CSV
+    # subir los df
     try:
         df_nasdaq_tickers_info_clean = df_info_clean
         df_nasdaq_tickers_historic_clean = df_historic_clean
