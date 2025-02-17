@@ -1,107 +1,3 @@
-
-import requests
-from bs4 import BeautifulSoup
-import yfinance as yf
-from datetime import datetime
-import pandas as pd
-import numpy as np
-from tickers_nasdaq import tickers_nasdaq
-from data_cleaning import clean_data
-from roi import roi
-from func_sharpe_sortino import sharpe_ratio, sortino_ratio
-
-
-def get_datos_historicos(tickers, start_date="2020-01-01"):
-    end_date = datetime.now().strftime('%Y-%m-%d')
-    datos = yf.download(tickers, start=start_date, end=end_date, progress=False, group_by="ticker")
-    if isinstance(datos.columns, pd.MultiIndex):
-        datos.columns = ['_'.join(col).strip() for col in datos.columns]
-    datos = datos.copy()
-    datos.reset_index(inplace=True)
-    datos = datos.melt(id_vars=['Date'], var_name="Variable", value_name="Valor")
-    datos[['Ticker', 'Metric']] = datos['Variable'].str.rsplit('_', n=1, expand=True)
-    datos = datos.pivot(index=['Date', 'Ticker'], columns='Metric', values='Valor').reset_index()
-    return datos
-
-def get_ticker_info(ticker):
-    ticker_info = yf.Ticker(ticker).info
-    return ticker_info
-
-# Obtener la lista de tickers del NASDAQ
-tickers = tickers_nasdaq()
-
-# Obtener los datos históricos de todos los tickers del NASDAQ
-nasdaq_tickers_historic = get_datos_historicos(tickers)
-
-# Inicializar un DataFrame para almacenar la información de los tickers
-nasdaq_tickers_info = pd.DataFrame()
-
-# Obtener la información de cada ticker individualmente y almacenarla
-def obtener_informacion_tickers(tickers):
-    nasdaq_tickers_info = pd.DataFrame()
-    for ticker in tickers:
-        if ticker != 'NDX':
-            ticker_info = get_ticker_info(ticker)
-            dic_info = {
-                'Ticker': ticker_info.get('symbol', ticker), 
-                'ShortName': ticker_info.get('shortName', 'N/A'), 
-                'Sector': ticker_info.get('sector', 'N/A'),
-                'Industry': ticker_info.get('industry', 'N/A'),
-                'Country': ticker_info.get('country', 'N/A'),
-                'FullTimeEmployees': ticker_info.get('fullTimeEmployees', 'N/A'),
-                'MarketCap': ticker_info.get('marketCap', 'N/A'), 
-                'TotalRevenue': ticker_info.get('totalRevenue', 'N/A'), 
-                'NetIncomeToCommon': ticker_info.get('netIncomeToCommon', 'N/A'),
-                'TrailingEPS': ticker_info.get('trailingEps', 'N/A'),
-                'ForwardEPS': ticker_info.get('forwardEps', 'N/A'),
-                'TrailingPE': ticker_info.get('trailingPE', 'N/A'),
-                'ForwardPE': ticker_info.get('forwardPE', 'N/A'),
-                'ReturnOnAssets': ticker_info.get('returnOnAssets', 'N/A'), 
-                'ReturnOnEquity': ticker_info.get('returnOnEquity', 'N/A'), 
-                'DebtToEquity': ticker_info.get('debtToEquity', 'N/A'), 
-                'FreeCashflow': ticker_info.get('freeCashflow', 'N/A'), 
-                'DividendRate': ticker_info.get('dividendRate', 'N/A'), 
-                'DividendYield': ticker_info.get('dividendYield', 'N/A'),
-                'PayoutRatio': ticker_info.get('payoutRatio', 'N/A'), 
-                'Beta': ticker_info.get('beta', 'N/A'), 
-                'GrossMargins': ticker_info.get('grossMargins', 'N/A'), 
-                'OperatingMargins': ticker_info.get('operatingMargins', 'N/A'), 
-                'ProfitMargins': ticker_info.get('profitMargins', 'N/A'),
-                'ebitdaMargins': ticker_info.get('ebitdaMargins', 'N/A'), 
-                'Timestamp_extraction': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            }
-            df_info = pd.DataFrame([dic_info])
-            nasdaq_tickers_info = pd.concat([nasdaq_tickers_info, df_info], ignore_index=True)
-    return nasdaq_tickers_info
-
-# Corrección: Llamada a la nueva función obtener_informacion_tickers
-nasdaq_tickers_info = obtener_informacion_tickers(tickers)
-
-# Limpiar los DataFrames
-df_nasdaq_tickers_info_clean = clean_data(nasdaq_tickers_info)
-df_nasdaq_tickers_historic_clean = clean_data(nasdaq_tickers_historic)
-
-
-
-
-
-
-
-
-
-
-###########################################################################################################################
-###########################################################################################################################
-###########################################################################################################################
-###########################################################################################################################
-
-
-
-
-
-
-
-
 import streamlit as st
 import pandas as pd
 import yfinance as yf   
@@ -109,9 +5,11 @@ from PIL import Image
 import plotly.graph_objects as go
 import mplfinance as mpf
 from modules.pfb_page_config_dict import PAGE_CONFIG
-#from funcion_extraccion_info_historicos import *
+from funciones_economicas import *
+from connect_engine import get_engine_database
+from descarga_sql import *
 
-
+nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql
 
 st.set_page_config(**PAGE_CONFIG) 
 
@@ -151,6 +49,42 @@ def main():
     labels = ["Nombre", "Sector", "Industria", "País", 'MarketCap']
     values = [short_name, sector, industry, country, f'{MarketCap / 1_000_000:,.0f} $M'
 ]
+    #Mostrar la evolucion los ultimos dias
+    nasdaq_tickers_historic["Date"] = pd.to_datetime(nasdaq_tickers_historic["Date"])
+    ultima_fecha = nasdaq_tickers_historic["Date"].max()
+
+    fecha_hace_1_dia= ultima_fecha - pd.Timedelta(days=1)
+    fecha_hace_7_dias = ultima_fecha - pd.Timedelta(days=7)
+    fecha_hace_1_mes = ultima_fecha - pd.Timedelta(days=30)
+    fecha_hace_1_anyo = ultima_fecha - pd.Timedelta(days=365)
+
+
+    df_ticker = nasdaq_tickers_historic[nasdaq_tickers_historic["Ticker"] == selected_ticker]
+    precio_fin = df_ticker[df_ticker["Date"] == ultima_fecha]["Close"].values
+    precio_1_dia = df_ticker[df_ticker["Date"] == fecha_hace_1_dia]["Close"].values
+    precio_7_dias = df_ticker[df_ticker["Date"] == fecha_hace_7_dias]["Close"].values
+    precio_1_mes = df_ticker[df_ticker["Date"] == fecha_hace_1_mes]["Close"].values
+    precio_1_anyo= df_ticker[df_ticker["Date"] == fecha_hace_1_anyo]["Close"].values
+    
+
+    variacion_1_dia = ((precio_fin - precio_1_dia) / precio_1_dia) * 100
+    variacion_7_dias = ((precio_fin - precio_7_dias) / precio_7_dias) * 100
+    variacion_1_mes = ((precio_fin - precio_1_mes) / precio_1_mes) * 100
+    variacion_1_anyo = ((precio_fin - precio_1_anyo) / precio_1_anyo) * 100
+
+    st.subheader("Evolución de los últimos días")
+    evo_col1, evo_col2, evo_col3, evo_col4, evo_col5, evo_col6 = st.columns(6)
+    with evo_col1:
+        st.write(f"24h: {variacion_1_dia[0]:.2f} %")
+    
+    with evo_col2:
+        st.write(f"7 dias: {variacion_7_dias[0]:.2f} %")
+
+    with evo_col3:
+        st.write(f"30 dias: {variacion_1_mes[0]:.2f} %")
+
+    with evo_col4:
+        st.write(f"1 año: {variacion_1_anyo[0]:.2f} %")
 
     for col, label, value in zip(cols, labels, values):
         with col:
@@ -195,44 +129,19 @@ def main():
         # Mostrar el gráfico en Streamlit
         st.plotly_chart(fig, use_container_width=True)
 
+    df_ticker = df_nasdaq_tickers_historic_clean[df_nasdaq_tickers_historic_clean["Ticker"] == selected_ticker].copy()
+    df_ticker["SMA"] = df_ticker["Close"].rolling(20).mean()
+    df_ticker["Upper"] = df_ticker["SMA"] + 2 * df_ticker["Close"].rolling(20).std()
+    df_ticker["Lower"] = df_ticker["SMA"] - 2 * df_ticker["Close"].rolling(20).std()
 
+    fig_bollinger = go.Figure()
+    fig_bollinger.add_trace(go.Scatter(x=df_ticker["Date"], y=df_ticker["Close"], mode="lines", name="Precio"))
+    fig_bollinger.add_trace(go.Scatter(x=df_ticker["Date"], y=df_ticker["SMA"], mode="lines", name="SMA"))
+    fig_bollinger.add_trace(go.Scatter(x=df_ticker["Date"], y=df_ticker["Upper"], mode="lines", name="Upper Band", line=dict(dash="dot")))
+    fig_bollinger.add_trace(go.Scatter(x=df_ticker["Date"], y=df_ticker["Lower"], mode="lines", name="Lower Band", line=dict(dash="dot")))
+    st.plotly_chart(fig_bollinger)
 
-    #Mostrar la evolucion los ultimos dias
-    nasdaq_tickers_historic["Date"] = pd.to_datetime(nasdaq_tickers_historic["Date"])
-    ultima_fecha = nasdaq_tickers_historic["Date"].max()
-
-    fecha_hace_1_dia= ultima_fecha - pd.Timedelta(days=1)
-    fecha_hace_7_dias = ultima_fecha - pd.Timedelta(days=7)
-    fecha_hace_1_mes = ultima_fecha - pd.Timedelta(days=30)
-    fecha_hace_1_anyo = ultima_fecha - pd.Timedelta(days=365)
-
-
-    df_ticker = nasdaq_tickers_historic[nasdaq_tickers_historic["Ticker"] == selected_ticker]
-    precio_fin = df_ticker[df_ticker["Date"] == ultima_fecha]["Close"].values
-    precio_1_dia = df_ticker[df_ticker["Date"] == fecha_hace_1_dia]["Close"].values
-    precio_7_dias = df_ticker[df_ticker["Date"] == fecha_hace_7_dias]["Close"].values
-    precio_1_mes = df_ticker[df_ticker["Date"] == fecha_hace_1_mes]["Close"].values
-    precio_1_anyo= df_ticker[df_ticker["Date"] == fecha_hace_1_anyo]["Close"].values
     
-
-    variacion_1_dia = ((precio_fin - precio_1_dia) / precio_1_dia) * 100
-    variacion_7_dias = ((precio_fin - precio_7_dias) / precio_7_dias) * 100
-    variacion_1_mes = ((precio_fin - precio_1_mes) / precio_1_mes) * 100
-    variacion_1_anyo = ((precio_fin - precio_1_anyo) / precio_1_anyo) * 100
-
-    st.subheader("Evolución de los últimos días")
-    evo_col1, evo_col2, evo_col3, evo_col4, evo_col5, evo_col6 = st.columns(6)
-    with evo_col1:
-        st.write(f"24h: {variacion_1_dia[0]:.2f} %")
-    
-    with evo_col2:
-        st.write(f"7 dias: {variacion_7_dias[0]:.2f} %")
-
-    with evo_col3:
-        st.write(f"30 dias: {variacion_1_mes[0]:.2f} %")
-
-    with evo_col4:
-        st.write(f"1 año: {variacion_1_anyo[0]:.2f} %")
 
 
     st.write('\n')
