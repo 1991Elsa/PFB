@@ -4,14 +4,15 @@ import yfinance as yf
 from datetime import datetime
 import pandas as pd
 import numpy as np
-from tickers_nasdaq import tickers_nasdaq
-from data_cleaning import clean_data
+from tickers_nasdaq import tickers_nasdaq  
+from data_cleaning import clean_data 
 
-
+# Función para obtener datos históricos
 
 def get_datos_historicos(tickers, start_date="2020-01-01"):
     end_date = datetime.now().strftime('%Y-%m-%d')
     datos = yf.download(tickers, start=start_date, end=end_date, progress=False, group_by="ticker")
+
     if isinstance(datos.columns, pd.MultiIndex):
         datos.columns = ['_'.join(col).strip() for col in datos.columns]
     datos = datos.copy()
@@ -19,25 +20,23 @@ def get_datos_historicos(tickers, start_date="2020-01-01"):
     datos = datos.melt(id_vars=['Date'], var_name="Variable", value_name="Valor")
     datos[['Ticker', 'Metric']] = datos['Variable'].str.rsplit('_', n=1, expand=True)
     datos = datos.pivot(index=['Date', 'Ticker'], columns='Metric', values='Valor').reset_index()
+
     return datos
+
+# Función para obtener información de un ticker
 
 def get_ticker_info(ticker):
     ticker_info = yf.Ticker(ticker).info
+
     return ticker_info
 
-# Obtener la lista de tickers del NASDAQ
-tickers = tickers_nasdaq()
+# Función para obtener la información de los tickers
 
-# Obtener los datos históricos de todos los tickers del NASDAQ
-nasdaq_tickers_historic = get_datos_historicos(tickers)
-
-# Inicializar un DataFrame para almacenar la información de los tickers
-nasdaq_tickers_info = pd.DataFrame()
-
-# Obtener la información de cada ticker individualmente y almacenarla
 def obtener_informacion_tickers(tickers):
     nasdaq_tickers_info = pd.DataFrame()
+
     for ticker in tickers:
+
         if ticker != 'NDX':
             ticker_info = get_ticker_info(ticker)
             dic_info = {
@@ -69,16 +68,36 @@ def obtener_informacion_tickers(tickers):
                 'Timestamp_extraction': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             }
             df_info = pd.DataFrame([dic_info])
+
             nasdaq_tickers_info = pd.concat([nasdaq_tickers_info, df_info], ignore_index=True)
+
     return nasdaq_tickers_info
 
-# Corrección: Llamada a la nueva función obtener_informacion_tickers
+# Obtener la lista de tickers del NASDAQ
+
+tickers = tickers_nasdaq()
+
+# Obtener los datos históricos de todos los tickers del NASDAQ
+
+nasdaq_tickers_historic = get_datos_historicos(tickers)
+
+# Obtener la información de los tickers
+
 nasdaq_tickers_info = obtener_informacion_tickers(tickers)
 
 # Limpiar los DataFrames
+
 df_nasdaq_tickers_info_clean = clean_data(nasdaq_tickers_info)
 df_nasdaq_tickers_historic_clean = clean_data(nasdaq_tickers_historic)
 
-# Inspeccionar los DataFrames limpiados
-print(df_nasdaq_tickers_info_clean.columns)
-print(df_nasdaq_tickers_historic_clean.columns)
+# Guardar los DataFrames como archivos CSV
+
+df_nasdaq_tickers_info_clean.to_csv('nasdaq_tickers_info_clean.csv', index=False)
+df_nasdaq_tickers_historic_clean.to_csv('nasdaq_tickers_historic_clean.csv', index=False)
+
+
+
+
+
+
+
