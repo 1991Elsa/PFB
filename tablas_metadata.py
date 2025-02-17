@@ -1,4 +1,4 @@
-from sqlalchemy import MetaData, Table, Column, String, Float, DateTime, Date, ForeignKey
+from sqlalchemy import MetaData, Table, Column, String, Float, DateTime, Date, ForeignKey, text, insert
 
 metadata = MetaData()
 
