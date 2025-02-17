@@ -179,8 +179,9 @@ def creacion_bbdd(df_info_clean, df_historic_clean):
 
     # subir los df
     try:
-        df_nasdaq_tickers_info_clean = df_info_clean
-        df_nasdaq_tickers_historic_clean = df_historic_clean
+
+        df_nasdaq_tickers_info_clean = pd.read_csv('nasdaq_tickers_info_clean.csv')
+        df_nasdaq_tickers_historic_clean = pd.read_csv('nasdaq_tickers_historic_clean.csv')
 
         # Asegurarse de que las columnas 'Timestamp_extraction' y 'Date' son del tipo correcto
         df_nasdaq_tickers_info_clean['Timestamp_extraction'] = pd.to_datetime(df_nasdaq_tickers_info_clean['Timestamp_extraction'])
@@ -244,6 +245,10 @@ while True:
 
         nasdaq_tickers_info = obtener_informacion_tickers(tickers)
         nasdaq_tickers_info_clean = clean_data(nasdaq_tickers_info)
+
+        #Guardar los DataFrames como archivos CSV
+        nasdaq_tickers_info_clean.to_csv('nasdaq_tickers_info_clean.csv', index=False)
+        nasdaq_tickers_historic_clean.to_csv('nasdaq_tickers_historic_clean.csv', index=False)
 
         # Crear la base de datos y las tablas
         creacion_bbdd(nasdaq_tickers_info_clean, nasdaq_tickers_historic_clean)
