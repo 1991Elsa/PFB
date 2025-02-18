@@ -51,6 +51,8 @@ def main():
     labels = ["Nombre", "Sector", "Industria", "País", 'MarketCap']
     values = [short_name, sector, industry, country, f'{MarketCap / 1_000_000:,.0f} $M'
 ]
+    st.write('\n')
+    st.write('\n')
     #Mostrar la evolucion los ultimos dias
     nasdaq_tickers_historic["Date"] = pd.to_datetime(nasdaq_tickers_historic["Date"])
     ultima_fecha = nasdaq_tickers_historic["Date"].max()
@@ -77,20 +79,47 @@ def main():
     st.subheader("Evolución de los últimos días")
     evo_col1, evo_col2, evo_col3, evo_col4, evo_col5, evo_col6 = st.columns(6)
     with evo_col1:
-        st.write(f"24h: {variacion_1_dia[0]:.2f} %")
+        if variacion_1_dia[0] > 0:
+            st.success(f"{variacion_1_dia[0]:.2f} %")
+        elif variacion_1_dia[0] < 0:
+            st.error(f"{variacion_1_dia[0]:.2f} %")
+        else:
+            st.warning(f"{variacion_1_dia[0]:.2f} %")
+        
     
     with evo_col2:
-        st.write(f"7 dias: {variacion_7_dias[0]:.2f} %")
+        if variacion_7_dias[0] > 0:
+            st.success(f"{variacion_7_dias[0]:.2f} %")
+        elif variacion_7_dias[0] < 0:
+            st.error(f"{variacion_7_dias[0]:.2f} %")
+        else:
+            st.warning(f"{variacion_7_dias[0]:.2f} %")
+        
 
     with evo_col3:
-        st.write(f"30 dias: {variacion_1_mes[0]:.2f} %")
+        if variacion_1_mes[0] > 0:
+            st.success(f"{variacion_1_mes[0]:.2f} %")
+        elif variacion_1_mes[0] < 0:
+            st.error(f"{variacion_1_mes[0]:.2f} %")
+        else:
+            st.warning(f"{variacion_1_mes[0]:.2f} %")
+
+        
 
     with evo_col4:
-        st.write(f"1 año: {variacion_1_anyo[0]:.2f} %")
+        if variacion_1_anyo[0] > 0:
+            st.success(f"{variacion_1_anyo[0]:.2f} %")
+        elif variacion_1_anyo[0] < 0:
+            st.error(f"{variacion_1_anyo[0]:.2f} %")
+        else:
+            st.warning(f"{variacion_1_anyo[0]:.2f} %")
+        
 
     for col, label, value in zip(cols, labels, values):
         with col:
             st.write(f"**{label}:** {value}")
+
+    st.write('\n')
 
     # Convertir fechas seleccionadas a formato compatible con el DataFrame
     fecha_inicio = pd.to_datetime(fecha_inicio)
