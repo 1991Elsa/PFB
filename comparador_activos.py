@@ -3,9 +3,10 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime
-from limpieza_df import df_nasdaq_tickers_info_clean, df_nasdaq_tickers_historic_clean
+#from limpieza_df import df_nasdaq_tickers_info_clean, df_nasdaq_tickers_historic_clean
+from descarga_sql import nasdaq_tickers_historic
 
-# Supongamos que ya tienes el dataframe df_nasdaq_tickers_historic_clean cargado
+
 # df_nasdaq_tickers_historic_clean = pd.read_csv('historic_clean.csv')
 
 # Título de la herramienta
@@ -14,7 +15,7 @@ st.title("🔄 Comparador de Rendimiento y Correlación de Acciones")
 # Selección múltiple de tickers
 tickers_seleccionados = st.multiselect(
     "Selecciona los tickers que deseas comparar",
-    df_nasdaq_tickers_historic_clean['Ticker'].unique()
+    nasdaq_tickers_historic['Ticker'].unique()
 )
 
 # Selección de período
@@ -32,9 +33,9 @@ fecha_fin = pd.to_datetime(fecha_fin)
 # Verificar si se han seleccionado tickers
 if tickers_seleccionados:
     # Filtrar el dataframe por el período seleccionado
-    df_filtrado = df_nasdaq_tickers_historic_clean[
-        (df_nasdaq_tickers_historic_clean['Date'] >= fecha_inicio) &
-        (df_nasdaq_tickers_historic_clean['Date'] <= fecha_fin)
+    df_filtrado = nasdaq_tickers_historic[
+        (nasdaq_tickers_historic['Date'] >= fecha_inicio) &
+        (nasdaq_tickers_historic['Date'] <= fecha_fin)
     ]
 
     # --- Comparación de rendimientos ---

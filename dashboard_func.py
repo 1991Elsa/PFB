@@ -3,13 +3,13 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
-from funcion_extraccion_info_historicos import df_nasdaq_tickers_info_clean, df_nasdaq_tickers_historic_clean
+from descarga_sql import nasdaq_tickers_historic, nasdaq_tickers_info
 
 # Título del dashboard
 st.title("Dashboard de Análisis Financiero y Técnico - Nasdaq 100")
 
 # Obtener lista de tickers únicos y ordenarlos alfabéticamente
-tickers_unicos = df_nasdaq_tickers_info_clean[['Ticker', 'ShortName']]
+tickers_unicos =  nasdaq_tickers_info[['Ticker', 'ShortName']]
 tickers_unicos = tickers_unicos.sort_values(by='Ticker')
 
 tickers_opciones = tickers_unicos.apply(lambda row: f"{row['Ticker']} - {row['ShortName']}", axis=1).tolist()
@@ -25,10 +25,10 @@ ticker_seleccionado = st.selectbox(
 ticker_seleccionado = ticker_seleccionado.split(" - ")[0]
 
 # Filtrar el dataframe de información para el ticker seleccionado
-df_filtrado_info = df_nasdaq_tickers_info_clean[df_nasdaq_tickers_info_clean['Ticker'] == ticker_seleccionado]
+df_filtrado_info =  nasdaq_tickers_info[ nasdaq_tickers_info['Ticker'] == ticker_seleccionado]
 
 # Filtrar el dataframe histórico para el ticker seleccionado
-df_filtrado_historic = df_nasdaq_tickers_historic_clean[df_nasdaq_tickers_historic_clean['Ticker'] == ticker_seleccionado]
+df_filtrado_historic = nasdaq_tickers_historic[nasdaq_tickers_historic['Ticker'] == ticker_seleccionado]
 
 # Verificar si hay datos para el ticker seleccionado
 if not df_filtrado_info.empty and not df_filtrado_historic.empty:
