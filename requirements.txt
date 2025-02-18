@@ -85,3 +85,5 @@ wcwidth==0.2.13
 mysql-connector-python
 pymysql
 sqlalchemy
+python-dotenv
+cryptography
