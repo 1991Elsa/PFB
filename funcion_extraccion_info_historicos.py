@@ -5,7 +5,7 @@ from datetime import datetime
 import pandas as pd
 import numpy as np
 from tickers_nasdaq import tickers_nasdaq  
-from data_cleaning import clean_data 
+from limpieza_df import clean_data_info, clean_data_historic 
 
 # Función para obtener datos históricos
 
@@ -45,14 +45,9 @@ def obtener_informacion_tickers(tickers):
                 'Sector': ticker_info.get('sector', 'N/A'),
                 'Industry': ticker_info.get('industry', 'N/A'),
                 'Country': ticker_info.get('country', 'N/A'),
-                'FullTimeEmployees': ticker_info.get('fullTimeEmployees', 'N/A'),
                 'MarketCap': ticker_info.get('marketCap', 'N/A'), 
                 'TotalRevenue': ticker_info.get('totalRevenue', 'N/A'), 
                 'NetIncomeToCommon': ticker_info.get('netIncomeToCommon', 'N/A'),
-                'TrailingEPS': ticker_info.get('trailingEps', 'N/A'),
-                'ForwardEPS': ticker_info.get('forwardEps', 'N/A'),
-                'TrailingPE': ticker_info.get('trailingPE', 'N/A'),
-                'ForwardPE': ticker_info.get('forwardPE', 'N/A'),
                 'ReturnOnAssets': ticker_info.get('returnOnAssets', 'N/A'), 
                 'ReturnOnEquity': ticker_info.get('returnOnEquity', 'N/A'), 
                 'DebtToEquity': ticker_info.get('debtToEquity', 'N/A'), 
@@ -60,7 +55,6 @@ def obtener_informacion_tickers(tickers):
                 'DividendRate': ticker_info.get('dividendRate', 'N/A'), 
                 'DividendYield': ticker_info.get('dividendYield', 'N/A'),
                 'PayoutRatio': ticker_info.get('payoutRatio', 'N/A'), 
-                'Beta': ticker_info.get('beta', 'N/A'), 
                 'GrossMargins': ticker_info.get('grossMargins', 'N/A'), 
                 'OperatingMargins': ticker_info.get('operatingMargins', 'N/A'), 
                 'ProfitMargins': ticker_info.get('profitMargins', 'N/A'),
@@ -87,8 +81,8 @@ nasdaq_tickers_info = obtener_informacion_tickers(tickers)
 
 # Limpiar los DataFrames
 
-df_nasdaq_tickers_info_clean = clean_data(nasdaq_tickers_info)
-df_nasdaq_tickers_historic_clean = clean_data(nasdaq_tickers_historic)
+df_nasdaq_tickers_info_clean = clean_data_info(nasdaq_tickers_info)
+df_nasdaq_tickers_historic_clean = clean_data_historic(nasdaq_tickers_historic)
 
 # Guardar los DataFrames como archivos CSV
 
