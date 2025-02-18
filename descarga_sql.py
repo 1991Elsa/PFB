@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import sklearn
-from connect_engine import get_engine, get_engine_database  # Importar las funciones
+from connect_engine import get_engine, get_engine_database
 
 
 def descargar_data_sql():

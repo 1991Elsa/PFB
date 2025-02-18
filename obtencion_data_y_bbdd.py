@@ -154,12 +154,14 @@ def creacion_bbdd(df_info_clean, df_historic_clean):
         initial_engine = get_engine()
         with initial_engine.connect() as connection:
             result = connection.execute(text("SELECT 1"))
-            print("Conexión inicial establecida con éxito y librerías instaladas correctamente.")
+            print("Conexión inicial establecida con éxito.")
         
-        # Conectarse y crear la base de datos 'yahoo_finance' si no existe
+        # Intentar eliminar la base de datos 'yahoo_finance' si existe
         with initial_engine.connect() as connection:
-            connection.execute(text("CREATE DATABASE IF NOT EXISTS yahoo_finance"))
-            print("Base de datos yahoo_finance creada con éxito.")
+            connection.execute(text("DROP DATABASE IF EXISTS yahoo_finance"))
+            print("Base de datos 'yahoo_finance' eliminada con éxito.")
+            connection.execute(text("CREATE DATABASE yahoo_finance"))
+            print("Base de datos 'yahoo_finance' creada con éxito.")
         
         # Ahora conectar al motor especificando la nueva base de datos
         engine = get_engine_database()

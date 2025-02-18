@@ -1,3 +1,5 @@
+#tablas_metadata.py
+
 from sqlalchemy import MetaData, Table, Column, String, Float, DateTime, Date, ForeignKey, text, insert
 
 metadata = MetaData()
@@ -28,12 +30,12 @@ tickers_info_table = Table('nasdaq_tickers_info_sql', metadata,
     Column('OperatingMargins', Float),
     Column('ProfitMargins', Float),
     Column('ebitdaMargins', Float),
-    Column('Timestamp_extraction', DateTime)  # Tipo DATETIME
+    Column('Timestamp_extraction', DateTime) 
 )
 
 tickers_historic_table = Table('nasdaq_tickers_historic_sql', metadata,
     Column('Date', Date, primary_key=True),
-    Column('Ticker', String(10), ForeignKey('nasdaq_tickers_info_sql.Ticker'), primary_key=True),  # Clave foránea
+    Column('Ticker', String(10), ForeignKey('nasdaq_tickers_info_sql.Ticker'), primary_key=True),  
     Column('Close', Float),
     Column('High', Float),
     Column('Low', Float),
