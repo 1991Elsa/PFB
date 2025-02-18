@@ -7,9 +7,9 @@ import mplfinance as mpf
 from modules.pfb_page_config_dict import PAGE_CONFIG
 from funciones_economicas import *
 from connect_engine import get_engine_database
-from descarga_sql import *
+from descarga_sql import nasdaq_tickers_historic, nasdaq_tickers_info
 
-nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql
+
 
 st.set_page_config(**PAGE_CONFIG) 
 
@@ -33,11 +33,13 @@ def main():
 
 
     #Para pagina 2
-    tickers_nasdaq_no_ndx = tickers_nasdaq()
-    tickers_nasdaq_no_ndx.remove('NDX')
+
+    tickers_nasdaq = nasdaq_tickers_info["Ticker"].unique().tolist()
+    #tickers_nasdaq_no_ndx = tickers_nasdaq
+    #tickers_nasdaq_no_ndx.remove('NDX')
  
 
-    selected_ticker = st.selectbox("Selecciona el ticker a mostrar", options = tickers_nasdaq_no_ndx)
+    selected_ticker = st.selectbox("Selecciona el ticker a mostrar", options = tickers_nasdaq)
     info = nasdaq_tickers_info[nasdaq_tickers_info["Ticker"] == selected_ticker]
     short_name, sector, industry, country, MarketCap = [
         info[col].values[0] if not info[col].empty else "No disponible"
@@ -129,12 +131,14 @@ def main():
         # Mostrar el gráfico en Streamlit
         st.plotly_chart(fig, use_container_width=True)
 
-    df_ticker = df_nasdaq_tickers_historic_clean[df_nasdaq_tickers_historic_clean["Ticker"] == selected_ticker].copy()
+    df_ticker = nasdaq_tickers_historic[nasdaq_tickers_historic["Ticker"] == selected_ticker].copy()
     df_ticker["SMA"] = df_ticker["Close"].rolling(20).mean()
     df_ticker["Upper"] = df_ticker["SMA"] + 2 * df_ticker["Close"].rolling(20).std()
     df_ticker["Lower"] = df_ticker["SMA"] - 2 * df_ticker["Close"].rolling(20).std()
 
     fig_bollinger = go.Figure()
+    fig_bollinger.update_layout(title=f"Bollinger Bands - {selected_ticker} de {fecha_inicio.strftime('%d-%m-%Y')} a {fecha_fin.strftime('%d-%m-%Y')}")
+    title = f"Bandas de Bollinger - {selected_ticker} de {fecha_inicio.strftime('%d-%m-%Y')} a {fecha_fin.strftime('%d-%m-%Y')}"
     fig_bollinger.add_trace(go.Scatter(x=df_ticker["Date"], y=df_ticker["Close"], mode="lines", name="Precio"))
     fig_bollinger.add_trace(go.Scatter(x=df_ticker["Date"], y=df_ticker["SMA"], mode="lines", name="SMA"))
     fig_bollinger.add_trace(go.Scatter(x=df_ticker["Date"], y=df_ticker["Upper"], mode="lines", name="Upper Band", line=dict(dash="dot")))
