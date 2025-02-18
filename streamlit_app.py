@@ -16,8 +16,13 @@ st.set_page_config(**PAGE_CONFIG)
 #info_tickers = nasdaq_tickers_info
 
 def main():
-    st.title("PFB Yahoo Finance")
-    st.write("Bienvenidos a la demo del PFB de Yahoo Finance")
+
+    st.image(Image.open("sources/logo_ndq.jpeg"),width=50)
+    
+    st.title("NASDAQ 100")
+    
+    st.write("En esta aplicación podrás visualizar la información de los tickers del NASDAQ 100, así como su evolución en el tiempo y algunas métricas financieras.")
+        
     
 
     st.sidebar.title("Navegación")
@@ -80,39 +85,39 @@ def main():
     evo_col1, evo_col2, evo_col3, evo_col4, evo_col5, evo_col6 = st.columns(6)
     with evo_col1:
         if variacion_1_dia[0] > 0:
-            st.success(f"{variacion_1_dia[0]:.2f} %")
+            st.success(f"24h:{variacion_1_dia[0]:.2f} %")
         elif variacion_1_dia[0] < 0:
-            st.error(f"{variacion_1_dia[0]:.2f} %")
+            st.error(f"24h: {variacion_1_dia[0]:.2f} %")
         else:
-            st.warning(f"{variacion_1_dia[0]:.2f} %")
+            st.warning(f"24h: {variacion_1_dia[0]:.2f} %")
         
     
     with evo_col2:
         if variacion_7_dias[0] > 0:
-            st.success(f"{variacion_7_dias[0]:.2f} %")
+            st.success(f"7 dias:{variacion_7_dias[0]:.2f} %")
         elif variacion_7_dias[0] < 0:
-            st.error(f"{variacion_7_dias[0]:.2f} %")
+            st.error(f"7 dias: {variacion_7_dias[0]:.2f} %")
         else:
-            st.warning(f"{variacion_7_dias[0]:.2f} %")
+            st.warning(f"7 dias: {variacion_7_dias[0]:.2f} %")
         
 
     with evo_col3:
         if variacion_1_mes[0] > 0:
-            st.success(f"{variacion_1_mes[0]:.2f} %")
+            st.success(f"1 mes:{variacion_1_mes[0]:.2f} %")
         elif variacion_1_mes[0] < 0:
-            st.error(f"{variacion_1_mes[0]:.2f} %")
+            st.error(f"1 {variacion_1_mes[0]:.2f} %")
         else:
-            st.warning(f"{variacion_1_mes[0]:.2f} %")
+            st.warning(f"1 mes: {variacion_1_mes[0]:.2f} %")
 
         
 
     with evo_col4:
         if variacion_1_anyo[0] > 0:
-            st.success(f"{variacion_1_anyo[0]:.2f} %")
+            st.success(f"1 año:{variacion_1_anyo[0]:.2f} %")
         elif variacion_1_anyo[0] < 0:
-            st.error(f"{variacion_1_anyo[0]:.2f} %")
+            st.error(f"1 año: {variacion_1_anyo[0]:.2f} %")
         else:
-            st.warning(f"{variacion_1_anyo[0]:.2f} %")
+            st.warning(f"1 año: {variacion_1_anyo[0]:.2f} %")
         
 
     for col, label, value in zip(cols, labels, values):
