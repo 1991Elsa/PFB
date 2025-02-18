@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import sklearn
-from connect_engine import get_engine, get_engine_database
+from connect_engine import get_engine, get_engine_database  # Importar las funciones
 
 
 def descargar_data_sql():
@@ -21,10 +21,10 @@ def descargar_data_sql():
         df_historic = pd.read_sql_table(table_name="nasdaq_tickers_historic_sql", con=engine)
         df_info = pd.read_sql_table(table_name="nasdaq_tickers_info_sql", con=engine)
         
-        # Imprimir los DataFrames
-        print(df_historic)
-        print(df_info)
+       
     except Exception as e:
         print(f"Error al leer las tablas SQL: {e}")
 
     return df_historic, df_info
+
+nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
