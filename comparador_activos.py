@@ -3,11 +3,9 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime
-#from limpieza_df import df_nasdaq_tickers_info_clean, df_nasdaq_tickers_historic_clean
 from descarga_sql import nasdaq_tickers_historic
 
 
-# df_nasdaq_tickers_historic_clean = pd.read_csv('historic_clean.csv')
 
 # Título de la herramienta
 st.title("🔄 Comparador de Rendimiento y Correlación de Acciones")
