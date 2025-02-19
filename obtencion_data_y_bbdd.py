@@ -40,6 +40,7 @@ Retorna:
         data_row = row.get('data-rowkey', '')
         if data_row.startswith('NASDAQ:'):
             tickers.append(data_row.replace('NASDAQ:', ''))
+    print('Tickers scrapeados con exito')
     return tickers
 
 
@@ -56,8 +57,7 @@ Parámetros:
 Retorna:
 - Un DataFrame con los datos históricos de los tickers especificados.
 """
-
-
+ 
     end_date = datetime.now().strftime('%Y-%m-%d')
     datos = yf.download(tickers, start=start_date, end=end_date, progress=False, group_by="ticker")
 
@@ -68,8 +68,10 @@ Retorna:
     datos = datos.melt(id_vars=['Date'], var_name="Variable", value_name="Valor")
     datos[['Ticker', 'Metric']] = datos['Variable'].str.rsplit('_', n=1, expand=True)
     datos = datos.pivot(index=['Date', 'Ticker'], columns='Metric', values='Valor').reset_index()
+    print('Datos historicos descargados con exito')
 
     return datos
+    
 
 # Función para obtener información de un ticker
 
@@ -132,13 +134,14 @@ Retorna:
             df_info = pd.DataFrame([dic_info])
 
             nasdaq_tickers_info = pd.concat([nasdaq_tickers_info, df_info], ignore_index=True)
-
+    print('Informacion de los tickers descargada con exito')
     return nasdaq_tickers_info
 
 # Función para limpiar los datos
 def clean_data(df):
     df = df.round(2)
     df = df.replace({np.nan:None})
+    print('Datos limpios con exito')
 
     return df
 
@@ -220,35 +223,53 @@ def creacion_bbdd(df_info_clean, df_historic_clean):
 
 #Bucle para automatizar la extracción de datos
 
-while True:
+#while True:
     #now=datetime.now().strftime('%H:%M')
     #market_close = '16:00'
     #if now == market_close:
         #if True:
     # Obtener la lista de tickers del NASDAQ
 
+try:
     tickers = tickers_nasdaq()
+except:
+    print('dio error la funcion de scrapping')
+
 
     # Obtener los datos históricos de todos los tickers del NASDAQ
-
+try:
     nasdaq_tickers_historic = get_datos_historicos(tickers)
     nasdaq_tickers_historic_clean = clean_data(nasdaq_tickers_historic)
+except Exception as e:
+    print(f'Dio error la llamada de historicos: {e}')
 
 
     # Obtener la información de los tickers
-
+try:
     nasdaq_tickers_info = obtener_informacion_tickers(tickers)
     nasdaq_tickers_info_clean = clean_data(nasdaq_tickers_info)
+except Exception as e:
+    print(f'Dio error la llamada de info: {e}')
+
 
     #Guardar los DataFrames como archivos CSV
+try:
     nasdaq_tickers_info_clean.to_csv('nasdaq_tickers_info_clean.csv', index=False)
     nasdaq_tickers_historic_clean.to_csv('nasdaq_tickers_historic_clean.csv', index=False)
+except Exception as e:
+    print(f'Dio error la limpieza de los datos {e}')
+
 
     # Crear la base de datos y las tablas
+
+try:
     creacion_bbdd(nasdaq_tickers_info_clean, nasdaq_tickers_historic_clean)
+except Exception as e:
+    print(f'No se creo la BBDD {e}')
 
 
-    break
 
-else:
-    time.sleep(3600)
+    #break
+
+#else:
+#    time.sleep(3600)

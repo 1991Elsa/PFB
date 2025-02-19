@@ -13,7 +13,9 @@ from descarga_sql import nasdaq_tickers_historic, nasdaq_tickers_info
 
 st.set_page_config(**PAGE_CONFIG) 
 
-#info_tickers = nasdaq_tickers_info
+nasdaq_tickers_info = nasdaq_tickers_info
+nasdaq_tickers_historic = nasdaq_tickers_historic
+
 
 def main():
 

@@ -20,6 +20,7 @@ def descargar_data_sql():
     try:
         df_historic = pd.read_sql_table(table_name="nasdaq_tickers_historic_sql", con=engine)
         df_info = pd.read_sql_table(table_name="nasdaq_tickers_info_sql", con=engine)
+        print('Descarga de datos con exito')
         
        
     except Exception as e:
