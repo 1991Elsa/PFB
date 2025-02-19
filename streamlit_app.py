@@ -16,13 +16,8 @@ st.set_page_config(**PAGE_CONFIG)
 #info_tickers = nasdaq_tickers_info
 
 def main():
-
-    st.image(Image.open("sources/logo_ndq.jpeg"),width=50)
-    
-    st.title("NASDAQ 100")
-    
-    st.write("En esta aplicación podrás visualizar la información de los tickers del NASDAQ 100, así como su evolución en el tiempo y algunas métricas financieras.")
-        
+    st.title("PFB Yahoo Finance")
+    st.write("Bienvenidos a la demo del PFB de Yahoo Finance")
     
 
     st.sidebar.title("Navegación")
@@ -102,7 +97,7 @@ def main():
         elif variacion_1_dia[0] < 0:
             st.error(f"24h: {variacion_1_dia[0]:.2f} %")
         else:
-            st.warning(f"24h: {variacion_1_dia[0]:.2f} %")
+            st.warning(f"24h {variacion_1_dia[0]:.2f} %")
         
     
     with evo_col3:
@@ -118,7 +113,7 @@ def main():
         if variacion_1_mes[0] > 0:
             st.success(f"1 mes: {variacion_1_mes[0]:.2f} %")
         elif variacion_1_mes[0] < 0:
-            st.error(f"1 {variacion_1_mes[0]:.2f} %")
+            st.error(f"1 mes: {variacion_1_mes[0]:.2f} %")
         else:
             st.warning(f"1 mes: {variacion_1_mes[0]:.2f} %")
 
