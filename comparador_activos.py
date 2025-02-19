@@ -15,6 +15,7 @@ tickers_seleccionados = st.multiselect(
     "Selecciona los tickers que deseas comparar",
     nasdaq_tickers_historic['Ticker'].unique()
 )
+
 st.write('\n')
 st.write('\n')
 
