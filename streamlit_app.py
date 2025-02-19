@@ -7,17 +7,22 @@ import mplfinance as mpf
 from modules.pfb_page_config_dict import PAGE_CONFIG
 from funciones_economicas import *
 from connect_engine import get_engine_database
-from descarga_sql import *
+from descarga_sql import nasdaq_tickers_historic, nasdaq_tickers_info
 
-nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql
+
 
 st.set_page_config(**PAGE_CONFIG) 
 
 #info_tickers = nasdaq_tickers_info
 
 def main():
-    st.title("PFB Yahoo Finance")
-    st.write("Bienvenidos a la demo del PFB de Yahoo Finance")
+
+    st.image(Image.open("sources/logo_ndq.jpeg"),width=50)
+    
+    st.title("NASDAQ 100")
+    
+    st.write("En esta aplicación podrás visualizar la información de los tickers del NASDAQ 100, así como su evolución en el tiempo y algunas métricas financieras.")
+        
     
 
     st.sidebar.title("Navegación")
@@ -33,11 +38,13 @@ def main():
 
 
     #Para pagina 2
-    tickers_nasdaq_no_ndx = tickers_nasdaq()
-    tickers_nasdaq_no_ndx.remove('NDX')
+
+    tickers_nasdaq = nasdaq_tickers_info["Ticker"].unique().tolist()
+    #tickers_nasdaq_no_ndx = tickers_nasdaq
+    #tickers_nasdaq_no_ndx.remove('NDX')
  
 
-    selected_ticker = st.selectbox("Selecciona el ticker a mostrar", options = tickers_nasdaq_no_ndx)
+    selected_ticker = st.selectbox("Selecciona el ticker a mostrar", options = tickers_nasdaq)
     info = nasdaq_tickers_info[nasdaq_tickers_info["Ticker"] == selected_ticker]
     short_name, sector, industry, country, MarketCap = [
         info[col].values[0] if not info[col].empty else "No disponible"
@@ -49,6 +56,8 @@ def main():
     labels = ["Nombre", "Sector", "Industria", "País", 'MarketCap']
     values = [short_name, sector, industry, country, f'{MarketCap / 1_000_000:,.0f} $M'
 ]
+    st.write('\n')
+    st.write('\n')
     #Mostrar la evolucion los ultimos dias
     nasdaq_tickers_historic["Date"] = pd.to_datetime(nasdaq_tickers_historic["Date"])
     ultima_fecha = nasdaq_tickers_historic["Date"].max()
@@ -75,20 +84,47 @@ def main():
     st.subheader("Evolución de los últimos días")
     evo_col1, evo_col2, evo_col3, evo_col4, evo_col5, evo_col6 = st.columns(6)
     with evo_col1:
-        st.write(f"24h: {variacion_1_dia[0]:.2f} %")
+        if variacion_1_dia[0] > 0:
+            st.success(f"24h:{variacion_1_dia[0]:.2f} %")
+        elif variacion_1_dia[0] < 0:
+            st.error(f"24h: {variacion_1_dia[0]:.2f} %")
+        else:
+            st.warning(f"24h: {variacion_1_dia[0]:.2f} %")
+        
     
     with evo_col2:
-        st.write(f"7 dias: {variacion_7_dias[0]:.2f} %")
+        if variacion_7_dias[0] > 0:
+            st.success(f"7 dias:{variacion_7_dias[0]:.2f} %")
+        elif variacion_7_dias[0] < 0:
+            st.error(f"7 dias: {variacion_7_dias[0]:.2f} %")
+        else:
+            st.warning(f"7 dias: {variacion_7_dias[0]:.2f} %")
+        
 
     with evo_col3:
-        st.write(f"30 dias: {variacion_1_mes[0]:.2f} %")
+        if variacion_1_mes[0] > 0:
+            st.success(f"1 mes:{variacion_1_mes[0]:.2f} %")
+        elif variacion_1_mes[0] < 0:
+            st.error(f"1 {variacion_1_mes[0]:.2f} %")
+        else:
+            st.warning(f"1 mes: {variacion_1_mes[0]:.2f} %")
+
+        
 
     with evo_col4:
-        st.write(f"1 año: {variacion_1_anyo[0]:.2f} %")
+        if variacion_1_anyo[0] > 0:
+            st.success(f"1 año:{variacion_1_anyo[0]:.2f} %")
+        elif variacion_1_anyo[0] < 0:
+            st.error(f"1 año: {variacion_1_anyo[0]:.2f} %")
+        else:
+            st.warning(f"1 año: {variacion_1_anyo[0]:.2f} %")
+        
 
     for col, label, value in zip(cols, labels, values):
         with col:
             st.write(f"**{label}:** {value}")
+
+    st.write('\n')
 
     # Convertir fechas seleccionadas a formato compatible con el DataFrame
     fecha_inicio = pd.to_datetime(fecha_inicio)
@@ -129,12 +165,14 @@ def main():
         # Mostrar el gráfico en Streamlit
         st.plotly_chart(fig, use_container_width=True)
 
-    df_ticker = df_nasdaq_tickers_historic_clean[df_nasdaq_tickers_historic_clean["Ticker"] == selected_ticker].copy()
+    df_ticker = nasdaq_tickers_historic[nasdaq_tickers_historic["Ticker"] == selected_ticker].copy()
     df_ticker["SMA"] = df_ticker["Close"].rolling(20).mean()
     df_ticker["Upper"] = df_ticker["SMA"] + 2 * df_ticker["Close"].rolling(20).std()
     df_ticker["Lower"] = df_ticker["SMA"] - 2 * df_ticker["Close"].rolling(20).std()
 
     fig_bollinger = go.Figure()
+    fig_bollinger.update_layout(title=f"Bollinger Bands - {selected_ticker} de {fecha_inicio.strftime('%d-%m-%Y')} a {fecha_fin.strftime('%d-%m-%Y')}")
+    title = f"Bandas de Bollinger - {selected_ticker} de {fecha_inicio.strftime('%d-%m-%Y')} a {fecha_fin.strftime('%d-%m-%Y')}"
     fig_bollinger.add_trace(go.Scatter(x=df_ticker["Date"], y=df_ticker["Close"], mode="lines", name="Precio"))
     fig_bollinger.add_trace(go.Scatter(x=df_ticker["Date"], y=df_ticker["SMA"], mode="lines", name="SMA"))
     fig_bollinger.add_trace(go.Scatter(x=df_ticker["Date"], y=df_ticker["Upper"], mode="lines", name="Upper Band", line=dict(dash="dot")))
