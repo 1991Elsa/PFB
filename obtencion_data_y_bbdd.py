@@ -221,34 +221,34 @@ def creacion_bbdd(df_info_clean, df_historic_clean):
 #Bucle para automatizar la extracción de datos
 
 while True:
-    now=datetime.now().strftime('%H:%M')
-    market_close = '16:00'
-    if now == market_close:
+    #now=datetime.now().strftime('%H:%M')
+    #market_close = '16:00'
+    #if now == market_close:
         #if True:
     # Obtener la lista de tickers del NASDAQ
 
-        tickers = tickers_nasdaq()
+    tickers = tickers_nasdaq()
 
-        # Obtener los datos históricos de todos los tickers del NASDAQ
+    # Obtener los datos históricos de todos los tickers del NASDAQ
 
-        nasdaq_tickers_historic = get_datos_historicos(tickers)
-        nasdaq_tickers_historic_clean = clean_data(nasdaq_tickers_historic)
-
-
-        # Obtener la información de los tickers
-
-        nasdaq_tickers_info = obtener_informacion_tickers(tickers)
-        nasdaq_tickers_info_clean = clean_data(nasdaq_tickers_info)
-
-        #Guardar los DataFrames como archivos CSV
-        nasdaq_tickers_info_clean.to_csv('nasdaq_tickers_info_clean.csv', index=False)
-        nasdaq_tickers_historic_clean.to_csv('nasdaq_tickers_historic_clean.csv', index=False)
-
-        # Crear la base de datos y las tablas
-        creacion_bbdd(nasdaq_tickers_info_clean, nasdaq_tickers_historic_clean)
+    nasdaq_tickers_historic = get_datos_historicos(tickers)
+    nasdaq_tickers_historic_clean = clean_data(nasdaq_tickers_historic)
 
 
-        break
-    
-    else:
-        time.sleep(3600)
+    # Obtener la información de los tickers
+
+    nasdaq_tickers_info = obtener_informacion_tickers(tickers)
+    nasdaq_tickers_info_clean = clean_data(nasdaq_tickers_info)
+
+    #Guardar los DataFrames como archivos CSV
+    nasdaq_tickers_info_clean.to_csv('nasdaq_tickers_info_clean.csv', index=False)
+    nasdaq_tickers_historic_clean.to_csv('nasdaq_tickers_historic_clean.csv', index=False)
+
+    # Crear la base de datos y las tablas
+    creacion_bbdd(nasdaq_tickers_info_clean, nasdaq_tickers_historic_clean)
+
+
+    break
+
+else:
+    time.sleep(3600)

@@ -47,21 +47,12 @@ def main():
     ]
 
     
-
-    st.write('\n')
-    st.write('\n')
-
-    st.subheader(f"Información de {nasdaq_tickers_info[nasdaq_tickers_info['Ticker'] == selected_ticker]['ShortName'].values[0]}  ({selected_ticker}) - {nasdaq_tickers_historic[nasdaq_tickers_historic['Ticker'] == selected_ticker].sort_values(by='Date', ascending=False).iloc[0]['Close']:.2f}$")
-    
-    st.write('\n')
-
     cols = st.columns(5)
     labels = ["Nombre", "Sector", "Industria", "País", 'MarketCap']
     values = [short_name, sector, industry, country, f'{MarketCap / 1_000_000:,.0f} $M'
 ]
     st.write('\n')
- 
-
+    st.write('\n')
     #Mostrar la evolucion los ultimos dias
     nasdaq_tickers_historic["Date"] = pd.to_datetime(nasdaq_tickers_historic["Date"])
     ultima_fecha = nasdaq_tickers_historic["Date"].max()
@@ -85,42 +76,39 @@ def main():
     variacion_1_mes = ((precio_fin - precio_1_mes) / precio_1_mes) * 100
     variacion_1_anyo = ((precio_fin - precio_1_anyo) / precio_1_anyo) * 100
 
-    
+    st.subheader("Evolución de los últimos días")
     evo_col1, evo_col2, evo_col3, evo_col4, evo_col5, evo_col6 = st.columns(6)
     with evo_col1:
-        st.markdown("Ultimos movimientos")
-
-
-    with evo_col2:
         if variacion_1_dia[0] > 0:
-            st.success(f"24h: {variacion_1_dia[0]:.2f} %")
+            st.success(f"24h:{variacion_1_dia[0]:.2f} %")
         elif variacion_1_dia[0] < 0:
             st.error(f"24h: {variacion_1_dia[0]:.2f} %")
         else:
             st.warning(f"24h {variacion_1_dia[0]:.2f} %")
         
     
-    with evo_col3:
+    with evo_col2:
         if variacion_7_dias[0] > 0:
-            st.success(f"7 dias: {variacion_7_dias[0]:.2f} %")
+            st.success(f"7 dias:{variacion_7_dias[0]:.2f} %")
         elif variacion_7_dias[0] < 0:
             st.error(f"7 dias: {variacion_7_dias[0]:.2f} %")
         else:
             st.warning(f"7 dias: {variacion_7_dias[0]:.2f} %")
         
 
-    with evo_col4:
+    with evo_col3:
         if variacion_1_mes[0] > 0:
-            st.success(f"1 mes: {variacion_1_mes[0]:.2f} %")
+            st.success(f"1 mes:{variacion_1_mes[0]:.2f} %")
         elif variacion_1_mes[0] < 0:
             st.error(f"1 mes: {variacion_1_mes[0]:.2f} %")
         else:
             st.warning(f"1 mes: {variacion_1_mes[0]:.2f} %")
 
+        
 
-    with evo_col5:
+    with evo_col4:
         if variacion_1_anyo[0] > 0:
-            st.success(f"1 año: {variacion_1_anyo[0]:.2f} %")
+            st.success(f"1 año:{variacion_1_anyo[0]:.2f} %")
         elif variacion_1_anyo[0] < 0:
             st.error(f"1 año: {variacion_1_anyo[0]:.2f} %")
         else:
