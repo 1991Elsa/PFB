@@ -221,10 +221,10 @@ def creacion_bbdd(df_info_clean, df_historic_clean):
 #Bucle para automatizar la extracción de datos
 
 while True:
-    #now=datetime.now().strftime('%H:%M')
-    #market_close = '16:00'
-    #if now == market_close:
-    if True:
+    now=datetime.now().strftime('%H:%M')
+    market_close = '16:00'
+    if now == market_close:
+        #if True:
     # Obtener la lista de tickers del NASDAQ
 
         tickers = tickers_nasdaq()
