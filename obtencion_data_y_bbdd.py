@@ -138,12 +138,46 @@ Retorna:
     return nasdaq_tickers_info
 
 # Función para limpiar los datos
-def clean_data(df):
-    df = df.round(2)
-    df = df.replace({np.nan:None})
-    print('Datos limpios con exito')
+def clean_data_info(df):
+    try:
 
+        columnas_a_procesar = [
+            'ReturnOnAssets', 'ReturnOnEquity', 'DebtToEquity', 'MarketCap',
+            'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow', 'DividendRate',
+            'DividendYield', 'PayoutRatio', 'Beta', 'ebitdaMargins'
+        ]
+
+        for columna in columnas_a_procesar:
+            if columna in df.columns:  # Verificar si la columna existe en el dataframe
+                df[columna] = pd.to_numeric(df[columna], errors='coerce')
+                if columna in ['MarketCap', 'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow']:
+                    df[columna] = df[columna] / 1_000_000  
+
+        df = df.replace({np.nan: None})
+        
+
+    except Exception as e:
+        print(f'Fallo la limpieza de info {e}')
     return df
+
+
+# Función para limpiar los datos historicos
+def clean_data_historic(df):
+    try:
+        columnas_a_procesar = [
+            'Close', 'High', 'Low', 'Open', 'Volume'
+        ]
+
+        for columna in columnas_a_procesar:
+            if columna in df.columns:  # Verificar si la columna existe en el dataframe
+                df[columna] = pd.to_numeric(df[columna], errors='coerce')
+
+        df = df.replace({np.nan: None})
+
+        return df
+    except Exception as e:
+        print(f'Fallo la limpieza de historicos {e}')
+
 
 # Creacion de la tabla en MySQL
 def creacion_bbdd(df_info_clean, df_historic_clean):
@@ -232,14 +266,14 @@ def creacion_bbdd(df_info_clean, df_historic_clean):
 
 try:
     tickers = tickers_nasdaq()
-except:
-    print('dio error la funcion de scrapping')
+except Exception as e:
+    print(f'Dio error la funcion de scrapping {e}')
 
 
     # Obtener los datos históricos de todos los tickers del NASDAQ
 try:
     nasdaq_tickers_historic = get_datos_historicos(tickers)
-    nasdaq_tickers_historic_clean = clean_data(nasdaq_tickers_historic)
+    nasdaq_tickers_historic_clean = clean_data_historic (nasdaq_tickers_historic)
 except Exception as e:
     print(f'Dio error la llamada de historicos: {e}')
 
@@ -247,7 +281,7 @@ except Exception as e:
     # Obtener la información de los tickers
 try:
     nasdaq_tickers_info = obtener_informacion_tickers(tickers)
-    nasdaq_tickers_info_clean = clean_data(nasdaq_tickers_info)
+    nasdaq_tickers_info_clean = clean_data_info (nasdaq_tickers_info)
 except Exception as e:
     print(f'Dio error la llamada de info: {e}')
 
