@@ -145,7 +145,7 @@ def clean_data_info(df):
         columnas_a_procesar = [
             'ReturnOnAssets', 'ReturnOnEquity', 'DebtToEquity', 'MarketCap',
             'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow', 'DividendRate',
-            'DividendYield', 'PayoutRatio', 'Beta', 'ebitdaMargins'
+            'DividendYield', 'PayoutRatio',  'ebitdaMargins'
         ]
 
         for columna in columnas_a_procesar:

@@ -13,7 +13,12 @@ from descarga_sql import descargar_data_sql
 
 st.set_page_config(**PAGE_CONFIG) 
 
-nasdaq_tickers_info, nasdaq_tickers_historic = descargar_data_sql()
+try:
+    nasdaq_tickers_info, nasdaq_tickers_historic = descargar_data_sql()
+except:
+    nasdaq_tickers_info = pd.read_csv("nasdaq_tickers_info_clean.csv")
+    nasdaq_tickers_historic = pd.read_csv("nasdaq_tickers_historic_clean.csv")
+
 
 
 def main():
@@ -28,7 +33,7 @@ def main():
 
     st.sidebar.title("Navegación")
     
-    #st.sidebar.success(f'Last update: \n\n{nasdaq_tickers_info["Timestamp_extraction"][1]}')
+    st.sidebar.success(f'Last update: \n\n{nasdaq_tickers_info["Timestamp_extraction"][1]}')
 
     col1, col2, col3, col4, col5 = st.columns(5) 
     with col4:
@@ -238,7 +243,7 @@ def main():
         st.write(f'**Sortino Ratio**: Es una medida de la rentabilidad ajustada al riesgo, pero solo tiene en cuenta los rendimientos negativos.')
         st.write('Riesgo: Es el riesgo personalizado para la inversión a realizar.')
 
-                        
+          
 
         
     
