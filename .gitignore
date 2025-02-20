@@ -9,4 +9,6 @@ connect_engine
 
 
 nasdaq_tickers_historic_clean.csv
-nasdaq_tickers_info_clean.csv
+nasdaq_tickers_info_clean.csv__pycache__/
+
+__pycache__
