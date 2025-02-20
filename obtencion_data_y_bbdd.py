@@ -134,6 +134,7 @@ Retorna:
             df_info = pd.DataFrame([dic_info])
 
             nasdaq_tickers_info = pd.concat([nasdaq_tickers_info, df_info], ignore_index=True)
+            
     print('Informacion de los tickers descargada con exito')
     return nasdaq_tickers_info
 
@@ -269,6 +270,7 @@ except Exception as e:
     # Obtener los datos históricos de todos los tickers del NASDAQ
 try:
     nasdaq_tickers_historic_clean = clean_data_historic (get_datos_historicos(tickers))
+    
 except Exception as e:
     print(f'Dio error la llamada de historicos: {e}')
 
