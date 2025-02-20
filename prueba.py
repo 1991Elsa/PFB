@@ -14,9 +14,11 @@ def creacion_bbdd(df_info_clean, df_historic_clean):
         
         # Conectarse y crear la base de datos 'yahoo_finance' si no existe
         with initial_engine.connect() as connection:
+            connection.execute(text("DROP DATABASE IF EXISTS yahoo_finance"))
+            print("Base de datos 'yahoo_finance' eliminada con éxito.")
             connection.execute(text("CREATE DATABASE IF NOT EXISTS yahoo_finance"))
-            print("Base de datos yahoo_finance creada con éxito.")
-        
+            print("Base de datos 'yahoo_finance' creada con éxito.")
+
         # Ahora conectar al motor especificando la nueva base de datos
         engine = get_engine_database()
         # Verificar la conexión a la nueva base de datos
@@ -77,7 +79,6 @@ def creacion_bbdd(df_info_clean, df_historic_clean):
 
     except Exception as e:
         print(f"Error al leer los archivos CSV o insertar los datos en las tablas: {e}")
-
 
 nasdaq_tickers_info = pd.read_csv("nasdaq_tickers_info_clean.csv")
 nasdaq_tickers_historic = pd.read_csv("nasdaq_tickers_historic_clean.csv")
