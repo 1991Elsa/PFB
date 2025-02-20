@@ -16,6 +16,10 @@ tickers_seleccionados = st.multiselect(
     nasdaq_tickers_historic['Ticker'].unique()
 )
 
+st.write('\n')
+st.write('\n')
+
+
 # Selección de período
 st.subheader("📅 Selección de Período")
 col1, col2 = st.columns(2)

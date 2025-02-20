@@ -7,13 +7,14 @@ import mplfinance as mpf
 from modules.pfb_page_config_dict import PAGE_CONFIG
 from funciones_economicas import *
 from connect_engine import get_engine_database
-from descarga_sql import nasdaq_tickers_historic, nasdaq_tickers_info
+from descarga_sql import descargar_data_sql
 
 
 
 st.set_page_config(**PAGE_CONFIG) 
 
-#info_tickers = nasdaq_tickers_info
+nasdaq_tickers_info, nasdaq_tickers_historic = descargar_data_sql()
+
 
 def main():
 
@@ -27,7 +28,7 @@ def main():
 
     st.sidebar.title("Navegación")
     
-    st.sidebar.success(f'Last update: \n\n{nasdaq_tickers_info["Timestamp_extraction"][1]}')
+    #st.sidebar.success(f'Last update: \n\n{nasdaq_tickers_info["Timestamp_extraction"][1]}')
 
     col1, col2, col3, col4, col5 = st.columns(5) 
     with col4:

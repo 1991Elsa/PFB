@@ -254,16 +254,6 @@ def creacion_bbdd(df_info_clean, df_historic_clean):
         print(f"Error al leer los archivos CSV o insertar los datos en las tablas: {e}")
 
 
-
-#Bucle para automatizar la extracción de datos
-
-#while True:
-    #now=datetime.now().strftime('%H:%M')
-    #market_close = '16:00'
-    #if now == market_close:
-        #if True:
-    # Obtener la lista de tickers del NASDAQ
-
 try:
     tickers = tickers_nasdaq()
 except Exception as e:
@@ -272,16 +262,14 @@ except Exception as e:
 
     # Obtener los datos históricos de todos los tickers del NASDAQ
 try:
-    nasdaq_tickers_historic = get_datos_historicos(tickers)
-    nasdaq_tickers_historic_clean = clean_data_historic (nasdaq_tickers_historic)
+    nasdaq_tickers_historic_clean = clean_data_historic (get_datos_historicos(tickers))
 except Exception as e:
     print(f'Dio error la llamada de historicos: {e}')
 
 
     # Obtener la información de los tickers
 try:
-    nasdaq_tickers_info = obtener_informacion_tickers(tickers)
-    nasdaq_tickers_info_clean = clean_data_info (nasdaq_tickers_info)
+    nasdaq_tickers_info_clean = clean_data_info (obtener_informacion_tickers(tickers))
 except Exception as e:
     print(f'Dio error la llamada de info: {e}')
 
@@ -300,10 +288,3 @@ try:
     creacion_bbdd(nasdaq_tickers_info_clean, nasdaq_tickers_historic_clean)
 except Exception as e:
     print(f'No se creo la BBDD {e}')
-
-
-
-    #break
-
-#else:
-#    time.sleep(3600)
