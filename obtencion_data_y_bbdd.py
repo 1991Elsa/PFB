@@ -40,6 +40,7 @@ Retorna:
         data_row = row.get('data-rowkey', '')
         if data_row.startswith('NASDAQ:'):
             tickers.append(data_row.replace('NASDAQ:', ''))
+    print('Tickers scrapeados con exito')
     return tickers
 
 
@@ -56,8 +57,7 @@ Parámetros:
 Retorna:
 - Un DataFrame con los datos históricos de los tickers especificados.
 """
-
-
+ 
     end_date = datetime.now().strftime('%Y-%m-%d')
     datos = yf.download(tickers, start=start_date, end=end_date, progress=False, group_by="ticker")
 
@@ -68,8 +68,10 @@ Retorna:
     datos = datos.melt(id_vars=['Date'], var_name="Variable", value_name="Valor")
     datos[['Ticker', 'Metric']] = datos['Variable'].str.rsplit('_', n=1, expand=True)
     datos = datos.pivot(index=['Date', 'Ticker'], columns='Metric', values='Valor').reset_index()
+    print('Datos historicos descargados con exito')
 
     return datos
+    
 
 # Función para obtener información de un ticker
 
@@ -132,15 +134,50 @@ Retorna:
             df_info = pd.DataFrame([dic_info])
 
             nasdaq_tickers_info = pd.concat([nasdaq_tickers_info, df_info], ignore_index=True)
-
+    print('Informacion de los tickers descargada con exito')
     return nasdaq_tickers_info
 
 # Función para limpiar los datos
-def clean_data(df):
-    df = df.round(2)
-    df = df.replace({np.nan:None})
+def clean_data_info(df):
+    try:
 
+        columnas_a_procesar = [
+            'ReturnOnAssets', 'ReturnOnEquity', 'DebtToEquity', 'MarketCap',
+            'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow', 'DividendRate',
+            'DividendYield', 'PayoutRatio', 'Beta', 'ebitdaMargins'
+        ]
+
+        for columna in columnas_a_procesar:
+            if columna in df.columns:  # Verificar si la columna existe en el dataframe
+                df[columna] = pd.to_numeric(df[columna], errors='coerce')
+                if columna in ['MarketCap', 'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow']:
+                    df[columna] = df[columna] / 1_000_000  
+
+        df = df.replace({np.nan: None})
+        
+
+    except Exception as e:
+        print(f'Fallo la limpieza de info {e}')
     return df
+
+
+# Función para limpiar los datos historicos
+def clean_data_historic(df):
+    try:
+        columnas_a_procesar = [
+            'Close', 'High', 'Low', 'Open', 'Volume'
+        ]
+
+        for columna in columnas_a_procesar:
+            if columna in df.columns:  # Verificar si la columna existe en el dataframe
+                df[columna] = pd.to_numeric(df[columna], errors='coerce')
+
+        df = df.replace({np.nan: None})
+
+        return df
+    except Exception as e:
+        print(f'Fallo la limpieza de historicos {e}')
+
 
 # Creacion de la tabla en MySQL
 def creacion_bbdd(df_info_clean, df_historic_clean):
@@ -148,14 +185,12 @@ def creacion_bbdd(df_info_clean, df_historic_clean):
         initial_engine = get_engine()
         with initial_engine.connect() as connection:
             result = connection.execute(text("SELECT 1"))
-            print("Conexión inicial establecida con éxito.")
+            print("Conexión inicial establecida con éxito y librerías instaladas correctamente.")
         
-        # Intentar eliminar la base de datos 'yahoo_finance' si existe
+        # Conectarse y crear la base de datos 'yahoo_finance' si no existe
         with initial_engine.connect() as connection:
-            connection.execute(text("DROP DATABASE IF EXISTS yahoo_finance"))
-            print("Base de datos 'yahoo_finance' eliminada con éxito.")
-            connection.execute(text("CREATE DATABASE yahoo_finance"))
-            print("Base de datos 'yahoo_finance' creada con éxito.")
+            connection.execute(text("CREATE DATABASE IF NOT EXISTS yahoo_finance"))
+            print("Base de datos yahoo_finance creada con éxito.")
         
         # Ahora conectar al motor especificando la nueva base de datos
         engine = get_engine_database()
@@ -222,35 +257,53 @@ def creacion_bbdd(df_info_clean, df_historic_clean):
 
 #Bucle para automatizar la extracción de datos
 
-while True:
+#while True:
     #now=datetime.now().strftime('%H:%M')
     #market_close = '16:00'
     #if now == market_close:
-    if True:
+        #if True:
     # Obtener la lista de tickers del NASDAQ
 
-        tickers = tickers_nasdaq()
-
-        # Obtener los datos históricos de todos los tickers del NASDAQ
-
-        nasdaq_tickers_historic = get_datos_historicos(tickers)
-        nasdaq_tickers_historic_clean = clean_data(nasdaq_tickers_historic)
+try:
+    tickers = tickers_nasdaq()
+except Exception as e:
+    print(f'Dio error la funcion de scrapping {e}')
 
 
-        # Obtener la información de los tickers
-
-        nasdaq_tickers_info = obtener_informacion_tickers(tickers)
-        nasdaq_tickers_info_clean = clean_data(nasdaq_tickers_info)
-
-        #Guardar los DataFrames como archivos CSV
-        nasdaq_tickers_info_clean.to_csv('nasdaq_tickers_info_clean.csv', index=False)
-        nasdaq_tickers_historic_clean.to_csv('nasdaq_tickers_historic_clean.csv', index=False)
-
-        # Crear la base de datos y las tablas
-        creacion_bbdd(nasdaq_tickers_info_clean, nasdaq_tickers_historic_clean)
+    # Obtener los datos históricos de todos los tickers del NASDAQ
+try:
+    nasdaq_tickers_historic = get_datos_historicos(tickers)
+    nasdaq_tickers_historic_clean = clean_data_historic (nasdaq_tickers_historic)
+except Exception as e:
+    print(f'Dio error la llamada de historicos: {e}')
 
 
-        break
-    
-    else:
-        time.sleep(3600)
+    # Obtener la información de los tickers
+try:
+    nasdaq_tickers_info = obtener_informacion_tickers(tickers)
+    nasdaq_tickers_info_clean = clean_data_info (nasdaq_tickers_info)
+except Exception as e:
+    print(f'Dio error la llamada de info: {e}')
+
+
+    #Guardar los DataFrames como archivos CSV
+try:
+    nasdaq_tickers_info_clean.to_csv('nasdaq_tickers_info_clean.csv', index=False)
+    nasdaq_tickers_historic_clean.to_csv('nasdaq_tickers_historic_clean.csv', index=False)
+except Exception as e:
+    print(f'Dio error la limpieza de los datos {e}')
+
+
+    # Crear la base de datos y las tablas
+
+try:
+    creacion_bbdd(nasdaq_tickers_info_clean, nasdaq_tickers_historic_clean)
+except Exception as e:
+    print(f'No se creo la BBDD {e}')
+
+
+
+    #break
+
+#else:
+#    time.sleep(3600)
