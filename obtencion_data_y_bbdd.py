@@ -139,7 +139,7 @@ Retorna:
 
 # Función para limpiar los datos
 def clean_data_info(df):
-    '''
+
     try:
 
         columnas_a_procesar = [
@@ -179,7 +179,7 @@ def clean_data_historic(df):
     except Exception as e:
         print(f'Fallo la limpieza de historicos {e}')
 
-'''
+
 # Creacion de la tabla en MySQL
 def creacion_bbdd(df_info_clean, df_historic_clean):
     try:
