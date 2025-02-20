@@ -185,7 +185,7 @@ def calcular_correlacion(df_nasdaq_tickers_historic_clean, periodo="diario"):
     df_nasdaq_tickers_historic_clean['Date'] = pd.to_datetime(df_nasdaq_tickers_historic_clean['Date'])
 
     # Filtrar solo los tickers seleccionados
-    df_nasdaq_tickers_historic_clean = df_nasdaq_tickers_historic_clean[df_nasdaq_tickers_historic_clean['Ticker'].isin(tickers)]
+    df_nasdaq_tickers_historic_clean = df_nasdaq_tickers_historic_clean[df_nasdaq_tickers_historic_clean['Ticker'].isin(df_nasdaq_tickers_historic_clean["Ticker"].unique().tolist())]
     
     # Calcular rendimientos diarios
     df_nasdaq_tickers_historic_clean['Rentabilidad'] = df_nasdaq_tickers_historic_clean.groupby('Ticker')['Close'].pct_change(fill_method=None)
