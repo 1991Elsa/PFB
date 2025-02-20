@@ -1,8 +1,10 @@
+# conect_engine.py
+
 from sqlalchemy import create_engine
 
 DATABASE_CONFIG = {
     "username": "root",
-    "password": "2021",
+    "password": "H3m3t3r10!",
     "hostname": "localhost", 
     "port": 3306
 }
