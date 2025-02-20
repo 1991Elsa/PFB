@@ -134,14 +134,16 @@ Retorna:
             df_info = pd.DataFrame([dic_info])
 
             nasdaq_tickers_info = pd.concat([nasdaq_tickers_info, df_info], ignore_index=True)
+            
     print('Informacion de los tickers descargada con exito')
     return nasdaq_tickers_info
 
 # Función para limpiar los datos
 def clean_data_info(df):
+
     try:
 
-        columnas_a_procesar = [
+        '''columnas_a_procesar = [
             'ReturnOnAssets', 'ReturnOnEquity', 'DebtToEquity', 'MarketCap',
             'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow', 'DividendRate',
             'DividendYield', 'PayoutRatio', 'ebitdaMargins'
@@ -151,7 +153,7 @@ def clean_data_info(df):
             if columna in df.columns:  # Verificar si la columna existe en el dataframe
                 df[columna] = pd.to_numeric(df[columna], errors='coerce')
                 if columna in ['MarketCap', 'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow']:
-                    df[columna] = df[columna] / 1_000_000  
+                    df[columna] = df[columna] / 1_000_000  '''
 
         df = df.replace({np.nan: None})
         
@@ -163,15 +165,18 @@ def clean_data_info(df):
 
 # Función para limpiar los datos historicos
 def clean_data_historic(df):
+
     try:
-        columnas_a_procesar = [
+         
+        '''columnas_a_procesar = [
             'Close', 'High', 'Low', 'Open', 'Volume'
         ]
 
         for columna in columnas_a_procesar:
             if columna in df.columns:  # Verificar si la columna existe en el dataframe
-                df[columna] = pd.to_numeric(df[columna], errors='coerce')
+                df[columna] = pd.to_numeric(df[columna], errors='coerce')'''
 
+        
         df = df.replace({np.nan: None})
 
         return df
@@ -265,6 +270,7 @@ except Exception as e:
     # Obtener los datos históricos de todos los tickers del NASDAQ
 try:
     nasdaq_tickers_historic_clean = clean_data_historic (get_datos_historicos(tickers))
+    
 except Exception as e:
     print(f'Dio error la llamada de historicos: {e}')
 

@@ -29,4 +29,3 @@ def descargar_data_sql():
     return df_historic, df_info
 
 nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
-print(nasdaq_tickers_info.columns)
