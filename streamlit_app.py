@@ -7,17 +7,15 @@ import mplfinance as mpf
 from modules.pfb_page_config_dict import PAGE_CONFIG
 from funciones_economicas import *
 from connect_engine import get_engine_database
-from descarga_sql import descargar_data_sql
+#from descarga_sql import descargar_data_sql
 
 
 
 st.set_page_config(**PAGE_CONFIG) 
 
-try:
-    nasdaq_tickers_info, nasdaq_tickers_historic = descargar_data_sql()
-except:
-    nasdaq_tickers_info = pd.read_csv("nasdaq_tickers_info_clean.csv")
-    nasdaq_tickers_historic = pd.read_csv("nasdaq_tickers_historic_clean.csv")
+
+nasdaq_tickers_info = pd.read_csv("nasdaq_tickers_info_clean.csv")
+nasdaq_tickers_historic = pd.read_csv("nasdaq_tickers_historic_clean.csv")
 
 
 
