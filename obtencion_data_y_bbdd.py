@@ -145,7 +145,7 @@ def clean_data_info(df):
         columnas_a_procesar = [
             'ReturnOnAssets', 'ReturnOnEquity', 'DebtToEquity', 'MarketCap',
             'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow', 'DividendRate',
-            'DividendYield', 'PayoutRatio', 'Beta', 'ebitdaMargins'
+            'DividendYield', 'PayoutRatio', 'ebitdaMargins'
         ]
 
         for columna in columnas_a_procesar:
@@ -190,9 +190,11 @@ def creacion_bbdd(df_info_clean, df_historic_clean):
         
         # Conectarse y crear la base de datos 'yahoo_finance' si no existe
         with initial_engine.connect() as connection:
+            connection.execute(text("DROP DATABASE IF EXISTS yahoo_finance"))
+            print("Base de datos 'yahoo_finance' eliminada con éxito.")
             connection.execute(text("CREATE DATABASE IF NOT EXISTS yahoo_finance"))
-            print("Base de datos yahoo_finance creada con éxito.")
-        
+            print("Base de datos 'yahoo_finance' creada con éxito.")
+
         # Ahora conectar al motor especificando la nueva base de datos
         engine = get_engine_database()
         # Verificar la conexión a la nueva base de datos
