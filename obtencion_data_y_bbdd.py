@@ -63,11 +63,11 @@ Retorna:
 
     if isinstance(datos.columns, pd.MultiIndex):
         datos.columns = ['_'.join(col).strip() for col in datos.columns]
-    datos = datos.copy()
-    datos.reset_index(inplace=True)
-    datos = datos.melt(id_vars=['Date'], var_name="Variable", value_name="Valor")
-    datos[['Ticker', 'Metric']] = datos['Variable'].str.rsplit('_', n=1, expand=True)
-    datos = datos.pivot(index=['Date', 'Ticker'], columns='Metric', values='Valor').reset_index()
+        datos = datos.copy()
+        datos.reset_index(inplace=True)
+        datos = datos.melt(id_vars=['Date'], var_name="Variable", value_name="Valor")
+        datos[['Ticker', 'Metric']] = datos['Variable'].str.rsplit('_', n=1, expand=True)
+        datos = datos.pivot(index=['Date', 'Ticker'], columns='Metric', values='Valor').reset_index()
 
     return datos
 
@@ -113,16 +113,22 @@ Retorna:
                 'Sector': ticker_info.get('sector', 'N/A'),
                 'Industry': ticker_info.get('industry', 'N/A'),
                 'Country': ticker_info.get('country', 'N/A'),
+                'FullTimeEmployees': ticker_info.get('fullTimeEmployees', 'N/A'),
                 'MarketCap': ticker_info.get('marketCap', 'N/A'), 
                 'TotalRevenue': ticker_info.get('totalRevenue', 'N/A'), 
                 'NetIncomeToCommon': ticker_info.get('netIncomeToCommon', 'N/A'),
+                'TrailingEPS': ticker_info.get('trailingEps', 'N/A'),
+                'ForwardEPS': ticker_info.get('forwardEps', 'N/A'),
+                'TrailingPE': ticker_info.get('trailingPE', 'N/A'),
+                'ForwardPE': ticker_info.get('forwardPE', 'N/A'),
                 'ReturnOnAssets': ticker_info.get('returnOnAssets', 'N/A'), 
                 'ReturnOnEquity': ticker_info.get('returnOnEquity', 'N/A'), 
                 'DebtToEquity': ticker_info.get('debtToEquity', 'N/A'), 
                 'FreeCashflow': ticker_info.get('freeCashflow', 'N/A'), 
                 'DividendRate': ticker_info.get('dividendRate', 'N/A'), 
                 'DividendYield': ticker_info.get('dividendYield', 'N/A'),
-                'PayoutRatio': ticker_info.get('payoutRatio', 'N/A'),
+                'PayoutRatio': ticker_info.get('payoutRatio', 'N/A'), 
+                'Beta': ticker_info.get('beta', 'N/A'), 
                 'GrossMargins': ticker_info.get('grossMargins', 'N/A'), 
                 'OperatingMargins': ticker_info.get('operatingMargins', 'N/A'), 
                 'ProfitMargins': ticker_info.get('profitMargins', 'N/A'),
