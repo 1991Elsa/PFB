@@ -55,6 +55,64 @@ def main():
         for col in ["ShortName", "Sector", "Industry", "Country", "MarketCap"]
     ]
 
+
+
+
+
+
+
+
+    def calcular_variaciones(df, ticker):
+        df["Date"] = pd.to_datetime(df["Date"])
+        ultima_fecha = df["Date"].max()
+        
+        fechas = {
+            "24h": ultima_fecha - pd.Timedelta(days=1),
+            "7 días": ultima_fecha - pd.Timedelta(days=7),
+            "1 mes": ultima_fecha - pd.Timedelta(days=30),
+            "1 año": ultima_fecha - pd.Timedelta(days=365)
+        }
+        
+        df_ticker = df[df["Ticker"] == ticker]
+        precio_fin = df_ticker[df_ticker["Date"] == ultima_fecha]["Close"].values
+        
+        variaciones = {}
+        for periodo, fecha in fechas.items():
+            precio_ant = df_ticker[df_ticker["Date"] == fecha]["Close"].values
+            if precio_ant.size > 0 and precio_fin.size > 0:
+                variaciones[periodo] = ((precio_fin[0] - precio_ant[0]) / precio_ant[0]) * 100
+            else:
+                variaciones[periodo] = None
+        
+        return variaciones
+
+    def mostrar_variaciones(variaciones):
+        st.subheader("Evolución de los últimos días")
+        cols = st.columns(len(variaciones))
+        
+        for col, (periodo, variacion) in zip(cols, variaciones.items()):
+            with col:
+                if variacion is not None:
+                    if variacion > 0:
+                        st.success(f"{periodo}: {variacion:.2f} %")
+                    elif variacion < 0:
+                        st.error(f"{periodo}: {variacion:.2f} %")
+                    else:
+                        st.warning(f"{periodo}: {variacion:.2f} %")
+                else:
+                    st.warning(f"{periodo}: No disponible")
+
+
+    variaciones = calcular_variaciones(nasdaq_tickers_historic, selected_ticker)
+    mostrar_variaciones(variaciones)
+
+
+
+
+
+
+
+
     
     cols = st.columns(5)
     labels = ["Nombre", "Sector", "Industria", "País", 'MarketCap']
