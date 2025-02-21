@@ -9,6 +9,7 @@ from descarga_sql import nasdaq_tickers_historic
 
 # Título de la herramienta
 st.title("🔄 Comparador de Rendimiento y Correlación de Acciones")
+st.write("Usa esta herramienta para comparar el rendimiento y la correlación de acciones del NASDAQ 100.")
 
 # Selección múltiple de tickers
 tickers_seleccionados = st.multiselect(
@@ -22,6 +23,7 @@ st.write('\n')
 
 # Selección de período
 st.subheader("📅 Selección de Período")
+st.write("Selecciona el período de tiempo para el análisis de rendimiento y correlación.")
 col1, col2 = st.columns(2)
 with col1:
     fecha_inicio = st.date_input("Fecha de inicio", datetime(2020, 1, 1))
@@ -110,6 +112,12 @@ if tickers_seleccionados:
         yaxis_title="Ticker"
     )
     st.plotly_chart(fig_correlacion)
+
+    st.write("""
+**Guía del Gráfico de Correlación:**
+
+Este gráfico muestra la relación entre los precios de cierre de los tickers seleccionados. Los valores de correlación varían entre -1 y 1. Un valor cercano a 1 indica que las acciones tienden a moverse en la misma dirección. Un valor cercano a -1 indica que tienden a moverse en direcciones opuestas. Un valor cercano a 0 indica poca o ninguna relación entre los movimientos de las acciones.
+""")
 
 else:
     st.warning("Por favor, selecciona al menos un ticker para comparar.")
