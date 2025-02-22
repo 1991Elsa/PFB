@@ -2,20 +2,29 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 from datetime import datetime
+from descarga_sql import descargar_data_sql
 
 # Cargar datos desde archivo CSV y cambiar type columnas
-nasdaq_tickers_historic = pd.read_csv("nasdaq_tickers_historic_clean.csv")
-nasdaq_tickers_historic['Date'] = pd.to_datetime(nasdaq_tickers_historic['Date'])
+nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
 
 # Función para mostrar la página
 def mostrar():
     st.title("📊 Análisis Técnico")
 
+    st.write("\n")
+    st.write("\n")
+
     # Selección de ticker
     ticker_seleccionado = st.selectbox("Selecciona un ticker", nasdaq_tickers_historic['Ticker'].unique())
 
+    st.write("\n")
+    st.write("\n")
+
     # Selección de período
     st.header("📅 Selección de Período")
+
+    st.write("\n")
+
     col1, col2 = st.columns(2)
     with col1:
         fecha_inicio = st.date_input("Fecha de inicio", datetime(2020, 1, 1))
@@ -35,6 +44,8 @@ def mostrar():
         st.warning("No hay datos disponibles para el ticker seleccionado en el período especificado.")
         return
 
+    st.write("\n")
+    
     # Calcular y mostrar el ROI, Sharpe Ratio y Sortino Ratio en columnas
     col1, col2, col3 = st.columns(3)
     with col1:
@@ -47,24 +58,39 @@ def mostrar():
         sortino = sortino_ratio(ticker_seleccionado, fecha_inicio, fecha_fin, nasdaq_tickers_historic)
         st.metric(label="Sortino Ratio", value=sortino)
 
+    st.write("\n")
+    st.write("\n")
+
+    st.subheader("Tabla de Volatilidad")
     # Mostrar la volatilidad
-    st.subheader("📊 Volatilidad de los Tickers")
-    st.write("Esta tabla muestra la volatilidad de cada ticker seleccionado durante el período especificado.")
-    volatilidad = calcular_volatilidad(nasdaq_tickers_historic)
-    st.dataframe(volatilidad)
+    with st.expander("📊 Mostrar Tabla de Volatilidad de los Tickers"):
+        st.write("Esta tabla muestra la volatilidad de cada ticker seleccionado durante el período especificado.")
+        volatilidad = calcular_volatilidad(nasdaq_tickers_historic)
+        st.dataframe(volatilidad.select_dtypes(include=np.number).style.highlight_max(axis=0))
+
+    st.subheader("Explicación de la Volatilidad")
+    with st.expander("Mostrar explicación de la tabla de volatilidad"):
+        st.text(""" La volatilidad mide cuánto varía el precio de un activo en un período determinado. \n
+                Un activo con alta volatilidad tiene cambios bruscos en su precio, mientras que uno con baja volatilidad es más estable. \n
+                La tabla muestra en color amarillo los activos más volátiles; es decir, menos estables.""")
+
+
+    st.write("\n")
+    
 
     # Mostrar la correlación
-    st.subheader("📊 Correlación entre los Tickers")
-    st.write("Esta tabla muestra la matriz de correlación entre los tickers seleccionados, indicando cómo se relacionan los precios de cierre entre ellos.")
-    correlacion = calcular_correlacion(nasdaq_tickers_historic)
-    st.dataframe(correlacion)
-    st.text("""
+    st.subheader("Matriz de Correlación")
+    with st.expander("📊Mostrar Correlación entre los Tickers"):
+        st.write("Esta tabla muestra la matriz de correlación entre los tickers seleccionados, indicando cómo se relacionan los precios de cierre entre ellos.")
+        correlacion = calcular_correlacion(nasdaq_tickers_historic)
+        st.dataframe(correlacion.select_dtypes(include=np.number).style.highlight_max(axis=0))
 
-    Correlación positiva (cercana a +1): Las acciones tienden a moverse en la misma dirección.
-
-    Correlación negativa (cercana a -1): Las acciones tienden a moverse en direcciones opuestas.
-
-    Correlación cercana a 0: Hay poca o ninguna relación entre los movimientos de las acciones.""")
+    st.write("\n")
+    st.subheader("Explicación de la Matriz de Correlación")
+    with st.expander("Mostrar explicación de la Matriz de Correlación"):
+        st.text(""" Correlación positiva (cercana a +1): Las acciones tienden a moverse en la misma dirección.
+        Correlación negativa (cercana a -1): Las acciones tienden a moverse en direcciones opuestas.
+        Correlación cercana a 0: Hay poca o ninguna relación entre los movimientos de las acciones.""")
 
 # Resto de funciones (roi, sharpe_ratio, sortino_ratio, calcular_volatilidad, calcular_correlacion) permanecen iguales
 

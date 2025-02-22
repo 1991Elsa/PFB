@@ -1,6 +1,12 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 import plotly.graph_objects as go
+import numpy as np
+from datetime import datetime
+from descarga_sql import descargar_data_sql
+
+nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
 
 # Definir las funciones
 
@@ -46,13 +52,15 @@ def mostrar():
     st.write("Este es el contenido del Dashboard Interactivo.")
 
     # Cargar datos desde archivo CSV
-    nasdaq_tickers_info = pd.read_csv("nasdaq_tickers_info_clean.csv")
-    nasdaq_tickers_historic = pd.read_csv("nasdaq_tickers_historic_clean.csv")
+    nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
 
     # Convertir la columna 'Date' a tipo datetime
     nasdaq_tickers_historic['Date'] = pd.to_datetime(nasdaq_tickers_historic['Date'])
 
     tickers_nasdaq = nasdaq_tickers_info["Ticker"].unique().tolist()
+
+    st.write("\n")
+    st.write("\n")
 
     selected_ticker = st.selectbox("Selecciona el ticker a mostrar", options=tickers_nasdaq)
     info = nasdaq_tickers_info[nasdaq_tickers_info["Ticker"] == selected_ticker]
@@ -60,6 +68,8 @@ def mostrar():
         info[col].values[0] if not info[col].empty else "No disponible"
         for col in ["ShortName", "Sector", "Industry", "Country", "MarketCap"]
     ]
+
+    st.write("\n")
 
     cols = st.columns(5)
     labels = ["Nombre", "Sector", "Industria", "País", 'MarketCap']
@@ -72,9 +82,20 @@ def mostrar():
     st.write('\n')
     st.write('\n')
 
-    # Convertir fechas seleccionadas a formato compatible con el DataFrame
-    fecha_inicio = st.date_input("Fecha de inicio")
-    fecha_fin = st.date_input("Fecha de fin")
+    # Selección de período
+    st.subheader("📅 Selección de Período")
+    st.write("Selecciona el período de tiempo para el análisis.")
+
+    st.write("\n")
+    st.write("\n")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        fecha_inicio = st.date_input("Fecha de inicio", datetime(2020, 1, 1))
+    with col2:
+        fecha_fin = st.date_input("Fecha de fin", datetime.today())
+
+    # Convertir las fechas a datetime64[ns] para filtrar el dataframe
     fecha_inicio = pd.to_datetime(fecha_inicio)
     fecha_fin = pd.to_datetime(fecha_fin)
 
@@ -130,6 +151,7 @@ def mostrar():
     st.write('\n')
     st.write('\n')
 
+    st.subheader("Métricas")
     with st.expander("Mostrar métricas", expanded=False):
         # Calcular el ROI
         roi_value = roi(selected_ticker, fecha_inicio, fecha_fin, df=nasdaq_tickers_historic)
@@ -160,8 +182,8 @@ def mostrar():
             elif sharpe_value > 3:
                 st.success('Inversión excepcional')
 
-                with col_sortino:
-                    sortino_ratio_value = sortino_ratio(selected_ticker, fecha_inicio, fecha_fin, df = nasdaq_tickers_historic, risk_free_rate=risk)
+        with col_sortino:
+            sortino_ratio_value = sortino_ratio(selected_ticker, fecha_inicio, fecha_fin, df = nasdaq_tickers_historic, risk_free_rate=risk)
             st.write(f"**Sortino Ratio:** {sortino_ratio_value}")
             if sortino_ratio_value > 1:
                 st.success('Buena inversión ajustada al riesgo')
@@ -172,14 +194,14 @@ def mostrar():
             elif sortino_ratio_value > 3:
                 st.success('Inversión excepcional')
 
-        st.write('\n')   
-        st.write('\n')  
-        st.write('\n')
-        st.subheader(f"**Explicacion de los ratios**")
+    st.write('\n')   
+    st.write('\n')  
+    st.write('\n')
+    
+    st.subheader(f"**Explicación de los ratios**")
+    with st.expander(f"**Mostrar explicación**"):
         st.write(f'**ROI**: Return on Investment, es el retorno de la inversión.')
         st.write(f'**Sharpe Ratio**: Es una medida de la rentabilidad ajustada al riesgo.')
         st.write(f'**Sortino Ratio**: Es una medida de la rentabilidad ajustada al riesgo, pero solo tiene en cuenta los rendimientos negativos.')
-        st.write('Riesgo: Es el riesgo personalizado para la inversión a realizar.')
-
-
+        st.write(f'**Riesgo**: Es el riesgo personalizado para la inversión a realizar.')
 
