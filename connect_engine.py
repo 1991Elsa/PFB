@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 
 DATABASE_CONFIG = {
     "username": "root",
-    "password": "2021",
+    "password": "Dunidu",
     "hostname": "localhost", 
     "port": 3306
 }
