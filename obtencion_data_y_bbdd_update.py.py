@@ -5,9 +5,9 @@ from datetime import datetime
 import pandas as pd
 import numpy as np
 import time
-from tablas_metadata import *
 from connect_engine import *
-
+from tablas_metadata import *
+from sqlalchemy.dialects.mysql import insert
 
 # Función para obtener los tickers de NASDAQ 100 (scrapping)
 def tickers_nasdaq():
