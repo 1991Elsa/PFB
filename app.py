@@ -19,13 +19,7 @@ def mostrar_sidebar():
         st.sidebar.title("NASDAQ-100")
         st.sidebar.image("sources/logo_ndq.jpeg", width=50)
         st.sidebar.success(f'Last update: {nasdaq_tickers_info["Timestamp_extraction"][1]}')
-
-        # Separador visual
-        st.sidebar.markdown("---")
-        # eliminamos el calendario lateral? ya que cada pagina tiene selector de fechas
-        fecha_inicio = st.sidebar.date_input("Fecha de inicio", pd.to_datetime(min(nasdaq_tickers_historic["Date"])))
-        fecha_fin = st.sidebar.date_input("Fecha de fin", pd.to_datetime(max(nasdaq_tickers_historic["Date"])))
-        
+       
         # Separador visual
         st.sidebar.markdown("---")
 
@@ -53,7 +47,7 @@ def mostrar_sidebar():
                                         key="cliente")
             st.session_state.sub_page = sub_page
 
-        return fecha_inicio, fecha_fin
+    
 
 # Función para mostrar la página de inicio
 def mostrar_inicio():
@@ -69,8 +63,7 @@ def main():
     if 'page' not in st.session_state:
         st.session_state.page = "inicio"
 
-    fecha_inicio, fecha_fin = mostrar_sidebar()
-    
+    mostrar_sidebar()
 
     if st.session_state.page == "inicio":
         mostrar_inicio()
