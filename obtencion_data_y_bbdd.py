@@ -143,7 +143,7 @@ def clean_data_info(df):
 
     try:
 
-        '''columnas_a_procesar = [
+        columnas_a_procesar = [
             'ReturnOnAssets', 'ReturnOnEquity', 'DebtToEquity', 'MarketCap',
             'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow', 'DividendRate',
             'DividendYield', 'PayoutRatio', 'ebitdaMargins'
@@ -153,7 +153,7 @@ def clean_data_info(df):
             if columna in df.columns:  # Verificar si la columna existe en el dataframe
                 df[columna] = pd.to_numeric(df[columna], errors='coerce')
                 if columna in ['MarketCap', 'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow']:
-                    df[columna] = df[columna] / 1_000_000  '''
+                    df[columna] = df[columna] / 1_000_000  
 
         df = df.replace({np.nan: None})
         
@@ -168,13 +168,13 @@ def clean_data_historic(df):
 
     try:
          
-        '''columnas_a_procesar = [
+        columnas_a_procesar = [
             'Close', 'High', 'Low', 'Open', 'Volume'
         ]
 
         for columna in columnas_a_procesar:
             if columna in df.columns:  # Verificar si la columna existe en el dataframe
-                df[columna] = pd.to_numeric(df[columna], errors='coerce')'''
+                df[columna] = pd.to_numeric(df[columna], errors='coerce')
 
         
         df = df.replace({np.nan: None})
