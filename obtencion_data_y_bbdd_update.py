@@ -185,11 +185,12 @@ def clean_data_historic(df):
 
 # Creacion de la tabla en MySQL
 def creacion_bbdd(df_info_clean, df_historic_clean):
+    
     try:
         initial_engine = get_engine()
         with initial_engine.connect() as connection:
             result = connection.execute(text("CREATE DATABASE IF NOT EXISTS yahoo_finance"))
-            print("Base de datos 'yahoo_finance' creada o verificada con éxito.")
+            print("Base de datos 'yahoo_finance' creada/verificada con éxito.")
         
         # Conectarse a la base de datos 'yahoo_finance'
         engine = get_engine_database()
@@ -202,7 +203,7 @@ def creacion_bbdd(df_info_clean, df_historic_clean):
     # Crea las tablas en la base de datos
     try:
         metadata.create_all(engine, checkfirst=True)
-        print("Tablas verificadas o creadas con éxito.")
+        print("Tablas creadas/verificadas con éxito.")
     except Exception as e:
         print(f"Error al crear las tablas: {e}")
 
