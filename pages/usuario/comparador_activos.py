@@ -3,11 +3,13 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime
+from descarga_sql import descargar_data_sql
 
 # Función para mostrar la página
 def mostrar():
     # Cargar datos desde archivo CSV
-    nasdaq_tickers_historic = pd.read_csv("nasdaq_tickers_historic_clean.csv")
+    nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
+    #nasdaq_tickers_historic = pd.read_csv("nasdaq_tickers_historic_clean.csv")
 
     # Convertir la columna 'Date' a tipo datetime
     nasdaq_tickers_historic['Date'] = pd.to_datetime(nasdaq_tickers_historic['Date'])

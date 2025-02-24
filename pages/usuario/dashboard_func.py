@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
+from descarga_sql import descargar_data_sql
 
 # Definir las funciones
 
@@ -46,8 +47,10 @@ def mostrar():
     st.write("Este es el contenido del Dashboard Interactivo.")
 
     # Cargar datos desde archivo CSV
-    nasdaq_tickers_info = pd.read_csv("nasdaq_tickers_info_clean.csv")
-    nasdaq_tickers_historic = pd.read_csv("nasdaq_tickers_historic_clean.csv")
+
+    nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
+    #nasdaq_tickers_info = pd.read_csv("nasdaq_tickers_info_clean.csv")
+    #nasdaq_tickers_historic = pd.read_csv("nasdaq_tickers_historic_clean.csv")
 
     # Convertir la columna 'Date' a tipo datetime
     nasdaq_tickers_historic['Date'] = pd.to_datetime(nasdaq_tickers_historic['Date'])
@@ -160,8 +163,10 @@ def mostrar():
             elif sharpe_value > 3:
                 st.success('Inversión excepcional')
 
-                with col_sortino:
-                    sortino_ratio_value = sortino_ratio(selected_ticker, fecha_inicio, fecha_fin, df = nasdaq_tickers_historic, risk_free_rate=risk)
+        with col_sortino:
+            sortino_ratio_value = sortino_ratio(selected_ticker, fecha_inicio, fecha_fin, df = nasdaq_tickers_historic, risk_free_rate=risk)
+    
+            
             st.write(f"**Sortino Ratio:** {sortino_ratio_value}")
             if sortino_ratio_value > 1:
                 st.success('Buena inversión ajustada al riesgo')

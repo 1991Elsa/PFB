@@ -68,7 +68,7 @@ def main():
         fechas = {
             "24h": ultima_fecha - pd.Timedelta(days=1),
             "7 días": ultima_fecha - pd.Timedelta(days=7),
-            "1 mes": ultima_fecha - pd.Timedelta(days=30),
+            #"1 mes": ultima_fecha - pd.Timedelta(days=31),
             "1 año": ultima_fecha - pd.Timedelta(days=365)
         }
         

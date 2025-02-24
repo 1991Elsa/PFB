@@ -2,10 +2,14 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 from datetime import datetime
+from descarga_sql import descargar_data_sql
 
 # Cargar datos desde archivo CSV y cambiar type columnas
-nasdaq_tickers_historic = pd.read_csv("nasdaq_tickers_historic_clean.csv")
-nasdaq_tickers_historic['Date'] = pd.to_datetime(nasdaq_tickers_historic['Date'])
+#nasdaq_tickers_historic = pd.read_csv("nasdaq_tickers_historic_clean.csv")
+#nasdaq_tickers_historic['Date'] = pd.to_datetime(nasdaq_tickers_historic['Date'])
+
+nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
+
 
 # Función para mostrar la página
 def mostrar():

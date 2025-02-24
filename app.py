@@ -2,12 +2,20 @@ import streamlit as st
 import pandas as pd
 from PIL import Image
 from modules.pfb_page_config_dict import PAGE_CONFIG
+from descarga_sql import descargar_data_sql
 
 st.set_page_config(**PAGE_CONFIG)
 
 # Cargando los datos desde archivo CSV
-nasdaq_tickers_info = pd.read_csv("nasdaq_tickers_info_clean.csv")
-nasdaq_tickers_historic = pd.read_csv("nasdaq_tickers_historic_clean.csv")
+
+nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
+#nasdaq_tickers_info = pd.read_csv("nasdaq_tickers_info_clean.csv")
+#nasdaq_tickers_historic = pd.read_csv("nasdaq_tickers_historic_clean.csv")
+
+
+
+
+
 
 # barra lateral
 def mostrar_sidebar():
@@ -75,11 +83,11 @@ def main():
     elif st.session_state.page == "usuario":
         if 'sub_page' in st.session_state:
             if st.session_state.sub_page == "Dashboard interactivo":
-                from pages.usuario import dashboard_interactivo_csv
-                dashboard_interactivo_csv.mostrar()
+                from pages.usuario import dashboard_func
+                dashboard_func.mostrar()
             elif st.session_state.sub_page == "Comparador de activos":
-                from pages.usuario import comparador_activos_csv
-                comparador_activos_csv.mostrar()
+                from pages.usuario import comparador_activos
+                comparador_activos.mostrar()
             elif st.session_state.sub_page == "Análisis técnico":
                 from pages.usuario import analisis_tecnico_csv
                 analisis_tecnico_csv.mostrar()
