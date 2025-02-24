@@ -1,21 +1,31 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime
 from descarga_sql import descargar_data_sql
+<<<<<<< HEAD
+=======
 
-# Función para mostrar la página
+nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
+
+# Título de la herramienta
+>>>>>>> main
+
 def mostrar():
+<<<<<<< HEAD
     # Cargar datos desde archivo CSV
     nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
     #nasdaq_tickers_historic = pd.read_csv("nasdaq_tickers_historic_clean.csv")
+=======
+>>>>>>> main
 
-    # Convertir la columna 'Date' a tipo datetime
-    nasdaq_tickers_historic['Date'] = pd.to_datetime(nasdaq_tickers_historic['Date'])
-
-    # Título de la herramienta
     st.title("🔄 Comparador de Rendimiento y Correlación de Acciones")
+    st.write("Usa esta herramienta para comparar el rendimiento y la correlación de acciones del NASDAQ 100.")
+
+    st.write("\n")
+    st.write("\n")
 
     # Selección múltiple de tickers
     tickers_seleccionados = st.multiselect(
@@ -26,8 +36,14 @@ def mostrar():
     st.write('\n')
     st.write('\n')
 
+
     # Selección de período
     st.subheader("📅 Selección de Período")
+    st.write("Selecciona el período de tiempo para el análisis de rendimiento y correlación.")
+
+    st.write("\n")
+    st.write("\n")
+
     col1, col2 = st.columns(2)
     with col1:
         fecha_inicio = st.date_input("Fecha de inicio", datetime(2020, 1, 1))
@@ -45,6 +61,11 @@ def mostrar():
             (nasdaq_tickers_historic['Date'] >= fecha_inicio) &
             (nasdaq_tickers_historic['Date'] <= fecha_fin)
         ]
+
+        st.write("\n")
+        st.write('\n')
+        st.write('\n')
+        st.write("\n")
 
         # --- Comparación de rendimientos ---
         st.subheader("📈 Comparación de Rendimientos")
@@ -78,14 +99,34 @@ def mostrar():
         )
         st.plotly_chart(fig_rendimientos)
 
+        with st.expander("📘Explicación del Gráfico de Comparación de Rendimientos"):
+            st.write(""" Este gráfico muestra como han cambiado los rendimientos de diferentes activos a lo largo del tiempo en la misma escala porcentual.
+            """)
+        
+        st.write('\n')
+        st.write('\n')
+        st.write('\n')
+        st.write('\n')
+
+
         # Mostrar tabla de rendimientos acumulados
         st.subheader("📊 Rendimiento Acumulado")
         rendimientos_acumulados = rendimientos.groupby('Ticker')['Rendimiento'].sum().reset_index()
-        st.dataframe(rendimientos_acumulados)
+        st.dataframe(rendimientos_acumulados.select_dtypes(include=np.number).style.highlight_max(axis=0))
+
+
+        with st.expander("📘Explicación del Rendimiento Acumulado"):
+            st.write("Se refiere a la ganancia o pérdida total de una inversión durante un período determinado, expresado en porcentaje.") 
+            st.write("En color amarillo se muestra el valor más alto obtenido de rendimiento acumulado.")
+
+        st.write('\n')
+        st.write('\n')
+        st.write('\n')
+        st.write('\n')
 
         # --- Gráfico de correlación ---
         st.subheader("📊 Correlación entre las Acciones Seleccionadas")
-
+        
         # Crear un dataframe con los precios de cierre de los tickers seleccionados
         precios_cierre = pd.DataFrame()
 
@@ -116,6 +157,13 @@ def mostrar():
             yaxis_title="Ticker"
         )
         st.plotly_chart(fig_correlacion)
+
+        with st.expander("📘Explicación del Gráfico de Correlación"):
+            st.write("Este gráfico muestra la relación entre los precios de cierre de los tickers seleccionados.")
+            st.write("Los valores de correlación varían entre -1 y 1.")
+            st.write("Un valor cercano a 1 indica que las acciones tienden a moverse en la misma dirección.")
+            st.write("Un valor cercano a -1 indica que tienden a moverse en direcciones opuestas.")
+            st.write("Un valor cercano a 0 indica poca o ninguna relación entre los movimientos de las acciones.")
 
     else:
         st.warning("Por favor, selecciona al menos un ticker para comparar.")
