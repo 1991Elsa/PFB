@@ -54,89 +54,100 @@ def mostrar():
         ]
 
         st.write("\n")
+        st.write('\n')
+        st.write('\n')
         st.write("\n")
 
         # --- Comparación de rendimientos ---
         st.subheader("📈 Comparación de Rendimientos")
-        with st.expander("📈 Mostrar Comparación de Rendimientos"):
         
-            # Crear un dataframe para almacenar los rendimientos
-            rendimientos = pd.DataFrame()
+        # Crear un dataframe para almacenar los rendimientos
+        rendimientos = pd.DataFrame()
 
-            # Calcular el rendimiento para cada ticker seleccionado
-            for ticker in tickers_seleccionados:
-                # Filtrar datos para el ticker actual
-                df_ticker = df_filtrado[df_filtrado['Ticker'] == ticker]
-                
-                # Ordenar por fecha (asegurarse de que los datos estén en orden cronológico)
-                df_ticker = df_ticker.sort_values('Date')
-                
-                # Calcular el rendimiento porcentual
-                df_ticker['Rendimiento'] = (df_ticker['Close'].pct_change(fill_method=None)) * 100
-                
-                # Agregar los datos al dataframe de rendimientos
-                df_ticker['Ticker'] = ticker  # Añadir columna de ticker para identificarlo
-                rendimientos = pd.concat([rendimientos, df_ticker[['Date', 'Ticker', 'Rendimiento']]])
+        # Calcular el rendimiento para cada ticker seleccionado
+        for ticker in tickers_seleccionados:
+            # Filtrar datos para el ticker actual
+            df_ticker = df_filtrado[df_filtrado['Ticker'] == ticker]
+            
+            # Ordenar por fecha (asegurarse de que los datos estén en orden cronológico)
+            df_ticker = df_ticker.sort_values('Date')
+            
+            # Calcular el rendimiento porcentual
+            df_ticker['Rendimiento'] = (df_ticker['Close'].pct_change(fill_method=None)) * 100
+            
+            # Agregar los datos al dataframe de rendimientos
+            df_ticker['Ticker'] = ticker  # Añadir columna de ticker para identificarlo
+            rendimientos = pd.concat([rendimientos, df_ticker[['Date', 'Ticker', 'Rendimiento']]])
 
-            # Gráfico de rendimientos comparados
-            fig_rendimientos = px.line(
-                rendimientos,
-                x='Date',
-                y='Rendimiento',
-                color='Ticker',
-                title=f"Rendimiento Porcentual de los Tickers Seleccionados ({fecha_inicio.date()} - {fecha_fin.date()})",
-                labels={'Rendimiento': 'Rendimiento (%)', 'Date': 'Fecha'}
-            )
-            st.plotly_chart(fig_rendimientos)
-        
+        # Gráfico de rendimientos comparados
+        fig_rendimientos = px.line(
+            rendimientos,
+            x='Date',
+            y='Rendimiento',
+            color='Ticker',
+            title=f"Rendimiento Porcentual de los Tickers Seleccionados ({fecha_inicio.date()} - {fecha_fin.date()})",
+            labels={'Rendimiento': 'Rendimiento (%)', 'Date': 'Fecha'}
+        )
+        st.plotly_chart(fig_rendimientos)
+
         with st.expander("📘Explicación del Gráfico de Comparación de Rendimientos"):
             st.write(""" Este gráfico muestra como han cambiado los rendimientos de diferentes activos a lo largo del tiempo en la misma escala porcentual.
             """)
+        
+        st.write('\n')
+        st.write('\n')
+        st.write('\n')
+        st.write('\n')
+
 
         # Mostrar tabla de rendimientos acumulados
         st.subheader("📊 Rendimiento Acumulado")
-        with st.expander("📊 Mostrar Rendimiento Acumulado"):
-            rendimientos_acumulados = rendimientos.groupby('Ticker')['Rendimiento'].sum().reset_index()
-            st.dataframe(rendimientos_acumulados.select_dtypes(include=np.number).style.highlight_max(axis=0))
+        rendimientos_acumulados = rendimientos.groupby('Ticker')['Rendimiento'].sum().reset_index()
+        st.dataframe(rendimientos_acumulados.select_dtypes(include=np.number).style.highlight_max(axis=0))
+
 
         with st.expander("📘Explicación del Rendimiento Acumulado"):
             st.write("Se refiere a la ganancia o pérdida total de una inversión durante un período determinado, expresado en porcentaje.") 
             st.write("En color amarillo se muestra el valor más alto obtenido de rendimiento acumulado.")
 
+        st.write('\n')
+        st.write('\n')
+        st.write('\n')
+        st.write('\n')
+
         # --- Gráfico de correlación ---
         st.subheader("📊 Correlación entre las Acciones Seleccionadas")
-        with st.expander("📊Mostrar Correlación entre las Acciones Seleccionadas"):
+        
+        # Crear un dataframe con los precios de cierre de los tickers seleccionados
+        precios_cierre = pd.DataFrame()
 
-            # Crear un dataframe con los precios de cierre de los tickers seleccionados
-            precios_cierre = pd.DataFrame()
+        for ticker in tickers_seleccionados:
+            df_ticker = df_filtrado[df_filtrado['Ticker'] == ticker]
+            df_ticker = df_ticker.sort_values('Date')
+            precios_cierre[ticker] = df_ticker.set_index('Date')['Close']
 
-            for ticker in tickers_seleccionados:
-                df_ticker = df_filtrado[df_filtrado['Ticker'] == ticker]
-                df_ticker = df_ticker.sort_values('Date')
-                precios_cierre[ticker] = df_ticker.set_index('Date')['Close']
+        # Calcular la matriz de correlación
+        matriz_correlacion = precios_cierre.corr()
 
-            # Calcular la matriz de correlación
-            matriz_correlacion = precios_cierre.corr()
-
-            # Gráfico de correlación (heatmap) con anotaciones
-            fig_correlacion = go.Figure(data=go.Heatmap(
-                z=matriz_correlacion.values,
-                x=matriz_correlacion.columns,
-                y=matriz_correlacion.index,
-                colorscale='Viridis',
-                zmin=-1,
-                zmax=1,
-                colorbar=dict(title='Correlación'),
-                text=matriz_correlacion.values.round(2),  # Anotaciones con 2 decimales
-                texttemplate="%{text}",  # Mostrar el texto en el heatmap
-                hoverinfo="none"  # Desactivar información adicional al pasar el mouse
-            ))
-            fig_correlacion.update_layout(
-                title=f"Matriz de Correlación entre las Acciones Seleccionadas ({fecha_inicio.date()} - {fecha_fin.date()})",
-                xaxis_title="Ticker",
-                yaxis_title="Ticker"
-            )
-            st.plotly_chart(fig_correlacion)
+        # Gráfico de correlación (heatmap) con anotaciones
+        fig_correlacion = go.Figure(data=go.Heatmap(
+            z=matriz_correlacion.values,
+            x=matriz_correlacion.columns,
+            y=matriz_correlacion.index,
+            colorscale='Viridis',
+            zmin=-1,
+            zmax=1,
+            colorbar=dict(title='Correlación'),
+            text=matriz_correlacion.values.round(2),  # Anotaciones con 2 decimales
+            texttemplate="%{text}",  # Mostrar el texto en el heatmap
+            hoverinfo="none"  # Desactivar información adicional al pasar el mouse
+        ))
+        fig_correlacion.update_layout(
+            title=f"Matriz de Correlación entre las Acciones Seleccionadas ({fecha_inicio.date()} - {fecha_fin.date()})",
+            xaxis_title="Ticker",
+            yaxis_title="Ticker"
+        )
+        st.plotly_chart(fig_correlacion)
 
         with st.expander("📘Explicación del Gráfico de Correlación"):
             st.write("Este gráfico muestra la relación entre los precios de cierre de los tickers seleccionados.")
