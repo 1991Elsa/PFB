@@ -1,5 +1,3 @@
-# conect_engine.py
-
 from sqlalchemy import create_engine
 
 DATABASE_CONFIG = {

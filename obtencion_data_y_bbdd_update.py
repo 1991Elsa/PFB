@@ -183,7 +183,7 @@ def clean_data_historic(df):
         print(f'Fallo la limpieza de historicos {e}')
 
 
-# Creacion de la tabla en MySQL
+# Creacion de la BBDD en MySQL
 def creacion_bbdd(df_info_clean, df_historic_clean):
     
     try:
@@ -263,13 +263,15 @@ except Exception as e:
     
 # Obtener y limpiar datos históricos
 try:
-    nasdaq_tickers_historic_clean = clean_data_historic(get_datos_historicos(tickers))
+    datos_historicos = get_datos_historicos(tickers)
+    nasdaq_tickers_historic_clean = clean_data_historic(datos_historicos)
 except Exception as e:
     print(f'Error en la llamada de históricos: {e}')
 
 # Obtener y limpiar información de los tickers
 try:
-    nasdaq_tickers_info_clean = clean_data_info(obtener_informacion_tickers(tickers))
+    informacion_tickers = obtener_informacion_tickers(tickers)
+    nasdaq_tickers_info_clean = clean_data_info(informacion_tickers)
 except Exception as e:
     print(f'Error en la llamada de info: {e}')
 
