@@ -63,12 +63,12 @@ def mostrar():
 
     st.subheader("Tabla de Volatilidad")
     # Mostrar la volatilidad
-    with st.expander("📊 Mostrar Tabla de Volatilidad de los Tickers"):
-        st.write("Esta tabla muestra la volatilidad de cada ticker seleccionado durante el período especificado.")
-        volatilidad = calcular_volatilidad(nasdaq_tickers_historic)
-        st.dataframe(volatilidad.select_dtypes(include=np.number).style.highlight_max(axis=0))
+  
+    st.write("Esta tabla muestra la volatilidad de cada ticker seleccionado durante el período especificado.")
+    volatilidad = calcular_volatilidad(nasdaq_tickers_historic)
+    st.dataframe(volatilidad.select_dtypes(include=np.number).style.highlight_max(axis=0))
 
-    st.subheader("Explicación de la Volatilidad")
+    
     with st.expander("Mostrar explicación de la tabla de volatilidad"):
         st.text(""" La volatilidad mide cuánto varía el precio de un activo en un período determinado. \n
                 Un activo con alta volatilidad tiene cambios bruscos en su precio, mientras que uno con baja volatilidad es más estable. \n
@@ -76,21 +76,26 @@ def mostrar():
 
 
     st.write("\n")
+    st.write("\n")
+    st.write("\n")
+    st.write("\n")
     
 
     # Mostrar la correlación
     st.subheader("Matriz de Correlación")
-    with st.expander("📊Mostrar Correlación entre los Tickers"):
-        st.write("Esta tabla muestra la matriz de correlación entre los tickers seleccionados, indicando cómo se relacionan los precios de cierre entre ellos.")
-        correlacion = calcular_correlacion(nasdaq_tickers_historic)
-        st.dataframe(correlacion.select_dtypes(include=np.number).style.highlight_max(axis=0))
-
-    st.write("\n")
-    st.subheader("Explicación de la Matriz de Correlación")
+    st.write("Esta tabla muestra la matriz de correlación entre los tickers seleccionados, indicando cómo se relacionan los precios de cierre entre ellos.")
+    correlacion = calcular_correlacion(nasdaq_tickers_historic)
+    st.dataframe(correlacion.select_dtypes(include=np.number).style.highlight_max(axis=0))
+    
     with st.expander("Mostrar explicación de la Matriz de Correlación"):
         st.text(""" Correlación positiva (cercana a +1): Las acciones tienden a moverse en la misma dirección.
         Correlación negativa (cercana a -1): Las acciones tienden a moverse en direcciones opuestas.
         Correlación cercana a 0: Hay poca o ninguna relación entre los movimientos de las acciones.""")
+
+    st.write("\n")
+    st.write("\n")
+    st.write("\n")
+    st.write("\n")
 
 # Resto de funciones (roi, sharpe_ratio, sortino_ratio, calcular_volatilidad, calcular_correlacion) permanecen iguales
 
