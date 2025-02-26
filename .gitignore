@@ -3,7 +3,7 @@ venv/
 entorno/
 env/
 
-connect_engine
+connect_engine.py
 
 .ipynb_checkpoints
 
@@ -13,4 +13,4 @@ nasdaq_tickers_info_clean.csv
 
 __pycache__/
 
-variaciones año
+tururu.py
