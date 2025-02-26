@@ -11,8 +11,13 @@ from descarga_sql import descargar_data_sql
 
 st.set_page_config(**PAGE_CONFIG)
 
-# Cargando los datos desde archivo CSV
-nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
+# Cargar los datos en st.session_state si no existen
+if 'nasdaq_tickers_historic' not in st.session_state or 'nasdaq_tickers_info' not in st.session_state:
+    st.session_state.nasdaq_tickers_historic, st.session_state.nasdaq_tickers_info = descargar_data_sql()
+
+# Obtener los datos desde st.session_state
+nasdaq_tickers_historic = st.session_state.nasdaq_tickers_historic
+nasdaq_tickers_info = st.session_state.nasdaq_tickers_info
 
 # barra lateral
 def mostrar_sidebar():
@@ -23,8 +28,7 @@ def mostrar_sidebar():
 
         st.sidebar.title("NASDAQ-100")
         st.sidebar.image("sources/logo_ndq.jpeg", width=50)
-        st.sidebar.success(f'Last update: {nasdaq_tickers_info["Timestamp_extraction"][1]}')
-       
+        
         # Separador visual
         st.sidebar.markdown("---")
 
@@ -51,7 +55,12 @@ def mostrar_sidebar():
                                         ["PowerBI", "Esquema de tablas"], 
                                         key="cliente")
             st.session_state.sub_page = sub_page
+        
+        st.sidebar.markdown("---")
 
+        # Time stamp de actualizacion
+        st.sidebar.success(f'Last update: {nasdaq_tickers_info["Timestamp_extraction"][1]}')
+       
     
 
 # Función para mostrar la página de inicio

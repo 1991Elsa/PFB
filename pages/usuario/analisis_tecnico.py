@@ -4,8 +4,13 @@ import streamlit as st
 from datetime import datetime
 #from descarga_sql import descargar_data_sql
 
+<<<<<<< HEAD
 # Cargar datos desde archivo CSV y cambiar type columnas
 #nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
+=======
+# Cargar datos desde sql
+nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
+>>>>>>> dec2cc0919a820c7597525c2e1a1e72640a9d5c2
 
 # Función para mostrar la página
 def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
