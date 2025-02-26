@@ -79,6 +79,60 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
         with col:
             st.write(f"**{label}:** {value}")
 
+
+
+    ###################################################################################################
+    
+
+    nasdaq_tickers_historic["Date"] = pd.to_datetime(nasdaq_tickers_historic["Date"])
+
+    df_ticker = nasdaq_tickers_historic[nasdaq_tickers_historic["Ticker"] == selected_ticker].sort_values("Date", ascending=False)
+
+    if len(df_ticker) < 2:
+        st.warning("No hay suficientes datos para calcular variaciones.")
+    else:
+     
+        last_close = df_ticker.iloc[0]["Close"]
+        
+        def get_variation(days):
+            if len(df_ticker) > days:
+                past_close = df_ticker.iloc[days]["Close"]
+                if not pd.isna(last_close) and not pd.isna(past_close) and past_close != 0:
+                    return ((last_close - past_close) / past_close) * 100
+            return None
+
+        
+        variaciones = {
+            "24h": get_variation(1),
+            "7 días": get_variation(7),
+            "1 mes": get_variation(30),
+            "1 año": get_variation(365),
+        }
+
+        st.write("\n")
+        st.write("\n")
+
+        st.markdown(f"Evolución de {selected_ticker}")
+
+        columnas = st.columns(len(variaciones))
+
+        for (nombre, valor), col in zip(variaciones.items(), columnas):
+            with col:
+                if valor is None:
+                    st.warning(f"{nombre}: N/A")
+                elif valor > 0:
+                    st.success(f"{nombre}: {valor:.2f} %")
+                elif valor < 0:
+                    st.error(f"{nombre}: {valor:.2f} %")
+                else:
+                    st.warning(f"{nombre}: {valor:.2f} %")
+
+
+
+
+    ###################################################################################################
+
+
     st.write('\n')
     st.write('\n')
 
@@ -200,8 +254,16 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     
     st.subheader(f"**Explicación de los ratios**")
    
-    st.write(f'**ROI**: Return on Investment, es el retorno de la inversión.')
-    st.write(f'**Sharpe Ratio**: Es una medida de la rentabilidad ajustada al riesgo.')
-    st.write(f'**Sortino Ratio**: Es una medida de la rentabilidad ajustada al riesgo, pero solo tiene en cuenta los rendimientos negativos.')
-    st.write(f'**Riesgo**: Es el riesgo personalizado para la inversión a realizar.')
+    st.write(f'''**ROI**:  mide cuánto ganas en relación con lo que has invertido. Se expresa en porcentaje y responde a la pregunta: "¿Por cada euro invertido, cuánto he ganado o perdido?"
+        Si es positivo indica ganancias (cuanto mayor, mejor); negativo indica pérdidas.''')
+    st.write('\n')
+    st.write(f'''**Sharpe Ratio**: Mide cuánto rendimiento obtienes por cada unidad de riesgo asumido. Se usa para evaluar si los beneficios justifican la volatilidad.  
+        Si es alto (>1), indica buena rentabilidad en relación con el riesgo; si es bajo (<1), el riesgo puede ser demasiado alto para la ganancia obtenida; si es negativo, el rendimiento es peor que una inversión sin riesgo.''')
+    st.write('\n')
+    st.write(f'''**Sortino Ratio**: Similar al Sharpe Ratio, pero solo tiene en cuenta el riesgo de caídas (pérdidas) y no la volatilidad total.  
+        Si es alto, indica buena rentabilidad con pocas caídas; si es bajo, sugiere muchas pérdidas o rendimientos inestables.''')
+    st.write('\n')
+    st.write(f'''**Riesgo**: Representa la incertidumbre o variabilidad de los rendimientos de una inversión.  
+        Si es alto, hay posibilidad de grandes ganancias, pero también de grandes pérdidas; si es bajo, la inversión es más estable y con menor probabilidad de pérdidas significativas.''')
+
 
