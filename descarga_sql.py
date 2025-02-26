@@ -20,12 +20,13 @@ def descargar_data_sql():
     try:
         df_historic = pd.read_sql_table(table_name="nasdaq_tickers_historic_sql", con=engine)
         df_info = pd.read_sql_table(table_name="nasdaq_tickers_info_sql", con=engine)
+        df_finanzas = pd.read_sql_table(table_name="nasdaq_tickers_finanzas_sql", con=engine)
         print('Descarga de datos con exito')
         
        
     except Exception as e:
         print(f"Error al leer las tablas SQL: {e}")
 
-    return df_historic, df_info
+    return df_historic, df_info, df_finanzas
 
-nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
+nasdaq_tickers_historic, nasdaq_tickers_info, nasdaq_tickers_finanzas = descargar_data_sql()
