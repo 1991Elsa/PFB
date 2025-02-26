@@ -2,6 +2,11 @@ import streamlit as st
 import pandas as pd
 from PIL import Image
 from modules.pfb_page_config_dict import PAGE_CONFIG
+from pages.usuario import dashboard_func
+from pages.usuario import comparador_activos
+from pages.usuario import analisis_tecnico
+from pages.usuario import tabla_bbdd
+
 from descarga_sql import descargar_data_sql
 
 st.set_page_config(**PAGE_CONFIG)
@@ -70,17 +75,18 @@ def main():
     elif st.session_state.page == "usuario":
         if 'sub_page' in st.session_state:
             if st.session_state.sub_page == "Dashboard interactivo":
-                from pages.usuario import dashboard_func
-                dashboard_func.mostrar()
+                dashboard_func.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
+
             elif st.session_state.sub_page == "Comparador de activos":
-                from pages.usuario import comparador_activos
-                comparador_activos.mostrar()
+                comparador_activos.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
+                
             elif st.session_state.sub_page == "Análisis técnico":
-                from pages.usuario import analisis_tecnico
-                analisis_tecnico.mostrar()
+                analisis_tecnico.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
+
             elif st.session_state.sub_page == "Tablas BBDD":
-                from pages.usuario import tabla_bbdd
-                tabla_bbdd.mostrar()
+                
+                tabla_bbdd.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
+
     elif st.session_state.page == "cliente":
         if 'sub_page' in st.session_state:
             if st.session_state.sub_page == "PowerBI":

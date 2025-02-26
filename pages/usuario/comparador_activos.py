@@ -4,22 +4,11 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime
-from descarga_sql import descargar_data_sql
-<<<<<<< HEAD
-=======
+# from descarga_sql import descargar_data_sql
 
-nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
-
-# Título de la herramienta
->>>>>>> main
-
-def mostrar():
-<<<<<<< HEAD
-    # Cargar datos desde archivo CSV
-    nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
+def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
+    # nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
     #nasdaq_tickers_historic = pd.read_csv("nasdaq_tickers_historic_clean.csv")
-=======
->>>>>>> main
 
     st.title("🔄 Comparador de Rendimiento y Correlación de Acciones")
     st.write("Usa esta herramienta para comparar el rendimiento y la correlación de acciones del NASDAQ 100.")

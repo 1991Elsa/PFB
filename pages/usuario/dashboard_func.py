@@ -4,9 +4,9 @@ import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
 from datetime import datetime
-from descarga_sql import descargar_data_sql
+#from descarga_sql import descargar_data_sql
 
-nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
+#nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
 
 # Definir las funciones
 
@@ -47,12 +47,12 @@ def sortino_ratio(ticker, start_date, end_date, df, risk_free_rate=0):
     sortino_ratio_value = excess_returns.mean() / downside_deviation
     return round(sortino_ratio_value, 2)
 
-def mostrar():
+def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     st.title("Dashboard Interactivo")
     st.write("Este es el contenido del Dashboard Interactivo.")
 
     # Cargar datos desde archivo CSV
-    nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
+    #nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
 
     # Convertir la columna 'Date' a tipo datetime
     nasdaq_tickers_historic['Date'] = pd.to_datetime(nasdaq_tickers_historic['Date'])
