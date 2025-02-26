@@ -1,198 +1,128 @@
-import pandas as pd
-import numpy as np
 import streamlit as st
-from datetime import datetime
-#from descarga_sql import descargar_data_sql
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+import numpy as np
+from descarga_sql import nasdaq_tickers_historic, nasdaq_tickers_info
 
-# Cargar datos desde archivo CSV y cambiar type columnas
-#nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
-
-# Función para mostrar la página
-def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
-    st.title("📊 Análisis Técnico")
-
-    st.write("\n")
-    st.write("\n")
-
-    # Selección de ticker
-    ticker_seleccionado = st.selectbox("Selecciona un ticker", nasdaq_tickers_historic['Ticker'].unique())
-
-    st.write("\n")
-    st.write("\n")
-
-    # Selección de período
-    st.header("📅 Selección de Período")
-
-    st.write("\n")
-
-    col1, col2 = st.columns(2)
-    with col1:
-        fecha_inicio = st.date_input("Fecha de inicio", datetime(2020, 1, 1))
-    with col2:
-        fecha_fin = st.date_input("Fecha de fin", datetime.today())
-
-    # Convertir las fechas a datetime
-    fecha_inicio = pd.to_datetime(fecha_inicio)
-    fecha_fin = pd.to_datetime(fecha_fin)
-
-    # Filtrar los datos por el período seleccionado
-    df_ticker = nasdaq_tickers_historic[(nasdaq_tickers_historic['Ticker'] == ticker_seleccionado) & 
-                                        (nasdaq_tickers_historic['Date'] >= fecha_inicio) & 
-                                        (nasdaq_tickers_historic['Date'] <= fecha_fin)]
-
-    if df_ticker.empty:
-        st.warning("No hay datos disponibles para el ticker seleccionado en el período especificado.")
-        return
-
-    st.write("\n")
+def mostrar():
     
-    # Calcular y mostrar el ROI, Sharpe Ratio y Sortino Ratio en columnas
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        roi_value = roi(ticker_seleccionado, fecha_inicio, fecha_fin, nasdaq_tickers_historic)
-        st.metric(label="ROI (%)", value=roi_value)
-    with col2:
-        sharpe = sharpe_ratio(ticker_seleccionado, fecha_inicio, fecha_fin, nasdaq_tickers_historic)
-        st.metric(label="Sharpe Ratio", value=sharpe)
-    with col3:
-        sortino = sortino_ratio(ticker_seleccionado, fecha_inicio, fecha_fin, nasdaq_tickers_historic)
-        st.metric(label="Sortino Ratio", value=sortino)
+    # Título del dashboard
+    st.title("Dashboard de Análisis Financiero y Técnico - Nasdaq 100")
 
-    st.write("\n")
-    st.write("\n")
+    # Obtener lista de tickers únicos y ordenarlos alfabéticamente
+    tickers_unicos =  nasdaq_tickers_info[['Ticker', 'ShortName']]
+    tickers_unicos = tickers_unicos.sort_values(by='Ticker')
 
-    st.subheader("Tabla de Volatilidad")
-    # Mostrar la volatilidad
-  
-    st.write("Esta tabla muestra la volatilidad de cada ticker seleccionado durante el período especificado.")
-    volatilidad = calcular_volatilidad(nasdaq_tickers_historic)
-    st.dataframe(volatilidad.select_dtypes(include=np.number).style.highlight_max(axis=0))
-
-    
-    with st.expander("Mostrar explicación de la tabla de volatilidad"):
-        st.text(""" La volatilidad mide cuánto varía el precio de un activo en un período determinado. \n
-                Un activo con alta volatilidad tiene cambios bruscos en su precio, mientras que uno con baja volatilidad es más estable. \n
-                La tabla muestra en color amarillo los activos más volátiles; es decir, menos estables.""")
+    tickers_opciones = tickers_unicos.apply(lambda row: f"{row['Ticker']} - {row['ShortName']}", axis=1).tolist()
 
 
-    st.write("\n")
-    st.write("\n")
-    st.write("\n")
-    st.write("\n")
-    
+    # Selección del ticker
+    ticker_seleccionado = st.selectbox(
+        "Selecciona un Ticker",
+        tickers_opciones
+    )
 
-    # Mostrar la correlación
-    st.subheader("Matriz de Correlación")
-    st.write("Esta tabla muestra la matriz de correlación entre los tickers seleccionados, indicando cómo se relacionan los precios de cierre entre ellos.")
-    correlacion = calcular_correlacion(nasdaq_tickers_historic)
-    st.dataframe(correlacion.select_dtypes(include=np.number).style.highlight_max(axis=0))
-    
-    with st.expander("Mostrar explicación de la Matriz de Correlación"):
-        st.text(""" Correlación positiva (cercana a +1): Las acciones tienden a moverse en la misma dirección.
-        Correlación negativa (cercana a -1): Las acciones tienden a moverse en direcciones opuestas.
-        Correlación cercana a 0: Hay poca o ninguna relación entre los movimientos de las acciones.""")
+    # Extraer solo el ticker seleccionado (separa el texto antes del " - ")
+    ticker_seleccionado = ticker_seleccionado.split(" - ")[0]
 
-    st.write("\n")
-    st.write("\n")
-    st.write("\n")
-    st.write("\n")
+    # Filtrar el dataframe de información para el ticker seleccionado
+    df_filtrado_info =  nasdaq_tickers_info[ nasdaq_tickers_info['Ticker'] == ticker_seleccionado]
 
-# Resto de funciones (roi, sharpe_ratio, sortino_ratio, calcular_volatilidad, calcular_correlacion) permanecen iguales
+    # Filtrar el dataframe histórico para el ticker seleccionado
+    df_filtrado_historic = nasdaq_tickers_historic[nasdaq_tickers_historic['Ticker'] == ticker_seleccionado]
 
-# Función para calcular el ROI
-def roi(ticker, fecha_inicial, fecha_final, df):
-    fecha_inicial = pd.to_datetime(fecha_inicial)
-    fecha_final = pd.to_datetime(fecha_final)
-    df_ticker = df[(df['Ticker'] == ticker) & (df['Date'].between(fecha_inicial, fecha_final))]
+    # Verificar si hay datos para el ticker seleccionado
+    if not df_filtrado_info.empty and not df_filtrado_historic.empty:
+        # --- Cálculos para el balance general y estado de resultados ---
+        net_income = df_filtrado_info['NetIncomeToCommon'].values[0]
+        roe = df_filtrado_info['ReturnOnEquity'].values[0]
+        debt_to_equity = df_filtrado_info['DebtToEquity'].values[0]
+        total_revenue = df_filtrado_info['TotalRevenue'].values[0]
+        gross_margins = df_filtrado_info['GrossMargins'].values[0]
 
-    if df_ticker.empty:
-        return "No hay datos disponibles"
+        patrimonio = net_income / roe 
+        pasivos = debt_to_equity * patrimonio
+        activos = pasivos + patrimonio
 
-    precio_inicial = df_ticker.iloc[0]['Close']
-    precio_final = df_ticker.iloc[-1]['Close']
+        coste_bienes_vendidos = total_revenue * (1 - gross_margins)
+        u_bruta = total_revenue - coste_bienes_vendidos
+        u_neta = net_income / 1_000_000
 
-    if pd.isna(precio_inicial) or pd.isna(precio_final):
-        return "Datos faltantes"
+        # --- Gráficos del balance general y estado de resultados ---
+        st.subheader("Análisis Financiero")
 
-    roi_value = ((precio_final - precio_inicial) / precio_inicial) * 100
-    return round(roi_value, 2)
+        #st.markdown("**Balance General**")
+        balance_general = pd.DataFrame({
+                'Concepto': ['Activos', 'Pasivos', 'Patrimonio'],
+                'Monto': [activos, pasivos, patrimonio]
+            })
+        fig_balance = px.bar(balance_general, x='Concepto', y='Monto', text='Monto', title=f"Balance general de la empresa {ticker_seleccionado}")
+        st.plotly_chart(fig_balance)
+        st.markdown("📌 Relación entre **activos, pasivos y patrimonio** de la empresa.")
 
-# Función para calcular el Sharpe Ratio
-def sharpe_ratio(ticker, start_date, end_date, df, risk_free_rate=0.02):
-    start_date = pd.to_datetime(start_date)
-    end_date = pd.to_datetime(end_date)
-    df_ticker = df[(df['Ticker'] == ticker) & (df['Date'].between(start_date, end_date))].sort_values(by='Date')
+        #st.markdown("**Estado de Resultados**")
+        estado_resultados = pd.DataFrame({
+                'Concepto': ['Utilidad Bruta', 'Utilidad Neta'],
+                'Monto': [u_bruta, u_neta]
+            })
+        fig_resultados = px.bar(estado_resultados, x='Concepto', y='Monto', text='Monto', title=f"Estado de resultados de la empresa {ticker_seleccionado}")
+        st.plotly_chart(fig_resultados)
+        st.markdown("📌 **Rentabilidad** de la empresa en diferentes niveles brutos y netos.")
 
-    if df_ticker.shape[0] < 2:
-        return "Datos insuficientes"
+        # --- Gráficos de análisis técnico ---
+        st.subheader("Análisis Técnico")
 
-    df_ticker['Rendimiento Diario'] = df_ticker['Close'].pct_change(fill_method=None)
-    mean_daily_return = df_ticker['Rendimiento Diario'].mean()
-    std_dev_daily_return = df_ticker['Rendimiento Diario'].std()
-    mean_annual_return = mean_daily_return * 252
-    std_dev_annual_return = std_dev_daily_return * np.sqrt(252)
+        # Precios históricos
+        st.markdown("**Precios Históricos**")
+        fig_precios = px.line(df_filtrado_historic, x='Date', y='Close', title=f"Precios de Cierre para {ticker_seleccionado}")
+        st.plotly_chart(fig_precios)
+        st.markdown("📌 Evolución de los **precios de cierre** del activo seleccionado.")
 
-    if std_dev_annual_return == 0 or pd.isna(std_dev_annual_return):
-        return "Volatilidad no definida"
+        # Medias móviles
+        st.markdown("**Medias Móviles (SMA)**")
+        df_filtrado_historic['SMA_50'] = df_filtrado_historic['Close'].rolling(window=50).mean()
+        df_filtrado_historic['SMA_200'] = df_filtrado_historic['Close'].rolling(window=200).mean()
 
-    sharpe = (mean_annual_return - risk_free_rate) / std_dev_annual_return
-    return round(sharpe, 2)
+        fig_medias = go.Figure()
+        fig_medias.add_trace(go.Scatter(x=df_filtrado_historic['Date'], y=df_filtrado_historic['Close'], name='Precio de Cierre'))
+        fig_medias.add_trace(go.Scatter(x=df_filtrado_historic['Date'], y=df_filtrado_historic['SMA_50'], name='SMA 50'))
+        fig_medias.add_trace(go.Scatter(x=df_filtrado_historic['Date'], y=df_filtrado_historic['SMA_200'], name='SMA 200'))
+        fig_medias.update_layout(title=f"Medias Móviles para {ticker_seleccionado}")
+        st.plotly_chart(fig_medias)
+        st.markdown(""" 📌 **Las medias móviles** son indicadores técnicos que suavizan los precios de un activo para identificar **tendencias** y posibles **puntos de entrada o salida**.
 
-# Función para calcular el Sortino Ratio
-def sortino_ratio(ticker, start_date, end_date, df, risk_free_rate=0.02):
-    start_date = pd.to_datetime(start_date)
-    end_date = pd.to_datetime(end_date)
-    df_ticker = df[(df['Ticker'] == ticker) & (df['Date'].between(start_date, end_date))].sort_values(by='Date')
+    🔹 Conceptos Clave:
+    - 📈 **Media Móvil Simple (SMA):** Promedio de los precios de cierre durante un período específico.
+    - 📉 **SMA 50 días:** Refleja la tendencia a corto/medio plazo.
+    - 📊 **SMA 200 días:** Refleja la tendencia a largo plazo.
 
-    if df_ticker.shape[0] < 2:
-        return "Datos insuficientes"
+    🔹 ¿Cómo se usan?
+    - 🟢 **Cruce alcista:** Cuando la SMA de corto plazo (50 días) cruza por encima de la SMA de largo plazo (200 días), puede indicar una tendencia alcista.
+    - 🔴 **Cruce bajista:** Cuando la SMA de corto plazo cruza por debajo de la SMA de largo plazo, puede indicar una tendencia bajista.
 
-    df_ticker['Rendimiento Diario'] = df_ticker['Close'].pct_change(fill_method=None)
-    mean_daily_return = df_ticker['Rendimiento Diario'].mean()
-    mean_annual_return = mean_daily_return * 252
-    downside_returns = df_ticker['Rendimiento Diario'][df_ticker['Rendimiento Diario'] < 0]
-    downside_deviation = downside_returns.std() * np.sqrt(252)
+    ---""")
 
-    if downside_deviation == 0 or pd.isna(downside_deviation):
-        return "Volatilidad negativa no definida"
+        # RSI (Relative Strength Index)
+        st.markdown("**Índice de Fuerza Relativa (RSI)**")
+        def calcular_rsi(data, window=14):
+            delta = data['Close'].diff()
+            ganancia = (delta.where(delta > 0, 0)).rolling(window=window).mean()
+            perdida = (-delta.where(delta < 0, 0)).rolling(window=window).mean()
+            rs = ganancia / perdida
+            rsi = 100 - (100 / (1 + rs))
+            return rsi
 
-    sortino = (mean_annual_return - risk_free_rate) / downside_deviation
-    return round(sortino, 2)
+        df_filtrado_historic['RSI'] = calcular_rsi(df_filtrado_historic)
+        fig_rsi = px.line(df_filtrado_historic, x='Date', y='RSI', title=f"RSI (14 días) para {ticker_seleccionado}")
+        st.plotly_chart(fig_rsi)
+        st.markdown("""
+    📌 **El RSI** mide la fuerza del precio y puede indicar zonas de **sobrecompra o sobreventa**.
 
-# Función para calcular la volatilidad
-def calcular_volatilidad(df, periodo="diario"):
-    df['Date'] = pd.to_datetime(df['Date'])
-    df['Rentabilidad'] = df.groupby('Ticker')['Close'].pct_change(fill_method=None)
+    - 🔴 **Sobrecompra:** RSI > 70
+    - 🟢 **Sobreventa:** RSI < 30
+    - 📊 Generalmente, se usa para identificar cambios de tendencia.
+    """)
 
-    if periodo == "mensual":
-        df['Month'] = df['Date'].dt.to_period('M')
-        datos_mensuales = df.groupby(['Ticker', 'Month'])['Close'].last().pct_change(fill_method=None)
-        volatilidad = datos_mensuales.groupby('Ticker').std().reset_index()
-    elif periodo == "diario":
-        volatilidad = df.groupby('Ticker')['Rentabilidad'].std().reset_index()
     else:
-        raise ValueError("El periodo debe ser 'diario' o 'mensual'.")
-
-    volatilidad.columns = ['Ticker', 'Volatilidad']
-    volatilidad = volatilidad.sort_values(by="Volatilidad", ascending=False).reset_index(drop=True)
-    return volatilidad
-
-# Función para calcular la correlación
-def calcular_correlacion(df, periodo="diario"):
-    df['Date'] = pd.to_datetime(df['Date'])
-    df = df[df['Ticker'].isin(df["Ticker"].unique().tolist())]
-    df['Rentabilidad'] = df.groupby('Ticker')['Close'].pct_change(fill_method=None)
-
-    if periodo == "mensual":
-        df['Month'] = df['Date'].dt.to_period('M')
-        datos_mensuales = df.groupby(['Ticker', 'Month'])['Close'].last().pct_change()
-        matriz_correlacion = datos_mensuales.unstack().corr()
-    elif periodo == "diario":
-        matriz_rentabilidades = df.pivot(index="Date", columns="Ticker", values="Rentabilidad")
-        matriz_correlacion = matriz_rentabilidades.corr()
-    else:
-        raise ValueError("El periodo debe ser 'diario' o 'mensual'.")
-
-    return matriz_correlacion
-
-    
+        st.warning("No hay datos disponibles para el ticker seleccionado.")
