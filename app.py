@@ -7,19 +7,7 @@ from descarga_sql import descargar_data_sql
 st.set_page_config(**PAGE_CONFIG)
 
 # Cargando los datos desde archivo CSV
-<<<<<<< HEAD
-
 nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
-#nasdaq_tickers_info = pd.read_csv("nasdaq_tickers_info_clean.csv")
-#nasdaq_tickers_historic = pd.read_csv("nasdaq_tickers_historic_clean.csv")
-
-
-
-
-
-=======
-nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
->>>>>>> main
 
 # barra lateral
 def mostrar_sidebar():

@@ -5,15 +5,7 @@ from datetime import datetime
 from descarga_sql import descargar_data_sql
 
 # Cargar datos desde archivo CSV y cambiar type columnas
-<<<<<<< HEAD:pages/usuario/analisis_tecnico_csv.py
-#nasdaq_tickers_historic = pd.read_csv("nasdaq_tickers_historic_clean.csv")
-#nasdaq_tickers_historic['Date'] = pd.to_datetime(nasdaq_tickers_historic['Date'])
-
 nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
-
-=======
-nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
->>>>>>> main:pages/usuario/analisis_tecnico.py
 
 # Función para mostrar la página
 def mostrar():
