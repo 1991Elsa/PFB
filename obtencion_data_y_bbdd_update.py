@@ -113,7 +113,35 @@ Retorna:
                 'ShortName': ticker_info.get('shortName', 'N/A'), 
                 'Sector': ticker_info.get('sector', 'N/A'),
                 'Industry': ticker_info.get('industry', 'N/A'),
-                'Country': ticker_info.get('country', 'N/A'),
+                'Country': ticker_info.get('country', 'N/A')
+            }
+            df_info = pd.DataFrame([dic_info])
+
+            nasdaq_tickers_info = pd.concat([nasdaq_tickers_info, df_info], ignore_index=True)
+            
+    print('Informacion de los tickers descargada con exito')
+    return nasdaq_tickers_info
+
+
+# Función para obtener la información financiera de los tickers
+def obtener_informacion_finanzas_tickers(tickers):
+    """
+    Obtiene la información financiera de los tickers especificados.
+
+    Parámetros:
+    - Tickers: Lista con los tickers de los cuales se desea obtener la información financiera.
+
+    Retorna:
+    - Un DataFrame con la información financiera de los tickers especificados.
+    """
+
+    nasdaq_tickers_finanzas = pd.DataFrame()
+
+    for ticker in tickers:
+        if ticker != 'NDX':
+            ticker_info = get_ticker_info(ticker)
+            dic_info = {
+                'Ticker': ticker_info.get('symbol', ticker),
                 'MarketCap': ticker_info.get('marketCap', 'N/A'), 
                 'TotalRevenue': ticker_info.get('totalRevenue', 'N/A'), 
                 'NetIncomeToCommon': ticker_info.get('netIncomeToCommon', 'N/A'),
@@ -132,34 +160,10 @@ Retorna:
             }
             df_info = pd.DataFrame([dic_info])
 
-            nasdaq_tickers_info = pd.concat([nasdaq_tickers_info, df_info], ignore_index=True)
+            nasdaq_tickers_finanzas = pd.concat([nasdaq_tickers_finanzas, df_info], ignore_index=True)
             
-    print('Informacion de los tickers descargada con exito')
-    return nasdaq_tickers_info
-
-# Función para limpiar los datos
-def clean_data_info(df):
-
-    try:
-
-        columnas_a_procesar = [
-            'ReturnOnAssets', 'ReturnOnEquity', 'DebtToEquity', 'MarketCap',
-            'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow', 'DividendRate',
-            'DividendYield', 'PayoutRatio', 'ebitdaMargins'
-        ]
-
-        for columna in columnas_a_procesar:
-            if columna in df.columns:  # Verificar si la columna existe en el dataframe
-                df[columna] = pd.to_numeric(df[columna], errors='coerce')
-                if columna in ['MarketCap', 'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow']:
-                    df[columna] = df[columna] / 1_000_000  
-
-        df = df.replace({np.nan: None})
-        
-
-    except Exception as e:
-        print(f'Fallo la limpieza de info {e}')
-    return df
+    print('Información financiera de los tickers descargada con éxito')
+    return nasdaq_tickers_finanzas
 
 
 # Función para limpiar los datos historicos
@@ -183,9 +187,41 @@ def clean_data_historic(df):
         print(f'Fallo la limpieza de historicos {e}')
 
 
+# Función para limpiar los datos info general
+def clean_data_info(df):
+    try:
+        # Este DataFrame contiene la información general, por lo que solo necesitamos limpiar los valores nulos.
+        df = df.replace({np.nan: None})
+        return df
+    except Exception as e:
+        print(f'Fallo la limpieza de info general {e}')
+
+
+# Función para limpiar los datos financieros  
+def clean_data_finanzas(df):
+    try:
+        columnas_a_procesar = [
+            'ReturnOnAssets', 'ReturnOnEquity', 'DebtToEquity', 'MarketCap',
+            'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow', 'DividendRate',
+            'DividendYield', 'PayoutRatio', 'ebitdaMargins'
+        ]
+
+        for columna in columnas_a_procesar:
+            if columna in df.columns:  # Verificar si la columna existe en el dataframe
+                df[columna] = pd.to_numeric(df[columna], errors='coerce')
+                if columna in ['MarketCap', 'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow']:
+                    df[columna] = df[columna] / 1_000_000  
+
+        df = df.replace({np.nan: None})
+        
+        return df
+    except Exception as e:
+        print(f'Fallo la limpieza de info {e}')
+        return df
+
+
 # Creacion de la BBDD en MySQL
-def creacion_bbdd(df_info_clean, df_historic_clean):
-    
+def creacion_bbdd(nasdaq_tickers_historic_clean, nasdaq_tickers_info_clean, nasdaq_tickers_finanzas_clean):
     try:
         initial_engine = get_engine()
         with initial_engine.connect() as connection:
@@ -209,25 +245,41 @@ def creacion_bbdd(df_info_clean, df_historic_clean):
 
     # Subir los df
     try:
-        df_nasdaq_tickers_info_clean = pd.read_csv('nasdaq_tickers_info_clean.csv')
         df_nasdaq_tickers_historic_clean = pd.read_csv('nasdaq_tickers_historic_clean.csv')
+        df_nasdaq_tickers_info_clean = pd.read_csv('nasdaq_tickers_info_clean.csv')
+        df_nasdaq_tickers_finanzas_clean = pd.read_csv('nasdaq_tickers_finanzas_clean.csv')
 
         # Asegura el type de las columnas 'Timestamp_extraction' y 'Date' 
-        df_nasdaq_tickers_info_clean['Timestamp_extraction'] = pd.to_datetime(df_nasdaq_tickers_info_clean['Timestamp_extraction'])
+        df_nasdaq_tickers_finanzas_clean['Timestamp_extraction'] = pd.to_datetime(df_nasdaq_tickers_finanzas_clean['Timestamp_extraction'])
         df_nasdaq_tickers_historic_clean['Date'] = pd.to_datetime(df_nasdaq_tickers_historic_clean['Date']).dt.date
 
-        # Reemplazar NaN por None para que no falle sql
+
+
+        # Reemplazar NaN por None
         df_nasdaq_tickers_info_clean = df_nasdaq_tickers_info_clean.replace({np.nan: None})
         df_nasdaq_tickers_historic_clean = df_nasdaq_tickers_historic_clean.replace({np.nan: None})
-
+        df_nasdaq_tickers_finanzas_clean = df_nasdaq_tickers_finanzas_clean.replace({np.nan: None})
+        
         # Desactivar las restricciones de clave foránea temporalmente para el llenado
         with engine.connect() as connection:
             connection.execute(text("SET FOREIGN_KEY_CHECKS=0;"))
 
+        # Insertar/actualizar los datos en nasdaq_tickers_historic_sql
+        try:
+            with engine.begin() as conn:
+                data = df_nasdaq_tickers_historic_clean.to_dict(orient='records')
+                stmt = insert(tickers_historic_table).values(data)
+                update_dict = {c.name: c for c in stmt.inserted if c.name not in ['Date', 'Ticker']}
+                stmt = stmt.on_duplicate_key_update(update_dict)
+                conn.execute(stmt)
+            print("Datos insertados en nasdaq_tickers_historic_sql correctamente.")
+        except Exception as e:
+            print(f"Error al insertar datos en nasdaq_tickers_historic_sql: {e}")
+
         # Insertar/actualizar los datos en nasdaq_tickers_info_sql
         try:
             with engine.begin() as conn:
-                data = df_info_clean.to_dict(orient='records')
+                data = df_nasdaq_tickers_info_clean.to_dict(orient='records')
                 stmt = insert(tickers_info_table).values(data)
                 update_dict = {c.name: c for c in stmt.inserted if c.name != 'Ticker'}
                 stmt = stmt.on_duplicate_key_update(update_dict)
@@ -236,17 +288,17 @@ def creacion_bbdd(df_info_clean, df_historic_clean):
         except Exception as e:
             print(f"Error al insertar datos en nasdaq_tickers_info_sql: {e}")
 
-        # Insertar/actualizar los datos en nasdaq_tickers_historic_sql
+        # Insertar/actualizar los datos en nasdaq_tickers_finanzas_sql
         try:
             with engine.begin() as conn:
-                data = df_historic_clean.to_dict(orient='records')
-                stmt = insert(tickers_historic_table).values(data)
-                update_dict = {c.name: c for c in stmt.inserted if c.name not in ['Date', 'Ticker']}
+                data = df_nasdaq_tickers_finanzas_clean.to_dict(orient='records')
+                stmt = insert(tickers_finanzas_table).values(data)
+                update_dict = {c.name: c for c in stmt.inserted if c.name != 'Ticker'}
                 stmt = stmt.on_duplicate_key_update(update_dict)
                 conn.execute(stmt)
-            print("Datos insertados en nasdaq_tickers_historic_sql correctamente.")
+            print("Datos insertados en nasdaq_tickers_finanzas_sql correctamente.")
         except Exception as e:
-            print(f"Error al insertar datos en nasdaq_tickers_historic_sql: {e}")
+            print(f"Error al insertar datos en nasdaq_tickers_finanzas_sql: {e}")
 
         # Reactiva la clave foránea
         with engine.connect() as connection:
@@ -268,22 +320,31 @@ try:
 except Exception as e:
     print(f'Error en la llamada de históricos: {e}')
 
-# Obtener y limpiar información de los tickers
+# Obtener y limpiar info general de los tickers
 try:
     informacion_tickers = obtener_informacion_tickers(tickers)
     nasdaq_tickers_info_clean = clean_data_info(informacion_tickers)
 except Exception as e:
-    print(f'Error en la llamada de info: {e}')
+    print(f'Error en la llamada de info general: {e}')
+
+# Obtener y limpiar métricas finanzas 
+try:
+    metricas_financieras = obtener_informacion_finanzas_tickers(tickers)
+    nasdaq_tickers_finanzas_clean = clean_data_finanzas(metricas_financieras)
+except Exception as e:
+    print(f'Error en la llamada de métricas financieras: {e}')
+
 
 # Guardar los DataFrames como archivos CSV
 try:
-    nasdaq_tickers_info_clean.to_csv('nasdaq_tickers_info_clean.csv', index=False)
     nasdaq_tickers_historic_clean.to_csv('nasdaq_tickers_historic_clean.csv', index=False)
+    nasdaq_tickers_info_clean.to_csv('nasdaq_tickers_info_clean.csv', index=False)
+    nasdaq_tickers_finanzas_clean.to_csv('nasdaq_tickers_finanzas_clean.csv', index=False)
 except Exception as e:
     print(f'Error en la limpieza de los datos: {e}')
 
 # Crear la bbdd y las tablas
 try:
-    creacion_bbdd(nasdaq_tickers_info_clean, nasdaq_tickers_historic_clean)
+    creacion_bbdd(nasdaq_tickers_historic_clean, nasdaq_tickers_info_clean, nasdaq_tickers_finanzas_clean)
 except Exception as e:
     print(f'No se creó la BBDD: {e}')
