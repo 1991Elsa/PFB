@@ -59,7 +59,14 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
             })
         fig_balance = px.bar(balance_general, x='Concepto', y='Monto', text='Monto', title=f"Balance general de la empresa {ticker_seleccionado}")
         st.plotly_chart(fig_balance)
-        st.markdown("📌 Relación entre **activos, pasivos y patrimonio** de la empresa.")
+        st.markdown("""📌 Relación entre **activos, pasivos y patrimonio** de la empresa.
+
+    - 🔋 **Activos**: Representan los que la empresa tiene y su capacidad para generar ingresos.
+    - 🪫 **Pasivos**: Representan las obligaciones financieras de la empresa (la deuda a terceros).
+    - 💶 **Patrimonio**: Refleja la salud financiera y el valor real de la empresa.   
+
+    🧮 Estos conceptos son clave para entender la estructura financiera y la solidez de la empresa.                 
+    """)
 
         #st.markdown("**Estado de Resultados**")
         estado_resultados = pd.DataFrame({
@@ -68,7 +75,13 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
             })
         fig_resultados = px.bar(estado_resultados, x='Concepto', y='Monto', text='Monto', title=f"Estado de resultados de la empresa {ticker_seleccionado}")
         st.plotly_chart(fig_resultados)
-        st.markdown("📌 **Rentabilidad** de la empresa en diferentes niveles brutos y netos.")
+        st.markdown("""📌 **Rentabilidad** de la empresa en diferentes niveles brutos y netos.
+                    
+    - Rentabilidad **bruta**: indica las ganacias después de los costes de venta (costes directos).
+    - Rentabilidad **neta**: indica las ganacias despues de deducir todos los gastos del negocio (costes directos, costes operativos e impuestos)
+
+    💰 Ambas son importantes para entender la eficiencia y salud financiera del negocio.         
+    """)
 
         # --- Gráficos de análisis técnico ---
         st.subheader("Análisis Técnico")
@@ -77,7 +90,18 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
         st.markdown("**Precios Históricos**")
         fig_precios = px.line(df_filtrado_historic, x='Date', y='Close', title=f"Precios de Cierre para {ticker_seleccionado}")
         st.plotly_chart(fig_precios)
-        st.markdown("📌 Evolución de los **precios de cierre** del activo seleccionado.")
+        st.markdown("""📌 Evolución de los **precios de cierre** del activo seleccionado.
+
+        💹 Refleja cómo ha cambiado el precio de cierre del activo a lo largo del tiempo.
+        🔎 Permite analizar tendencias, volatilidad y comportamiento del mercado.     
+
+        Importancia:
+                    
+    - 📈 Análisis técnico: Son fundamentales para trazar líneas de tendencia, medias móviles y otros indicadores.
+    - ☑️ Toma de decisiones: Ayudan a inversores y traders a decidir cuándo comprar, vender o mantener un activo.
+    - 📉 Volatilidad: Muestran cómo ha variado el precio en el tiempo, lo que indica el riesgo asociado al activo.   
+                    
+        """)
 
         # Medias móviles
         st.markdown("**Medias Móviles (SMA)**")
@@ -86,8 +110,8 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
 
         fig_medias = go.Figure()
         fig_medias.add_trace(go.Scatter(x=df_filtrado_historic['Date'], y=df_filtrado_historic['Close'], name='Precio de Cierre'))
-        fig_medias.add_trace(go.Scatter(x=df_filtrado_historic['Date'], y=df_filtrado_historic['SMA_50'], name='SMA 50'))
-        fig_medias.add_trace(go.Scatter(x=df_filtrado_historic['Date'], y=df_filtrado_historic['SMA_200'], name='SMA 200'))
+        fig_medias.add_trace(go.Scatter(x=df_filtrado_historic['Date'], y=df_filtrado_historic['SMA_50'], name='SMA 50', line = dict(color='green')))
+        fig_medias.add_trace(go.Scatter(x=df_filtrado_historic['Date'], y=df_filtrado_historic['SMA_200'], name='SMA 200', line = dict(color='red')))
         fig_medias.update_layout(title=f"Medias Móviles para {ticker_seleccionado}")
         st.plotly_chart(fig_medias)
         st.markdown(""" 📌 **Las medias móviles** son indicadores técnicos que suavizan los precios de un activo para identificar **tendencias** y posibles **puntos de entrada o salida**.

@@ -88,30 +88,27 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
         )
         st.plotly_chart(fig_rendimientos)
 
-        with st.expander("📘Explicación del Gráfico de Comparación de Rendimientos"):
-            st.write(""" Este gráfico muestra como han cambiado los rendimientos de diferentes activos a lo largo del tiempo en la misma escala porcentual.
-            """)
-        
-        st.write('\n')
-        st.write('\n')
-        st.write('\n')
-        st.write('\n')
+        st.markdown("""📘Explicación del Gráfico de Comparación de Rendimientos.
+    Este gráfico muestra como han cambiado los rendimientos de diferentes activos a lo largo del tiempo en la misma escala porcentual.
+
+    En general, se observa:
+    - Qué acción ha tenido mejor desempeño en un período de tiempo específico.
+    - Cuánto ha crecido o caído una inversión inicial en diferentes activos a lo largo del tiempo.         
+        """)
+           
 
 
         # Mostrar tabla de rendimientos acumulados
         st.subheader("📊 Rendimiento Acumulado")
         rendimientos_acumulados = rendimientos.groupby('Ticker')['Rendimiento'].sum().reset_index()
+        rendimientos_acumulados.set_index('Ticker')
         st.dataframe(rendimientos_acumulados.select_dtypes(include=np.number).style.highlight_max(axis=0))
 
 
-        with st.expander("📘Explicación del Rendimiento Acumulado"):
-            st.write("Se refiere a la ganancia o pérdida total de una inversión durante un período determinado, expresado en porcentaje.") 
-            st.write("En color amarillo se muestra el valor más alto obtenido de rendimiento acumulado.")
-
-        st.write('\n')
-        st.write('\n')
-        st.write('\n')
-        st.write('\n')
+        st.markdown("""📘Explicación del Rendimiento Acumulado.
+    Se refiere a la ganancia o pérdida total de una inversión durante un período determinado, expresado en porcentaje.
+    En color amarillo se muestra el valor más alto obtenido de rendimiento acumulado.
+                         """)
 
         # --- Gráfico de correlación ---
         st.subheader("📊 Correlación entre las Acciones Seleccionadas")
@@ -147,12 +144,24 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
         )
         st.plotly_chart(fig_correlacion)
 
-        with st.expander("📘Explicación del Gráfico de Correlación"):
-            st.write("Este gráfico muestra la relación entre los precios de cierre de los tickers seleccionados.")
-            st.write("Los valores de correlación varían entre -1 y 1.")
-            st.write("Un valor cercano a 1 indica que las acciones tienden a moverse en la misma dirección.")
-            st.write("Un valor cercano a -1 indica que tienden a moverse en direcciones opuestas.")
-            st.write("Un valor cercano a 0 indica poca o ninguna relación entre los movimientos de las acciones.")
+        st.markdown("""📘Explicación del Gráfico de Correlación.
+    Este gráfico muestra la relación entre los precios de cierre de los tickers seleccionados.
+                    
+    🔹 ¿Para qué se usa la correlación entre acciones?
+
+    La **diversificación de portafolios** se puede evaluar observando los movimientos de las acciones:
+
+    - Un valor cercano a 1 indica que las acciones tienden a moverse en la misma dirección, sus movimientos son similares, lo que no ayuda mucho a diversificar.
+    - Un valor cercano a -1 indica que tienden a moverse en direcciones opuestas, lo que puede ayudar a reducir el riesgo en un portafolio.
+    - Un valor cercano a 0 indica poca o ninguna relación entre los movimientos de las acciones, lo que también puede ser útil para diversificación.    
+
+    A la hora de **gestionar riesgos** los inversores pueden usar la correlación para evitar una exposición excesiva a inversiones en activos que se comporten de manera similar.
+
+    Este análisis es clave para evaluar cómo interactúan diferentes activos en un portafolio y optimizar la estrategia de inversión. 🚀📈         
+    """)
+            
+    
+    
 
     else:
         st.warning("Por favor, selecciona al menos un ticker para comparar.")
