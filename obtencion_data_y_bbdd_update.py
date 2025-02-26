@@ -253,6 +253,8 @@ def creacion_bbdd(nasdaq_tickers_historic_clean, nasdaq_tickers_info_clean, nasd
         df_nasdaq_tickers_finanzas_clean['Timestamp_extraction'] = pd.to_datetime(df_nasdaq_tickers_finanzas_clean['Timestamp_extraction'])
         df_nasdaq_tickers_historic_clean['Date'] = pd.to_datetime(df_nasdaq_tickers_historic_clean['Date']).dt.date
 
+
+
         # Reemplazar NaN por None
         df_nasdaq_tickers_info_clean = df_nasdaq_tickers_info_clean.replace({np.nan: None})
         df_nasdaq_tickers_historic_clean = df_nasdaq_tickers_historic_clean.replace({np.nan: None})
