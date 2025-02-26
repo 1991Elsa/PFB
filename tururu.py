@@ -1,3 +1,89 @@
+# Función para obtener la información financiera de los tickers
+
+def obtener_informacion_finanzas_tickers(tickers):
+    """
+Obtiene la información especifica y util de los tickers especificados.
+
+Parámetros:
+- Tickers: Lista con los tickers de los cuales se desea obtener los datos históricos.
+
+Retorna:
+- Un DataFrame con la información de los tickers especificados.
+"""
+
+    nasdaq_tickers_info_finanzas = pd.DataFrame()
+
+    for ticker in tickers:
+
+        if ticker != 'NDX':
+            ticker_info = get_ticker_info(ticker)
+            dic_info = {
+                'MarketCap': ticker_info.get('marketCap', 'N/A'), 
+                'TotalRevenue': ticker_info.get('totalRevenue', 'N/A'), 
+                'NetIncomeToCommon': ticker_info.get('netIncomeToCommon', 'N/A'),
+                'ReturnOnAssets': ticker_info.get('returnOnAssets', 'N/A'), 
+                'ReturnOnEquity': ticker_info.get('returnOnEquity', 'N/A'), 
+                'DebtToEquity': ticker_info.get('debtToEquity', 'N/A'), 
+                'FreeCashflow': ticker_info.get('freeCashflow', 'N/A'), 
+                'DividendRate': ticker_info.get('dividendRate', 'N/A'), 
+                'DividendYield': ticker_info.get('dividendYield', 'N/A'),
+                'PayoutRatio': ticker_info.get('payoutRatio', 'N/A'),
+                'GrossMargins': ticker_info.get('grossMargins', 'N/A'), 
+                'OperatingMargins': ticker_info.get('operatingMargins', 'N/A'), 
+                'ProfitMargins': ticker_info.get('profitMargins', 'N/A'),
+                'ebitdaMargins': ticker_info.get('ebitdaMargins', 'N/A'), 
+                'Timestamp_extraction': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            }
+            df_info = pd.DataFrame([dic_info])
+
+            nasdaq_tickers_info_finanzas = pd.concat([nasdaq_tickers_info_finanzas, df_info], ignore_index=True)
+            
+    print('Informacion de los tickers descargada con exito')
+    return nasdaq_tickers_info_finanzas
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import yfinance as yf
 
 # Define el ticker que quieres analizar (puedes cambiarlo por cualquier otro de la lista)

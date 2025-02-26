@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 import numpy as np
 from descarga_sql import nasdaq_tickers_historic, nasdaq_tickers_info
 
-def mostrar():
+def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     
     # Título del dashboard
     st.title("Dashboard de Análisis Financiero y Técnico - Nasdaq 100")
