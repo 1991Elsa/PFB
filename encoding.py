@@ -3,7 +3,6 @@ import numpy as np
 
 import pickle
 import sklearn
-#from sklearn.preprocessing import OneHotEncoder,OrdinalEncoder
 from sklearn.model_selection import KFold
 import category_encoders as ce
 from category_encoders.target_encoder import TargetEncoder
@@ -13,6 +12,14 @@ from descarga_sql import descargar_data_sql
 nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
 
 def encoding_fun(df):
+    """
+    Codifica las columnas categorícas en valores numéricos. 
+    Utiliza Target encoding para la columna Industry y One Hot Encoding para las columnas Sector y Country. 
+
+    Parámetro: Dataframe con todas las columnas
+
+    Retorna: Dataframe codificado en archivo pickle.
+    """
 
     df_info_encoded = pd.get_dummies(df, columns=["Sector", "Country"], dtype=int)
 
@@ -37,6 +44,7 @@ def encoding_fun(df):
     pickle_file =df_info_encoded.to_pickle("df_info_encoded.pkl")
 
     return pickle_file
+
 
 encoding_fun(nasdaq_tickers_info)
 
