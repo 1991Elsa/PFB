@@ -3,7 +3,7 @@ venv/
 entorno/
 env/
 
-connect_engine
+connect_engine.py
 
 .ipynb_checkpoints
 
