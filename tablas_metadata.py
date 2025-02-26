@@ -1,5 +1,3 @@
-#tablas_metadata.py
-
 from sqlalchemy import MetaData, Table, Column, String, Float, DateTime, Date, ForeignKey, text, insert
 
 metadata = MetaData()
