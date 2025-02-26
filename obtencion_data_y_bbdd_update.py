@@ -5,10 +5,9 @@ from datetime import datetime
 import pandas as pd
 import numpy as np
 import time
-from tablas_metadata import *
 from connect_engine import *
-
-
+from tablas_metadata import *
+from sqlalchemy.dialects.mysql import insert
 
 # Función para obtener los tickers de NASDAQ 100 (scrapping)
 def tickers_nasdaq():
@@ -186,113 +185,103 @@ def clean_data_historic(df):
 
 # Creacion de la tabla en MySQL
 def creacion_bbdd(df_info_clean, df_historic_clean):
+    
     try:
         initial_engine = get_engine()
         with initial_engine.connect() as connection:
-            result = connection.execute(text("SELECT 1"))
-            print("Conexión inicial establecida con éxito y librerías instaladas correctamente.")
+            result = connection.execute(text("CREATE DATABASE IF NOT EXISTS yahoo_finance"))
+            print("Base de datos 'yahoo_finance' creada/verificada con éxito.")
         
-        # Conectarse y crear la base de datos 'yahoo_finance' si no existe
-        with initial_engine.connect() as connection:
-            connection.execute(text("DROP DATABASE IF EXISTS yahoo_finance"))
-            print("Base de datos 'yahoo_finance' eliminada con éxito.")
-            connection.execute(text("CREATE DATABASE IF NOT EXISTS yahoo_finance"))
-            print("Base de datos 'yahoo_finance' creada con éxito.")
-
-        # Ahora conectar al motor especificando la nueva base de datos
+        # Conectarse a la base de datos 'yahoo_finance'
         engine = get_engine_database()
-        # Verificar la conexión a la nueva base de datos
         with engine.connect() as connection:
             result = connection.execute(text("SELECT 1"))
-            print("Conexión establecida con éxito a la base de datos yahoo_finance y librerías instaladas correctamente.")
+            print("Conexión establecida con éxito a la base de datos yahoo_finance.")
     except Exception as e:
         print(f"Error al establecer la conexión: {e}")
 
-    # Crear las tablas en la base de datos
+    # Crea las tablas en la base de datos
     try:
         metadata.create_all(engine, checkfirst=True)
-        print("Tablas creadas con éxito.")
+        print("Tablas creadas/verificadas con éxito.")
     except Exception as e:
         print(f"Error al crear las tablas: {e}")
 
-    # subir los df
+    # Subir los df
     try:
-
         df_nasdaq_tickers_info_clean = pd.read_csv('nasdaq_tickers_info_clean.csv')
         df_nasdaq_tickers_historic_clean = pd.read_csv('nasdaq_tickers_historic_clean.csv')
 
-        # Asegurarse de que las columnas 'Timestamp_extraction' y 'Date' son del tipo correcto
+        # Asegura el type de las columnas 'Timestamp_extraction' y 'Date' 
         df_nasdaq_tickers_info_clean['Timestamp_extraction'] = pd.to_datetime(df_nasdaq_tickers_info_clean['Timestamp_extraction'])
         df_nasdaq_tickers_historic_clean['Date'] = pd.to_datetime(df_nasdaq_tickers_historic_clean['Date']).dt.date
 
-        # Reemplazar NaN por None
+        # Reemplazar NaN por None para que no falle sql
         df_nasdaq_tickers_info_clean = df_nasdaq_tickers_info_clean.replace({np.nan: None})
         df_nasdaq_tickers_historic_clean = df_nasdaq_tickers_historic_clean.replace({np.nan: None})
 
-        # Desactivar las restricciones de clave foránea temporalmente
+        # Desactivar las restricciones de clave foránea temporalmente para el llenado
         with engine.connect() as connection:
             connection.execute(text("SET FOREIGN_KEY_CHECKS=0;"))
 
-        # Insertar los datos en la tabla nasdaq_tickers_info_sql sin cambiar su estructura
+        # Insertar/actualizar los datos en nasdaq_tickers_info_sql
         try:
             with engine.begin() as conn:
-                for row in df_nasdaq_tickers_info_clean.to_dict(orient='records'):
-                    stmt = insert(tickers_info_table).values(**row)
-                    conn.execute(stmt)
-            print("Datos insertados en la tabla nasdaq_tickers_info_sql correctamente.")
+                data = df_info_clean.to_dict(orient='records')
+                stmt = insert(tickers_info_table).values(data)
+                update_dict = {c.name: c for c in stmt.inserted if c.name != 'Ticker'}
+                stmt = stmt.on_duplicate_key_update(update_dict)
+                conn.execute(stmt)
+            print("Datos insertados en nasdaq_tickers_info_sql correctamente.")
         except Exception as e:
-            print(f"Error al insertar los datos en la tabla nasdaq_tickers_info_sql: {e}")
+            print(f"Error al insertar datos en nasdaq_tickers_info_sql: {e}")
 
-        # Insertar los datos en la tabla nasdaq_tickers_historic_sql sin cambiar su estructura
+        # Insertar/actualizar los datos en nasdaq_tickers_historic_sql
         try:
             with engine.begin() as conn:
-                for row in df_nasdaq_tickers_historic_clean.to_dict(orient='records'):
-                    stmt = insert(tickers_historic_table).values(**row)
-                    conn.execute(stmt)
-            print("Datos insertados en la tabla nasdaq_tickers_historic_sql correctamente.")
+                data = df_historic_clean.to_dict(orient='records')
+                stmt = insert(tickers_historic_table).values(data)
+                update_dict = {c.name: c for c in stmt.inserted if c.name not in ['Date', 'Ticker']}
+                stmt = stmt.on_duplicate_key_update(update_dict)
+                conn.execute(stmt)
+            print("Datos insertados en nasdaq_tickers_historic_sql correctamente.")
         except Exception as e:
-            print(f"Error al insertar los datos en la tabla nasdaq_tickers_historic_sql: {e}")
+            print(f"Error al insertar datos en nasdaq_tickers_historic_sql: {e}")
 
-        # Reactivar las restricciones de clave foránea
+        # Reactiva la clave foránea
         with engine.connect() as connection:
             connection.execute(text("SET FOREIGN_KEY_CHECKS=1;"))
 
     except Exception as e:
-        print(f"Error al leer los archivos CSV o insertar los datos en las tablas: {e}")
+        print(f"Error al procesar los datos: {e}")
 
-
+# Ejecución de las funciones
 try:
     tickers = tickers_nasdaq()
 except Exception as e:
-    print(f'Dio error la funcion de scrapping {e}')
-
-
-    # Obtener los datos históricos de todos los tickers del NASDAQ
-try:
-    nasdaq_tickers_historic_clean = clean_data_historic (get_datos_historicos(tickers))
+    print(f'Error en la función de scrapping: {e}')
     
-except Exception as e:
-    print(f'Dio error la llamada de historicos: {e}')
-
-
-    # Obtener la información de los tickers
+# Obtener y limpiar datos históricos
 try:
-    nasdaq_tickers_info_clean = clean_data_info (obtener_informacion_tickers(tickers))
+    nasdaq_tickers_historic_clean = clean_data_historic(get_datos_historicos(tickers))
 except Exception as e:
-    print(f'Dio error la llamada de info: {e}')
+    print(f'Error en la llamada de históricos: {e}')
 
+# Obtener y limpiar información de los tickers
+try:
+    nasdaq_tickers_info_clean = clean_data_info(obtener_informacion_tickers(tickers))
+except Exception as e:
+    print(f'Error en la llamada de info: {e}')
 
-    #Guardar los DataFrames como archivos CSV
+# Guardar los DataFrames como archivos CSV
 try:
     nasdaq_tickers_info_clean.to_csv('nasdaq_tickers_info_clean.csv', index=False)
     nasdaq_tickers_historic_clean.to_csv('nasdaq_tickers_historic_clean.csv', index=False)
 except Exception as e:
-    print(f'Dio error la limpieza de los datos {e}')
+    print(f'Error en la limpieza de los datos: {e}')
 
-
-    # Crear la base de datos y las tablas
-
+# Crear la bbdd y las tablas
 try:
     creacion_bbdd(nasdaq_tickers_info_clean, nasdaq_tickers_historic_clean)
 except Exception as e:
-    print(f'No se creo la BBDD {e}')
+    print(f'No se creó la BBDD: {e}')
