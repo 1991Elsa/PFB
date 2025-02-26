@@ -24,13 +24,12 @@ def encoding_fun(df):
     df_info_encoded = pd.get_dummies(df, columns=["Sector", "Country"], dtype=int)
 
     kf = KFold(n_splits=5, shuffle=True, random_state=42)
-
     industry_encoder = ce.TargetEncoder(cols=["Industry"])
 
     encoded_results =  []
 
     for train_index, val_index in kf.split(df_info_encoded):
-        X_train, X_val = nasdaq_tickers_info.iloc[train_index], nasdaq_tickers_info.iloc[val_index]
+        X_train, X_val = df.iloc[train_index], df.iloc[val_index]
 
         industry_encoder.fit(X_train["Industry"], X_train["MarketCap"])
         X_val_encoded = industry_encoder.transform(X_val["Industry"])
@@ -41,14 +40,23 @@ def encoding_fun(df):
 
     df_info_encoded["Industry_encoded"] = encoded_df
 
-    pickle_file =df_info_encoded.to_pickle("df_info_encoded.pkl")
+    industry_mapping = df_info_encoded.groupby("Industry")["MarketCap"].mean().to_dict()
+    
+    df_info_encoded.drop(columns=["Industry","Ticker","ShortName"], axis=1, inplace=True)
 
-    return pickle_file
+    df_info_encoded.to_pickle("df_info_encoded.pkl")
+
+    return df_info_encoded, industry_mapping
 
 
-encoding_fun(nasdaq_tickers_info)
+df_info_encoded, industry_mapping = encoding_fun(nasdaq_tickers_info)
 
 
 with open("df_info_encoded.pkl", "rb") as file:
    data = pickle.load(file)
 print(data)
+
+with open("industry_mapping.pkl", "wb") as file:
+    pickle.dump(industry_mapping, file)
+print(industry_mapping)
+
