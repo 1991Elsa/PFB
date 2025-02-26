@@ -4,9 +4,9 @@ import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
 from datetime import datetime
-from descarga_sql import descargar_data_sql
+#from descarga_sql import descargar_data_sql
 
-nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
+#nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
 
 # Definir las funciones
 
@@ -47,12 +47,12 @@ def sortino_ratio(ticker, start_date, end_date, df, risk_free_rate=0):
     sortino_ratio_value = excess_returns.mean() / downside_deviation
     return round(sortino_ratio_value, 2)
 
-def mostrar():
+def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     st.title("Dashboard Interactivo")
     st.write("Este es el contenido del Dashboard Interactivo.")
 
     # Cargar datos desde archivo CSV
-    nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
+    #nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
 
     # Convertir la columna 'Date' a tipo datetime
     nasdaq_tickers_historic['Date'] = pd.to_datetime(nasdaq_tickers_historic['Date'])
@@ -152,56 +152,56 @@ def mostrar():
     st.write('\n')
 
     st.subheader("Métricas")
-    with st.expander("Mostrar métricas", expanded=False):
-        # Calcular el ROI
-        roi_value = roi(selected_ticker, fecha_inicio, fecha_fin, df=nasdaq_tickers_historic)
-        st.write(f"**ROI:**")
-        if roi_value > 0:
-            st.success(f'Invertir en esa acción durante ese período habría generado una ganancia del {roi_value}%')
-        elif roi_value < 0:
-            st.error(f'Si hubieras invertido en esa acción, habrías perdido un {roi_value}% de tu inversión.')
-        st.write('\n')
+    
+    # Calcular el ROI
+    roi_value = roi(selected_ticker, fecha_inicio, fecha_fin, df=nasdaq_tickers_historic)
+    st.write(f"**ROI:**")
+    if roi_value > 0:
+        st.success(f'Invertir en esa acción durante ese período habría generado una ganancia del {roi_value}%')
+    elif roi_value < 0:
+        st.error(f'Si hubieras invertido en esa acción, habrías perdido un {roi_value}% de tu inversión.')
+    st.write('\n')
 
-        # Calcular Sharpe Ratio
-        col_risk1, col_risk2, col_risk3, col_risk4, col_risk5 = st.columns(5)
-        with col_risk5:
-            risk = st.number_input("Introducir riesgo personalizado (%)", min_value=0.0, max_value=100.0, value=20.00, step=0.01)
-            risk = risk / 100
+    # Calcular Sharpe Ratio
+    col_risk1, col_risk2, col_risk3, col_risk4, col_risk5 = st.columns(5)
+    with col_risk5:
+        risk = st.number_input("Introducir riesgo personalizado (%)", min_value=0.0, max_value=100.0, value=20.00, step=0.01)
+        risk = risk / 100
 
-        col_sortino, col_sharpe = st.columns(2)
+    col_sortino, col_sharpe = st.columns(2)
 
-        with col_sharpe:
-            sharpe_value = sharpe_ratio(selected_ticker, fecha_inicio, fecha_fin, df=nasdaq_tickers_historic, risk_free_rate=risk)
-            st.write(f"**Sharpe Ratio:** {sharpe_value}")
-            if sharpe_value > 1:
-                st.success('Buena inversión ajustada al riesgo')
-            elif sharpe_value < 1:
-                st.warning('Riesgo alto en relación con el retorno')
-            elif sharpe_value > 2:
-                st.success('Excelente inversión')
-            elif sharpe_value > 3:
-                st.success('Inversión excepcional')
+    with col_sharpe:
+        sharpe_value = sharpe_ratio(selected_ticker, fecha_inicio, fecha_fin, df=nasdaq_tickers_historic, risk_free_rate=risk)
+        st.write(f"**Sharpe Ratio:** {sharpe_value}")
+        if sharpe_value > 1:
+            st.success('Buena inversión ajustada al riesgo')
+        elif sharpe_value < 1:
+            st.warning('Riesgo alto en relación con el retorno')
+        elif sharpe_value > 2:
+            st.success('Excelente inversión')
+        elif sharpe_value > 3:
+            st.success('Inversión excepcional')
 
-        with col_sortino:
-            sortino_ratio_value = sortino_ratio(selected_ticker, fecha_inicio, fecha_fin, df = nasdaq_tickers_historic, risk_free_rate=risk)
-            st.write(f"**Sortino Ratio:** {sortino_ratio_value}")
-            if sortino_ratio_value > 1:
-                st.success('Buena inversión ajustada al riesgo')
-            elif sortino_ratio_value < 1:
-                st.warning('Riesgo alto en relación con el retorno')
-            elif sortino_ratio_value > 2:
-                st.success('Excelente inversión')
-            elif sortino_ratio_value > 3:
-                st.success('Inversión excepcional')
+    with col_sortino:
+        sortino_ratio_value = sortino_ratio(selected_ticker, fecha_inicio, fecha_fin, df = nasdaq_tickers_historic, risk_free_rate=risk)
+        st.write(f"**Sortino Ratio:** {sortino_ratio_value}")
+        if sortino_ratio_value > 1:
+            st.success('Buena inversión ajustada al riesgo')
+        elif sortino_ratio_value < 1:
+            st.warning('Riesgo alto en relación con el retorno')
+        elif sortino_ratio_value > 2:
+            st.success('Excelente inversión')
+        elif sortino_ratio_value > 3:
+            st.success('Inversión excepcional')
 
     st.write('\n')   
     st.write('\n')  
     st.write('\n')
     
     st.subheader(f"**Explicación de los ratios**")
-    with st.expander(f"**Mostrar explicación**"):
-        st.write(f'**ROI**: Return on Investment, es el retorno de la inversión.')
-        st.write(f'**Sharpe Ratio**: Es una medida de la rentabilidad ajustada al riesgo.')
-        st.write(f'**Sortino Ratio**: Es una medida de la rentabilidad ajustada al riesgo, pero solo tiene en cuenta los rendimientos negativos.')
-        st.write(f'**Riesgo**: Es el riesgo personalizado para la inversión a realizar.')
+   
+    st.write(f'**ROI**: Return on Investment, es el retorno de la inversión.')
+    st.write(f'**Sharpe Ratio**: Es una medida de la rentabilidad ajustada al riesgo.')
+    st.write(f'**Sortino Ratio**: Es una medida de la rentabilidad ajustada al riesgo, pero solo tiene en cuenta los rendimientos negativos.')
+    st.write(f'**Riesgo**: Es el riesgo personalizado para la inversión a realizar.')
 

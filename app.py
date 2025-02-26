@@ -2,12 +2,22 @@ import streamlit as st
 import pandas as pd
 from PIL import Image
 from modules.pfb_page_config_dict import PAGE_CONFIG
+from pages.usuario import dashboard_func
+from pages.usuario import comparador_activos
+from pages.usuario import analisis_tecnico
+from pages.usuario import tabla_bbdd
+
 from descarga_sql import descargar_data_sql
 
 st.set_page_config(**PAGE_CONFIG)
 
-# Cargando los datos desde archivo CSV
-nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
+# Cargar los datos en st.session_state si no existen
+if 'nasdaq_tickers_historic' not in st.session_state or 'nasdaq_tickers_info' not in st.session_state:
+    st.session_state.nasdaq_tickers_historic, st.session_state.nasdaq_tickers_info = descargar_data_sql()
+
+# Obtener los datos desde st.session_state
+nasdaq_tickers_historic = st.session_state.nasdaq_tickers_historic
+nasdaq_tickers_info = st.session_state.nasdaq_tickers_info
 
 # barra lateral
 def mostrar_sidebar():
@@ -18,8 +28,7 @@ def mostrar_sidebar():
 
         st.sidebar.title("NASDAQ-100")
         st.sidebar.image("sources/logo_ndq.jpeg", width=50)
-        st.sidebar.success(f'Last update: {nasdaq_tickers_info["Timestamp_extraction"][1]}')
-       
+        
         # Separador visual
         st.sidebar.markdown("---")
 
@@ -46,7 +55,12 @@ def mostrar_sidebar():
                                         ["PowerBI", "Esquema de tablas"], 
                                         key="cliente")
             st.session_state.sub_page = sub_page
+        
+        st.sidebar.markdown("---")
 
+        # Time stamp de actualizacion
+        st.sidebar.success(f'Last update: {nasdaq_tickers_info["Timestamp_extraction"][1]}')
+       
     
 
 # Función para mostrar la página de inicio
@@ -70,17 +84,18 @@ def main():
     elif st.session_state.page == "usuario":
         if 'sub_page' in st.session_state:
             if st.session_state.sub_page == "Dashboard interactivo":
-                from pages.usuario import dashboard_func
-                dashboard_func.mostrar()
+                dashboard_func.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
+
             elif st.session_state.sub_page == "Comparador de activos":
-                from pages.usuario import comparador_activos
-                comparador_activos.mostrar()
+                comparador_activos.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
+                
             elif st.session_state.sub_page == "Análisis técnico":
-                from pages.usuario import analisis_tecnico
-                analisis_tecnico.mostrar()
+                analisis_tecnico.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
+
             elif st.session_state.sub_page == "Tablas BBDD":
-                from pages.usuario import tabla_bbdd
-                tabla_bbdd.mostrar()
+                
+                tabla_bbdd.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
+
     elif st.session_state.page == "cliente":
         if 'sub_page' in st.session_state:
             if st.session_state.sub_page == "PowerBI":
