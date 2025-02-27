@@ -5,7 +5,7 @@ from connect_engine import get_engine_database
 
 
 def descargar_data_sql():
-    # Crear el engine y  se conecta a la base de datos yahoo_finance
+    # Crea el engine y se conecta a la base de datos yahoo_finance
     engine = get_engine_database()
 
     # Verifica la conexión
@@ -35,3 +35,13 @@ def descargar_data_sql():
     return df_historic, df_info
 
 nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
+
+"""
+En lugar de usar alchemy text y hacer las queries para descargar los datos de SQL cya que vamos a importar 
+las tablas completas, decidimos usar de pandas pd.read_sql ya que es mucho mas práctico.
+
+query_historic = text("SELECT * FROM nasdaq_tickers_historic_sql")
+query_info = text("SELECT * FROM nasdaq_tickers_info_sql")
+query_finanzas = text("SELECT * FROM nasdaq_tickers_finanzas_sql")
+
+"""
