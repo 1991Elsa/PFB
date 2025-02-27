@@ -190,7 +190,7 @@ def clean_data_historic(df):
 # Función para limpiar los datos info general
 def clean_data_info(df):
     try:
-        # Este DataFrame contiene la información general, por lo que solo necesitamos limpiar los valores nulos.
+        # Este df contiene la información general, solo necesitamos manejar valores nulos.
         df = df.replace({np.nan: None})
         return df
     except Exception as e:
@@ -253,10 +253,8 @@ def creacion_bbdd(nasdaq_tickers_historic_clean, nasdaq_tickers_info_clean, nasd
         df_nasdaq_tickers_finanzas_clean['Timestamp_extraction'] = pd.to_datetime(df_nasdaq_tickers_finanzas_clean['Timestamp_extraction'])
         df_nasdaq_tickers_historic_clean['Date'] = pd.to_datetime(df_nasdaq_tickers_historic_clean['Date']).dt.date
 
-
-
-        # Reemplazar NaN por None
-        df_nasdaq_tickers_info_clean = df_nasdaq_tickers_info_clean.replace({np.nan: None})
+        # Reemplazar NaN por None ya que las funciones de limpieza no lo consiguen hacer
+        #df_nasdaq_tickers_info_clean = df_nasdaq_tickers_info_clean.replace({np.nan: None})
         df_nasdaq_tickers_historic_clean = df_nasdaq_tickers_historic_clean.replace({np.nan: None})
         df_nasdaq_tickers_finanzas_clean = df_nasdaq_tickers_finanzas_clean.replace({np.nan: None})
         
@@ -333,7 +331,6 @@ try:
     nasdaq_tickers_finanzas_clean = clean_data_finanzas(metricas_financieras)
 except Exception as e:
     print(f'Error en la llamada de métricas financieras: {e}')
-
 
 # Guardar los DataFrames como archivos CSV
 try:

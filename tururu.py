@@ -1,45 +1,40 @@
-# Función para obtener la información financiera de los tickers
+import pandas as pd
+import numpy as np
+import sklearn
+from connect_engine import get_engine_database 
 
-def obtener_informacion_finanzas_tickers(tickers):
-    """
-Obtiene la información especifica y util de los tickers especificados.
 
-Parámetros:
-- Tickers: Lista con los tickers de los cuales se desea obtener los datos históricos.
+def descargar_data_sql():
+    # Crear el engine y  se conecta a la base de datos yahoo_finance
+    engine = get_engine_database()
 
-Retorna:
-- Un DataFrame con la información de los tickers especificados.
-"""
+    # Verifica la conexión
+    try:
+        connection = engine.connect()
+        connection.close()
+        print("Conexión establecida con éxito a la base de datos yahoo_finance.")
+    except Exception as e:
+        print(f"Error al establecer la conexión: {e}")
 
-    nasdaq_tickers_info_finanzas = pd.DataFrame()
+    # Lee las tablas SQL en df y cierra connecd
+    try:
+        df_historic = pd.read_sql_table(table_name="nasdaq_tickers_historic_sql", con=engine)
+        df_info = pd.read_sql_table(table_name="nasdaq_tickers_info_sql", con=engine)
+        df_finanzas = pd.read_sql_table(table_name="nasdaq_tickers_finanzas_sql", con=engine)
+        print('Descarga de datos con exito')   
+    except Exception as e:
+        print(f"Error al leer las tablas SQL: {e}")
 
-    for ticker in tickers:
+    # Volvemos a juntar las tablas separadas en df_info para manetener el código que ya teniamos.
+    try:
+        df_info = pd.merge(df_info, df_finanzas, on='Ticker')
+        print('Merge de info+finanzas realizada con éxito')
+    except Exception as e:
+        print(f"Error al unificar info+finanzas: {e}")
 
-        if ticker != 'NDX':
-            ticker_info = get_ticker_info(ticker)
-            dic_info = {
-                'MarketCap': ticker_info.get('marketCap', 'N/A'), 
-                'TotalRevenue': ticker_info.get('totalRevenue', 'N/A'), 
-                'NetIncomeToCommon': ticker_info.get('netIncomeToCommon', 'N/A'),
-                'ReturnOnAssets': ticker_info.get('returnOnAssets', 'N/A'), 
-                'ReturnOnEquity': ticker_info.get('returnOnEquity', 'N/A'), 
-                'DebtToEquity': ticker_info.get('debtToEquity', 'N/A'), 
-                'FreeCashflow': ticker_info.get('freeCashflow', 'N/A'), 
-                'DividendRate': ticker_info.get('dividendRate', 'N/A'), 
-                'DividendYield': ticker_info.get('dividendYield', 'N/A'),
-                'PayoutRatio': ticker_info.get('payoutRatio', 'N/A'),
-                'GrossMargins': ticker_info.get('grossMargins', 'N/A'), 
-                'OperatingMargins': ticker_info.get('operatingMargins', 'N/A'), 
-                'ProfitMargins': ticker_info.get('profitMargins', 'N/A'),
-                'ebitdaMargins': ticker_info.get('ebitdaMargins', 'N/A'), 
-                'Timestamp_extraction': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            }
-            df_info = pd.DataFrame([dic_info])
+    return df_historic, df_info
 
-            nasdaq_tickers_info_finanzas = pd.concat([nasdaq_tickers_info_finanzas, df_info], ignore_index=True)
-            
-    print('Informacion de los tickers descargada con exito')
-    return nasdaq_tickers_info_finanzas
+nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
 
 
 

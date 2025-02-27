@@ -65,7 +65,7 @@ def mostrar_sidebar():
 def mostrar_inicio():
     st.markdown("<h1 style='text-align: center;'>Bienvenido a la aplicación de Nasdaq 100.</h1>", unsafe_allow_html=True)
     st.write("")
-    st.image("sources/Nasdaq100.png", use_container_width=True)
+    st.image("sources/Nasdaq100.png", use_container_width=False)
     st.write("")
     st.subheader("""En esta aplicación podrás visualizar la información de los tickers del NASDAQ 100, así como su evolución en el tiempo y algunas métricas financieras.
     """)

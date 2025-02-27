@@ -1,14 +1,14 @@
 import pandas as pd
 import numpy as np
 import sklearn
-from connect_engine import get_engine, get_engine_database  # Importar las funciones
+from connect_engine import get_engine_database 
 
 
 def descargar_data_sql():
-    # Crear el engine y conectar a la base de datos yahoo_finance
+    # Crear el engine y  se conecta a la base de datos yahoo_finance
     engine = get_engine_database()
 
-    # Verificar la conexión
+    # Verifica la conexión
     try:
         connection = engine.connect()
         connection.close()
@@ -16,17 +16,22 @@ def descargar_data_sql():
     except Exception as e:
         print(f"Error al establecer la conexión: {e}")
 
-    # Leer las tablas SQL en DataFrames de pandas
+    # Lee las tablas SQL en df y cierra connect
     try:
         df_historic = pd.read_sql_table(table_name="nasdaq_tickers_historic_sql", con=engine)
         df_info = pd.read_sql_table(table_name="nasdaq_tickers_info_sql", con=engine)
         df_finanzas = pd.read_sql_table(table_name="nasdaq_tickers_finanzas_sql", con=engine)
-        print('Descarga de datos con exito')
-        
-       
+        print('Descarga de datos con exito')   
     except Exception as e:
         print(f"Error al leer las tablas SQL: {e}")
 
-    return df_historic, df_info, df_finanzas
+    # Volvemos a juntar las tablas separadas en df_info para manetener el código que ya teniamos.
+    try:
+        df_info = pd.merge(df_info, df_finanzas, on='Ticker')
+        print('Merge de info+finanzas realizada con éxito')
+    except Exception as e:
+        print(f"Error al unificar info+finanzas: {e}")
 
-nasdaq_tickers_historic, nasdaq_tickers_info, nasdaq_tickers_finanzas = descargar_data_sql()
+    return df_historic, df_info
+
+nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
