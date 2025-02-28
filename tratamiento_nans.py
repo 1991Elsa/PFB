@@ -1,12 +1,11 @@
 import pandas as pd
 import numpy as np
+from descarga_sql import descargar_data_sql
 
-nasdaq_tickers_historic = pd.read_csv("nasdaq_tickers_historic_clean.csv")
-nasdaq_tickers_info = pd.read_csv("nasdaq_tickers_info_clean.csv")
+nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
 
-def clean_data_info(df):
+def tratamiento_nans_info(df):
     """
-    Limpia el dataframe de información de los tickers, para convertir las columnas numéricas en millones.
     Trata los valores nulos de las columnas numéricas, rellenando con la mediana de la columna agrupada por Sector o con 0 en caso de DividendRate y DividendYield.
 
     Parámetro: Dataframe con información de los tickers.
@@ -19,14 +18,7 @@ def clean_data_info(df):
             'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow', 'DividendRate',
             'DividendYield', 'PayoutRatio', 'ebitdaMargins'
         ]
-
-        for columna in columnas_a_procesar:
-            if columna in df.columns:  # Verificar si la columna existe en el dataframe
-                df[columna] = pd.to_numeric(df[columna], errors='coerce')
-                if columna in ['MarketCap', 'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow']:
-                    df[columna] = df[columna] / 1_000_000  
-
-        #Tratamiento de nans    
+   
         df = df.fillna({"DividendRate" : 0, "DividendYield" : 0})
 
         df[columnas_a_procesar] = df.groupby("Sector")[columnas_a_procesar].transform(lambda x: x.fillna(x.median()))
@@ -39,9 +31,8 @@ def clean_data_info(df):
     
     return df
 
-def clean_data_historic(df):
+def tratamiento_nans_historic(df):
     """
-    Limpia el dataframe con la información historica de los tickers, para convertir las columnas a valores numéricos.
     Trata los valores nulos identificando la linealidad temporal de los datos y eliminando los tickers que cumplen con esta característica; porque son 
     empresas que aún no habían entrado al mercado en el rango de fechas de la descarga. Para los tickers restantes, interpola los valores nulos.
 
@@ -55,11 +46,6 @@ def clean_data_historic(df):
             'Close', 'High', 'Low', 'Open', 'Volume'
         ]
 
-        for columna in columnas_a_procesar:
-            if columna in df.columns:  # Verificar si la columna existe en el dataframe
-                df[columna] = pd.to_numeric(df[columna], errors='coerce')
-
-        #Tratamiento de nans
         nans = df[df.isna().any(axis=1)]
 
         def verificar_linealidad_temporal(df):
@@ -93,6 +79,6 @@ def clean_data_historic(df):
         print(f'Fallo la limpieza de historic {e}')
     return df
 
-nasdaq_tickers_info = clean_data_info(nasdaq_tickers_info)
-nasdaq_tickers_historic = clean_data_historic(nasdaq_tickers_historic)
+nasdaq_tickers_info_ml = tratamiento_nans_info(nasdaq_tickers_info)
+nasdaq_tickers_historic_ml = tratamiento_nans_historic(nasdaq_tickers_historic)
 

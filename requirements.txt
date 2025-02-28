@@ -88,3 +88,4 @@ sqlalchemy
 python-dotenv
 cryptography
 category_encoders
+pyspark
