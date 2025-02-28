@@ -210,16 +210,6 @@ def clean_data_historic(df):
         # Eliminar las filas en las que  el ticker está en la lista de linealidad temporal
         df = df[~df["Ticker"].isin(tickers_con_linealidad)].reset_index(drop=True)
 
-        # Interpolar datos para los tickers sin linealidad temporal
-        df["Date"] = pd.to_datetime(df["Date"])
-        df = df.sort_values(["Ticker", "Date"])
-
-        for ticker in sin_linealidad_temporal:
-            ticker_sin_linealidad = df["Ticker"] == ticker
-            df.loc[ticker_sin_linealidad, ["Close", "High", "Low", "Open", "Volume"]] = (
-            df.loc[ticker_sin_linealidad].set_index("Date")[["Close", "High", "Low", "Open", "Volume"]]
-            .interpolate(method="time", limit_direction="both").values)
-
         df = df.reset_index(drop=True)
 
         print("Valores nulos después de tratamiento:")
