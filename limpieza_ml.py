@@ -4,21 +4,14 @@ from descarga_sql import descargar_data_sql
 
 nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
 
-# INCLUIR EN LA LIMPIEZA_DF para el manejo de Nans
-
 # Limpieza de datos info
+nasdaq_tickers_info = nasdaq_tickers_info.fillna({"DividendRate" :0, "DividendYield" : 0})
 
-nasdaq_tickers_info ["DividendRate"].fillna(0, inplace=True)
-nasdaq_tickers_info ["DividendYield"].fillna(0, inplace=True)
-
-nasdaq_tickers_info["ReturnOnAssets"] = nasdaq_tickers_info.groupby("Sector")["ReturnOnAssets"].transform(lambda x: x.fillna(x.median()))
-nasdaq_tickers_info["ReturnOnEquity"] = nasdaq_tickers_info.groupby("Sector")["ReturnOnEquity"].transform(lambda x: x.fillna(x.median()))
-nasdaq_tickers_info["DebtToEquity"] = nasdaq_tickers_info.groupby("Sector")["DebtToEquity"].transform(lambda x: x.fillna(x.median()))
-nasdaq_tickers_info["FreeCashflow"] = nasdaq_tickers_info.groupby("Sector")["FreeCashflow"].transform(lambda x: x.fillna(x.median()))
+columnas = ["ReturnOnAssets", "ReturnOnEquity", "DebtToEquity", "FreeCashflow" ]
+nasdaq_tickers_info[columnas] = nasdaq_tickers_info.groupby("Sector")[columnas].transform(lambda x: x.fillna(x.median()))
 
 
 # Limpieza de datos historic
-
 
 nans = nasdaq_tickers_historic[nasdaq_tickers_historic.isna().any(axis=1)]
 
@@ -49,21 +42,5 @@ nasdaq_tickers_historic = nasdaq_tickers_historic.reset_index(drop=True)
 print("Valores nulos después de eliminación e interpolación:")
 print(nasdaq_tickers_historic.isna().sum())
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+print(nasdaq_tickers_historic.isna().sum())
+print(nasdaq_tickers_info.isna().sum())

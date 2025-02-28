@@ -1,40 +1,98 @@
 import pandas as pd
 import numpy as np
 
+nasdaq_tickers_historic = pd.read_csv("nasdaq_tickers_historic_clean.csv")
+nasdaq_tickers_info = pd.read_csv("nasdaq_tickers_info_clean.csv")
+
 def clean_data_info(df):
+    """
+    Limpia el dataframe de información de los tickers, para convertir las columnas numéricas en millones.
+    Trata los valores nulos de las columnas numéricas, rellenando con la mediana de la columna agrupada por Sector o con 0 en caso de DividendRate y DividendYield.
 
-    columnas_a_procesar = [
-        'ReturnOnAssets', 'ReturnOnEquity', 'DebtToEquity', 'MarketCap',
-        'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow', 'DividendRate',
-        'DividendYield', 'PayoutRatio', 'Beta', 'ebitdaMargins'
-    ]
+    Parámetro: Dataframe con información de los tickers.
 
-    for columna in columnas_a_procesar:
-        if columna in df.columns:  # Verificar si la columna existe en el dataframe
-            df[columna] = pd.to_numeric(df[columna], errors='coerce')
-            if columna in ['MarketCap', 'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow']:
-                df[columna] = df[columna] / 1_000_000  
+    Retorna: Dataframe limpio.
+    """
+    try:
+        columnas_a_procesar = [
+            'ReturnOnAssets', 'ReturnOnEquity', 'DebtToEquity', 'MarketCap',
+            'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow', 'DividendRate',
+            'DividendYield', 'PayoutRatio', 'ebitdaMargins'
+        ]
 
-    df = df.replace({np.nan: None})
+        for columna in columnas_a_procesar:
+            if columna in df.columns:  # Verificar si la columna existe en el dataframe
+                df[columna] = pd.to_numeric(df[columna], errors='coerce')
+                if columna in ['MarketCap', 'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow']:
+                    df[columna] = df[columna] / 1_000_000  
 
+        #Tratamiento de nans    
+        df = df.fillna({"DividendRate" : 0, "DividendYield" : 0})
+
+        df[columnas_a_procesar] = df.groupby("Sector")[columnas_a_procesar].transform(lambda x: x.fillna(x.median()))
+
+        print("Valores nulos después del tratamiento:")
+        print(df.isna().sum())
+    
+    except Exception as e:
+        print(f'Fallo la limpieza de info {e}')
+    
     return df
-
-#df_nasdaq_tickers_info_clean = clean_data_info(nasdaq_tickers_info)
 
 def clean_data_historic(df):
+    """
+    Limpia el dataframe con la información historica de los tickers, para convertir las columnas a valores numéricos.
+    Trata los valores nulos identificando la linealidad temporal de los datos y eliminando los tickers que cumplen con esta característica; porque son 
+    empresas que aún no habían entrado al mercado en el rango de fechas de la descarga. Para los tickers restantes, interpola los valores nulos.
 
-    columnas_a_procesar = [
-        'Close', 'High', 'Low', 'Open', 'Volume'
-    ]
+    Parámetro: Dataframe con información historica de los tickers.
 
-    for columna in columnas_a_procesar:
-        if columna in df.columns:  # Verificar si la columna existe en el dataframe
-            df[columna] = pd.to_numeric(df[columna], errors='coerce')
+    Retorna: Dataframe limpio.
+    """
+    
+    try:
+        columnas_a_procesar = [
+            'Close', 'High', 'Low', 'Open', 'Volume'
+        ]
 
-    df = df.replace({np.nan: None})
+        for columna in columnas_a_procesar:
+            if columna in df.columns:  # Verificar si la columna existe en el dataframe
+                df[columna] = pd.to_numeric(df[columna], errors='coerce')
 
+        #Tratamiento de nans
+        nans = df[df.isna().any(axis=1)]
+
+        def verificar_linealidad_temporal(df):
+            df["Date"] = pd.to_datetime(df["Date"])
+            fechas = pd.date_range(start=df["Date"].min(), end=df["Date"].max(), freq="MS")
+            return fechas.isin(df["Date"]).all()
+        
+        tickers_con_linealidad = (nans.groupby("Ticker").apply(verificar_linealidad_temporal).loc[lambda x: x].index.tolist())
+
+        sin_linealidad_temporal = list(set(nans["Ticker"]) - set(tickers_con_linealidad))
+
+        # Eliminar las filas en las que  el ticker está en la lista de linealidad temporal
+        df = df[~df["Ticker"].isin(tickers_con_linealidad)].reset_index(drop=True)
+
+        # Interpolar datos para los tickers sin linealidad temporal
+        df["Date"] = pd.to_datetime(df["Date"])
+        df = df.sort_values(["Ticker", "Date"])
+
+        for ticker in sin_linealidad_temporal:
+            ticker_sin_linealidad = df["Ticker"] == ticker
+            df.loc[ticker_sin_linealidad, ["Close", "High", "Low", "Open", "Volume"]] = (
+            df.loc[ticker_sin_linealidad].set_index("Date")[["Close", "High", "Low", "Open", "Volume"]]
+            .interpolate(method="time", limit_direction="both").values)
+
+        df = df.reset_index(drop=True)
+
+        print("Valores nulos después de tratamiento:")
+        print(df.isna().sum())
+
+    except Exception as e:
+        print(f'Fallo la limpieza de historic {e}')
     return df
 
-#df_nasdaq_tickers_historic_clean = clean_data_historic(nasdaq_tickers_historic)
-
+nasdaq_tickers_info = clean_data_info(nasdaq_tickers_info)
+nasdaq_tickers_historic = clean_data_historic(nasdaq_tickers_historic)
 
