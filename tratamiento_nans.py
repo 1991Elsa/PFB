@@ -34,7 +34,7 @@ def tratamiento_nans_info(df):
 def tratamiento_nans_historic(df):
     """
     Trata los valores nulos identificando la linealidad temporal de los datos y eliminando los tickers que cumplen con esta característica; porque son 
-    empresas que aún no habían entrado al mercado en el rango de fechas de la descarga. Para los tickers restantes, interpola los valores nulos.
+    empresas que aún no habían entrado al mercado en el rango de fechas de la descarga. 
 
     Parámetro: Dataframe con información historica de los tickers.
 
@@ -59,16 +59,6 @@ def tratamiento_nans_historic(df):
 
         # Eliminar las filas en las que  el ticker está en la lista de linealidad temporal
         df = df[~df["Ticker"].isin(tickers_con_linealidad)].reset_index(drop=True)
-
-        # Interpolar datos para los tickers sin linealidad temporal
-        df["Date"] = pd.to_datetime(df["Date"])
-        df = df.sort_values(["Ticker", "Date"])
-
-        for ticker in sin_linealidad_temporal:
-            ticker_sin_linealidad = df["Ticker"] == ticker
-            df.loc[ticker_sin_linealidad, ["Close", "High", "Low", "Open", "Volume"]] = (
-            df.loc[ticker_sin_linealidad].set_index("Date")[["Close", "High", "Low", "Open", "Volume"]]
-            .interpolate(method="time", limit_direction="both").values)
 
         df = df.reset_index(drop=True)
 
