@@ -43,7 +43,7 @@ def clean_data_historic(df):
     """
     Limpia el dataframe con la información historica de los tickers, para convertir las columnas a valores numéricos.
     Trata los valores nulos identificando la linealidad temporal de los datos y eliminando los tickers que cumplen con esta característica; porque son 
-    empresas que aún no habían entrado al mercado en el rango de fechas de la descarga. Para los tickers restantes, interpola los valores nulos.
+    empresas que aún no habían entrado al mercado en el rango de fechas de la descarga. 
 
     Parámetro: Dataframe con información historica de los tickers.
 
