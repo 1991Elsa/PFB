@@ -184,7 +184,7 @@ def clean_data_historic(df):
         print(f'Fallo la limpieza de historicos {e}')
 
 
-# Creacion de la tabla en MySQL
+# Creacion de la bbdd en MySQL
 def creacion_bbdd(df_info_clean, df_historic_clean):
     try:
         initial_engine = get_engine()
