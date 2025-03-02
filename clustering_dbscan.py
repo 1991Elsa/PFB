@@ -18,6 +18,7 @@ del tiempo y las agrupa según su comportamiento temporal.
 Usaremos las series temporales de los precios historicos contenidos en 
 nasdaq_tickers_historic 
 
+
 """
 
 def clustering_process(engine, nasdaq_tickers_historic):
