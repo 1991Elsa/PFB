@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
+from datetime import datetime
 #from descarga_sql import nasdaq_tickers_historic, nasdaq_tickers_info
 
 def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
@@ -25,6 +26,24 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
 
     # Extraer solo el ticker seleccionado (separa el texto antes del " - ")
     ticker_seleccionado = ticker_seleccionado.split(" - ")[0]
+
+    # Selección de período
+    st.subheader("📅 Selecciona el período de tiempo para el análisis.")
+
+    # Definimos fecha mínima y máxima para el selector de calendario
+    fecha_minima = datetime(2010, 1, 1) 
+    fecha_maxima = datetime.today()  
+
+    # Selección del rango de fechas
+    col1, col2 = st.columns(2)
+    with col1:
+        fecha_inicio = st.date_input("Fecha de inicio", datetime(2020, 1, 1), min_value=fecha_minima, max_value=fecha_maxima)
+    with col2:
+        fecha_fin = st.date_input("Fecha de fin", datetime.today(), min_value=fecha_minima, max_value=fecha_maxima)
+
+    # Convertir las fechas a datetime64[ns] para filtrar el dataframe
+    fecha_inicio = pd.to_datetime(fecha_inicio)
+    fecha_fin = pd.to_datetime(fecha_fin)
 
     # Filtrar el dataframe de información para el ticker seleccionado
     df_filtrado_info =  nasdaq_tickers_info[ nasdaq_tickers_info['Ticker'] == ticker_seleccionado]

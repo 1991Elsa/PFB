@@ -33,11 +33,16 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     st.write("\n")
     st.write("\n")
 
+    # Definimos fecha mínima y máxima para el selector de calendario
+    fecha_minima = datetime(2010, 1, 1)  # 01/01/2010
+    fecha_maxima = datetime.today()  # Fecha actual
+
     col1, col2 = st.columns(2)
     with col1:
-        fecha_inicio = st.date_input("Fecha de inicio", datetime(2020, 1, 1))
+        fecha_inicio = st.date_input("Fecha de inicio", datetime(2020, 1, 1), min_value=fecha_minima, max_value=fecha_maxima)
     with col2:
-        fecha_fin = st.date_input("Fecha de fin", datetime.today())
+        fecha_fin = st.date_input("Fecha de fin", datetime.today(), min_value=fecha_minima, max_value=fecha_maxima)
+
 
     # Convertir las fechas a datetime64[ns] para filtrar el dataframe
     fecha_inicio = pd.to_datetime(fecha_inicio)

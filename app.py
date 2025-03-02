@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from PIL import Image
 from modules.pfb_page_config_dict import PAGE_CONFIG
-from streamlit_modules import analisis_tecnico, comparador_activos, dashboard_func, esquema, powerbi, tabla_bbdd
+from streamlit_modules import analisis_tecnico,dashboard_func, comparador_activos, exploratory_data_analysis, esquema, powerbi, tabla_bbdd
 from descarga_sql import descargar_data_sql
 
 # Configuración de la página
@@ -16,8 +16,8 @@ nasdaq_tickers_historic = st.session_state.nasdaq_tickers_historic
 nasdaq_tickers_info = st.session_state.nasdaq_tickers_info
 
 # Carga la página por defecto en "Inicio"
-if 'selected_page' not in st.session_state:
-    st.session_state.selected_page = "Inicio"
+if 'seccion' not in st.session_state:
+    st.session_state.seccion = "Inicio"
 
 # Menu lateral
 def sidebar():
@@ -27,18 +27,20 @@ def sidebar():
 
     pages = [
         "Inicio",
-        "Dashboard interactivo",
+        "Exploratory Data Analysis",
+        "Dashboard Interactivo",
         "Comparador de activos",
         "Análisis técnico",
         "Tablas BBDD",
-        "PowerBI",
-        "Esquema de tablas"
+        "Dashboard Power BI",
+        "Esquema de tablas",
+        "About us"
     ]
   
-    st.session_state.selected_page = st.sidebar.radio(
+    st.session_state.seccion = st.sidebar.radio(
         "Elige una sección:",
         pages,
-        index=pages.index(st.session_state.selected_page)
+        index=pages.index(st.session_state.seccion)
     )
     st.sidebar.markdown("---")
     if "Timestamp_extraction" in nasdaq_tickers_info:
@@ -58,19 +60,24 @@ def main():
     sidebar()
 
     # Página  según la selección del sidebar
-    if st.session_state.selected_page == "Inicio":
+    if st.session_state.seccion == "Inicio":
         mostrar_inicio()
-    elif st.session_state.selected_page == "Dashboard interactivo":
+    elif st.session_state.seccion == "Exploratory Data Analysis":
+        exploratory_data_analysis.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
+    elif st.session_state.seccion == "Dashboard Interactivo":
         dashboard_func.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
-    elif st.session_state.selected_page == "Comparador de activos":
+    
+    elif st.session_state.seccion == "Comparador de activos":
         comparador_activos.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
-    elif st.session_state.selected_page == "Análisis técnico":
+    elif st.session_state.seccion == "Análisis técnico":
         analisis_tecnico.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
-    elif st.session_state.selected_page == "Tablas BBDD":
+    elif st.session_state.seccion == "Tablas BBDD":
         tabla_bbdd.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
-    elif st.session_state.selected_page == "PowerBI":
+    elif st.session_state.seccion == "PowerBI":
         powerbi.mostrar()
-    elif st.session_state.selected_page == "Esquema de tablas":
+    elif st.session_state.seccion == "Esquema de tablas":
+        esquema.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
+    elif st.session_state.seccion == "About us":
         esquema.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
 
 if __name__ == "__main__":
