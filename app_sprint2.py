@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from PIL import Image
 from modules.pfb_page_config_dict import PAGE_CONFIG
-from streamlit_modules import analisis_tecnico,dashboard_func, comparador_activos, exploratory_data_analysis, esquema, powerbi, tabla_bbdd
+from streamlit_modules import analisis_tecnico1, comparador_activos1,dashboard_func1, esquema1, exploratory_data_analysis, powerbi, tabla_bbdd1
 from descarga_sql import descargar_data_sql
 
 # Configuración de la página
@@ -65,20 +65,20 @@ def main():
     elif st.session_state.seccion == "Exploratory Data Analysis":
         exploratory_data_analysis.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
     elif st.session_state.seccion == "Dashboard Interactivo":
-        dashboard_func.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
+        dashboard_func1.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
     
     elif st.session_state.seccion == "Comparador de activos":
-        comparador_activos.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
+        comparador_activos1.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
     elif st.session_state.seccion == "Análisis técnico":
-        analisis_tecnico.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
+        analisis_tecnico1.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
     elif st.session_state.seccion == "Tablas BBDD":
-        tabla_bbdd.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
+        tabla_bbdd1.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
     elif st.session_state.seccion == "PowerBI":
         powerbi.mostrar()
     elif st.session_state.seccion == "Esquema de tablas":
-        esquema.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
+        esquema1.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
     elif st.session_state.seccion == "About us":
-        esquema.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
+        esquema1.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
 
 if __name__ == "__main__":
     main()
