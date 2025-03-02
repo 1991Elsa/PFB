@@ -304,20 +304,9 @@ def creacion_bbdd(nasdaq_tickers_historic_clean, nasdaq_tickers_info_clean, fina
     except Exception as e:
         print(f"Error al crear las tablas: {e}")
 
-    # Subir los df
+    # Asegura que Datetime solo se use date
     try:
-        #df_nasdaq_tickers_historic_clean = pd.read_csv('nasdaq_tickers_historic_clean.csv')
-        #df_nasdaq_tickers_info_clean = pd.read_csv('nasdaq_tickers_info_clean.csv')
-        #df_nasdaq_tickers_finanzas_clean = pd.read_csv('nasdaq_tickers_finanzas_clean.csv')
-
-        # Asegura el type de las columnas 'Timestamp_extraction' y 'Date' 
-        
         nasdaq_tickers_historic_clean['Date'] = pd.to_datetime(nasdaq_tickers_historic_clean['Date']).dt.date
-
-        # Reemplazar NaN por None ya que las funciones de limpieza no lo consiguen hacer
-        #nasdaq_tickers_info_clean = nasdaq_tickers_info_clean.replace({np.nan: None})
-        #nasdaq_tickers_historic_clean = nasdaq_tickers_historic_clean.replace({np.nan: None})
-        #nasdaq_tickers_finanzas_clean = nasdaq_tickers_finanzas_clean.replace({np.nan: None})
         
         # Desactivar las restricciones de clave foránea temporalmente para el llenado
         with engine.connect() as connection:
@@ -411,16 +400,6 @@ try:
 except Exception as e:
     print(f'Error en la llamada de métricas financieras: {e}')
 
-
-# Guardar los DataFrames como archivos CSV
-#try:
-    #nasdaq_tickers_historic_clean.to_csv('nasdaq_tickers_historic_clean.csv', index=False)
-    #nasdaq_tickers_info_clean.to_csv('nasdaq_tickers_info_clean.csv', index=False)
-    #finanzas_operativas_clean.to_csv('finanzas_operativas_clean.csv', index=False)
-    #finanzas_balanza_clean.to_csv('finanzas_balanza_clean.csv', index=False)
-    #finanzas_dividendos_clean.to_csv('finanzas_dividendos_clean.csv', index=False)
-#except Exception as e:
-    #print(f'Error en la limpieza de los datos: {e}')
 
 # Obtener el df del timestamp 
 try:
