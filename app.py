@@ -8,24 +8,23 @@ from descarga_sql import descargar_data_sql
 # Configuración de la página
 st.set_page_config(**PAGE_CONFIG)
 
-# Cargar datos si no existen en session_state
+# Usamos session_state para agilizar la carga de datos entre páginas
 if 'nasdaq_tickers_historic' not in st.session_state or 'nasdaq_tickers_info' not in st.session_state:
     st.session_state.nasdaq_tickers_historic, st.session_state.nasdaq_tickers_info = descargar_data_sql()
 
-# Obtener datos
 nasdaq_tickers_historic = st.session_state.nasdaq_tickers_historic
 nasdaq_tickers_info = st.session_state.nasdaq_tickers_info
 
-# Si aún no se ha seleccionado una página, por defecto es "Inicio"
+# Carga la página por defecto en "Inicio"
 if 'selected_page' not in st.session_state:
     st.session_state.selected_page = "Inicio"
 
-# Función para mostrar el sidebar
+# Menu lateral
 def sidebar():
     st.sidebar.image("sources/logo_ndq.jpeg", width=50)
     st.sidebar.title("NASDAQ-100")
     st.sidebar.write("")
-    # Lista de opciones: incluye "Inicio" y las demás secciones
+
     pages = [
         "Inicio",
         "Dashboard interactivo",
@@ -35,7 +34,7 @@ def sidebar():
         "PowerBI",
         "Esquema de tablas"
     ]
-    # Mostrar selector de páginas en el sidebar y actualizar session_state
+  
     st.session_state.selected_page = st.sidebar.radio(
         "Elige una sección:",
         pages,
@@ -55,10 +54,10 @@ def mostrar_inicio():
 
 # Función principal
 def main():
-    # Mostrar siempre el sidebar
+    
     sidebar()
 
-    # Renderizar la página principal según la selección del sidebar
+    # Página  según la selección del sidebar
     if st.session_state.selected_page == "Inicio":
         mostrar_inicio()
     elif st.session_state.selected_page == "Dashboard interactivo":
