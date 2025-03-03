@@ -20,28 +20,41 @@ def descargar_data_sql():
     try:
         df_historic = pd.read_sql_table(table_name="nasdaq_tickers_historic_sql", con=engine)
         df_info = pd.read_sql_table(table_name="nasdaq_tickers_info_sql", con=engine)
-        df_finanzas = pd.read_sql_table(table_name="nasdaq_tickers_finanzas_sql", con=engine)
+        df_operativas = pd.read_sql_table(table_name="finanzas_operativas_sql", con=engine)
+        df_balanza = pd.read_sql_table(table_name="finanzas_balanza_sql", con=engine)
+        df_dividendos = pd.read_sql_table(table_name="finanzas_dividendos_sql", con=engine)
         print('Descarga de datos con exito')   
     except Exception as e:
         print(f"Error al leer las tablas SQL: {e}")
 
-    # Volvemos a juntar las tablas separadas en df_info para manetener el código que ya teniamos.
+    # Volvemos a juntar las 3 tablas de metricas financieras en df_info para manetener el código que ya teniamos.
+    try:
+        df_finanzas = pd.merge(df_operativas, df_balanza, on='Ticker')
+        df_finanzas = pd.merge(df_finanzas, df_dividendos, on='Ticker')
+        print('Union de las tablas de finanzas realizada con éxito')
+    except Exception as e:
+        print(f"Error al unir las tablas de finanzas: {e}")
+
+    # Ahora unimos el df_finanzas al df_info
     try:
         df_info = pd.merge(df_info, df_finanzas, on='Ticker')
-        print('Merge de info+finanzas realizada con éxito')
+        print('Union de las tablas info y finanzas realizada con éxito')
     except Exception as e:
-        print(f"Error al unificar info+finanzas: {e}")
+        print(f"Error al unir las tablas info y finanzas: {e}")
 
     return df_historic, df_info
 
 nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
 
+# Guardamos los df en formato CSV
+nasdaq_tickers_historic.to_csv("nasdaq_tickers_historic.csv", index=False)
+nasdaq_tickers_info.to_csv("nasdaq_tickers_info.csv", index=False)
+
 """
-En lugar de usar alchemy text y hacer las queries para descargar los datos de SQL cya que vamos a importar 
+En lugar de usar alchemy text y hacer las queries para descargar los datos de SQL como vamos a importar 
 las tablas completas, decidimos usar de pandas pd.read_sql ya que es mucho mas práctico.
 
 query_historic = text("SELECT * FROM nasdaq_tickers_historic_sql")
 query_info = text("SELECT * FROM nasdaq_tickers_info_sql")
-query_finanzas = text("SELECT * FROM nasdaq_tickers_finanzas_sql")
 
 """
