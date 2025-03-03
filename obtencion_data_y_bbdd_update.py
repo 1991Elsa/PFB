@@ -110,25 +110,10 @@ Retorna:
             ticker_info = get_ticker_info(ticker)
             dic_info = {
                 'Ticker': ticker_info.get('symbol', ticker), 
-                'ShortName': ticker_info.get('shortName', 'N/A'), 
-                'Sector': ticker_info.get('sector', 'N/A'),
-                'Industry': ticker_info.get('industry', 'N/A'),
-                'Country': ticker_info.get('country', 'N/A'),
-                'MarketCap': ticker_info.get('marketCap', 'N/A'), 
-                'TotalRevenue': ticker_info.get('totalRevenue', 'N/A'), 
-                'NetIncomeToCommon': ticker_info.get('netIncomeToCommon', 'N/A'),
-                'ReturnOnAssets': ticker_info.get('returnOnAssets', 'N/A'), 
-                'ReturnOnEquity': ticker_info.get('returnOnEquity', 'N/A'), 
-                'DebtToEquity': ticker_info.get('debtToEquity', 'N/A'), 
-                'FreeCashflow': ticker_info.get('freeCashflow', 'N/A'), 
-                'DividendRate': ticker_info.get('dividendRate', 'N/A'), 
-                'DividendYield': ticker_info.get('dividendYield', 'N/A'),
-                'PayoutRatio': ticker_info.get('payoutRatio', 'N/A'),
-                'GrossMargins': ticker_info.get('grossMargins', 'N/A'), 
-                'OperatingMargins': ticker_info.get('operatingMargins', 'N/A'), 
-                'ProfitMargins': ticker_info.get('profitMargins', 'N/A'),
-                'ebitdaMargins': ticker_info.get('ebitdaMargins', 'N/A'), 
-                'Timestamp_extraction': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                'ShortName': ticker_info.get('shortName', 'N/A'),      #Nombre empresa
+                'Sector': ticker_info.get('sector', 'N/A'),            #Sector de la empresa
+                'Industry': ticker_info.get('industry', 'N/A'),        #Industria a la que pertenece
+                'Country': ticker_info.get('country', 'N/A')           #País
             }
             df_info = pd.DataFrame([dic_info])
 
@@ -137,29 +122,48 @@ Retorna:
     print('Informacion de los tickers descargada con exito')
     return nasdaq_tickers_info
 
-# Función para limpiar los datos
-def clean_data_info(df):
 
-    try:
+# Función para obtener la información financiera de los tickers
+def obtener_informacion_finanzas_tickers(tickers):
+    """
+    Obtiene la información financiera de los tickers especificados.
 
-        columnas_a_procesar = [
-            'ReturnOnAssets', 'ReturnOnEquity', 'DebtToEquity', 'MarketCap',
-            'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow', 'DividendRate',
-            'DividendYield', 'PayoutRatio', 'ebitdaMargins'
-        ]
+    Parámetros:
+    - Tickers: Lista con los tickers de los cuales se desea obtener la información financiera.
 
-        for columna in columnas_a_procesar:
-            if columna in df.columns:  # Verificar si la columna existe en el dataframe
-                df[columna] = pd.to_numeric(df[columna], errors='coerce')
-                if columna in ['MarketCap', 'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow']:
-                    df[columna] = df[columna] / 1_000_000  
+    Retorna:
+    - Un DataFrame con la información financiera de los tickers especificados.
+    """
 
-        df = df.replace({np.nan: None})
-        
+    nasdaq_tickers_finanzas = pd.DataFrame()
 
-    except Exception as e:
-        print(f'Fallo la limpieza de info {e}')
-    return df
+    for ticker in tickers:
+        if ticker != 'NDX':
+            ticker_info = get_ticker_info(ticker)
+            dic_info = {
+                'Ticker': ticker_info.get('symbol', ticker),
+                'MarketCap': ticker_info.get('marketCap', 'N/A'),                   #Capitalización de mercado.
+                'TotalRevenue': ticker_info.get('totalRevenue', 'N/A'),             #Ingresos totales.
+                'NetIncomeToCommon': ticker_info.get('netIncomeToCommon', 'N/A'),   #Ingresos netos.
+                'ReturnOnAssets': ticker_info.get('returnOnAssets', 'N/A'),         #Rentabilidad sobre activos.
+                'ReturnOnEquity': ticker_info.get('returnOnEquity', 'N/A'),         #Rentabilidad sobre el patrimonio.
+                'DebtToEquity': ticker_info.get('debtToEquity', 'N/A'),             #Ratio de deuda sobre el patrimonio.
+                'FreeCashflow': ticker_info.get('freeCashflow', 'N/A'),             #Flujo de caja libre.
+                'DividendRate': ticker_info.get('dividendRate', 'N/A'),             #Tasa de dividendos.
+                'DividendYield': ticker_info.get('dividendYield', 'N/A'),           #Rentabilidad por dividendo.
+                'PayoutRatio': ticker_info.get('payoutRatio', 'N/A'),               #Ratio de pago de dividendos.
+                'GrossMargins': ticker_info.get('grossMargins', 'N/A'),             #Margen bruto.
+                'OperatingMargins': ticker_info.get('operatingMargins', 'N/A'),     #Margen operativo.
+                'ProfitMargins': ticker_info.get('profitMargins', 'N/A'),           #Margen de beneficio.
+                'ebitdaMargins': ticker_info.get('ebitdaMargins', 'N/A'),           #Margen EBITDA que es el beneficio antes de intereses, impuestos, depreciación y amortización.
+                'Timestamp_extraction': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            }
+            df_info = pd.DataFrame([dic_info])
+
+            nasdaq_tickers_finanzas = pd.concat([nasdaq_tickers_finanzas, df_info], ignore_index=True)
+            
+    print('Información financiera de los tickers descargada con éxito')
+    return nasdaq_tickers_finanzas
 
 
 # Función para limpiar los datos historicos
@@ -183,9 +187,41 @@ def clean_data_historic(df):
         print(f'Fallo la limpieza de historicos {e}')
 
 
+# Función para limpiar los datos info general
+def clean_data_info(df):
+    try:
+        # Este df contiene la información general de cada empresa, solo necesitamos manejar valores nulos.
+        df = df.replace({np.nan: None})
+        return df
+    except Exception as e:
+        print(f'Fallo la limpieza de info general {e}')
+
+
+# Función para limpiar los datos financieros  
+def clean_data_finanzas(df):
+    try:
+        columnas_a_procesar = [
+            'ReturnOnAssets', 'ReturnOnEquity', 'DebtToEquity', 'MarketCap',
+            'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow', 'DividendRate',
+            'DividendYield', 'PayoutRatio', 'ebitdaMargins'
+        ]
+
+        for columna in columnas_a_procesar:
+            if columna in df.columns:  # Verificar si la columna existe en el dataframe
+                df[columna] = pd.to_numeric(df[columna], errors='coerce')
+                if columna in ['MarketCap', 'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow']:
+                    df[columna] = df[columna] / 1_000_000  
+
+        df = df.replace({np.nan: None})
+        
+        return df
+    except Exception as e:
+        print(f'Fallo la limpieza de info {e}')
+        return df
+
+
 # Creacion de la BBDD en MySQL
-def creacion_bbdd(df_info_clean, df_historic_clean):
-    
+def creacion_bbdd(nasdaq_tickers_historic_clean, nasdaq_tickers_info_clean, nasdaq_tickers_finanzas_clean):
     try:
         initial_engine = get_engine()
         with initial_engine.connect() as connection:
@@ -195,39 +231,52 @@ def creacion_bbdd(df_info_clean, df_historic_clean):
         # Conectarse a la base de datos 'yahoo_finance'
         engine = get_engine_database()
         with engine.connect() as connection:
-            result = connection.execute(text("SELECT 1"))
             print("Conexión establecida con éxito a la base de datos yahoo_finance.")
     except Exception as e:
         print(f"Error al establecer la conexión: {e}")
 
     # Crea las tablas en la base de datos
     try:
-        metadata.create_all(engine, checkfirst=True)
+        tablas.create_all(engine, checkfirst=True)
         print("Tablas creadas/verificadas con éxito.")
     except Exception as e:
         print(f"Error al crear las tablas: {e}")
 
     # Subir los df
     try:
-        df_nasdaq_tickers_info_clean = pd.read_csv('nasdaq_tickers_info_clean.csv')
-        df_nasdaq_tickers_historic_clean = pd.read_csv('nasdaq_tickers_historic_clean.csv')
+        #df_nasdaq_tickers_historic_clean = pd.read_csv('nasdaq_tickers_historic_clean.csv')
+        #df_nasdaq_tickers_info_clean = pd.read_csv('nasdaq_tickers_info_clean.csv')
+        #df_nasdaq_tickers_finanzas_clean = pd.read_csv('nasdaq_tickers_finanzas_clean.csv')
 
         # Asegura el type de las columnas 'Timestamp_extraction' y 'Date' 
-        df_nasdaq_tickers_info_clean['Timestamp_extraction'] = pd.to_datetime(df_nasdaq_tickers_info_clean['Timestamp_extraction'])
-        df_nasdaq_tickers_historic_clean['Date'] = pd.to_datetime(df_nasdaq_tickers_historic_clean['Date']).dt.date
+        nasdaq_tickers_finanzas_clean['Timestamp_extraction'] = pd.to_datetime(nasdaq_tickers_finanzas_clean['Timestamp_extraction'])
+        nasdaq_tickers_historic_clean['Date'] = pd.to_datetime(nasdaq_tickers_historic_clean['Date']).dt.date
 
-        # Reemplazar NaN por None para que no falle sql
-        df_nasdaq_tickers_info_clean = df_nasdaq_tickers_info_clean.replace({np.nan: None})
-        df_nasdaq_tickers_historic_clean = df_nasdaq_tickers_historic_clean.replace({np.nan: None})
-
+        # Reemplazar NaN por None ya que las funciones de limpieza no lo consiguen hacer
+        nasdaq_tickers_info_clean = nasdaq_tickers_info_clean.replace({np.nan: None})
+        nasdaq_tickers_historic_clean = nasdaq_tickers_historic_clean.replace({np.nan: None})
+        nasdaq_tickers_finanzas_clean = nasdaq_tickers_finanzas_clean.replace({np.nan: None})
+        
         # Desactivar las restricciones de clave foránea temporalmente para el llenado
         with engine.connect() as connection:
             connection.execute(text("SET FOREIGN_KEY_CHECKS=0;"))
 
+        # Insertar/actualizar los datos en nasdaq_tickers_historic_sql
+        try:
+            with engine.begin() as conn:
+                data = nasdaq_tickers_historic_clean.to_dict(orient='records')
+                stmt = insert(tickers_historic_table).values(data)
+                update_dict = {c.name: c for c in stmt.inserted if c.name not in ['Date', 'Ticker']}
+                stmt = stmt.on_duplicate_key_update(update_dict)
+                conn.execute(stmt)
+            print("Datos insertados en nasdaq_tickers_historic_sql correctamente.")
+        except Exception as e:
+            print(f"Error al insertar datos en nasdaq_tickers_historic_sql: {e}")
+
         # Insertar/actualizar los datos en nasdaq_tickers_info_sql
         try:
             with engine.begin() as conn:
-                data = df_info_clean.to_dict(orient='records')
+                data = nasdaq_tickers_info_clean.to_dict(orient='records')
                 stmt = insert(tickers_info_table).values(data)
                 update_dict = {c.name: c for c in stmt.inserted if c.name != 'Ticker'}
                 stmt = stmt.on_duplicate_key_update(update_dict)
@@ -236,17 +285,17 @@ def creacion_bbdd(df_info_clean, df_historic_clean):
         except Exception as e:
             print(f"Error al insertar datos en nasdaq_tickers_info_sql: {e}")
 
-        # Insertar/actualizar los datos en nasdaq_tickers_historic_sql
+        # Insertar/actualizar los datos en nasdaq_tickers_finanzas_sql
         try:
             with engine.begin() as conn:
-                data = df_historic_clean.to_dict(orient='records')
-                stmt = insert(tickers_historic_table).values(data)
-                update_dict = {c.name: c for c in stmt.inserted if c.name not in ['Date', 'Ticker']}
+                data = nasdaq_tickers_finanzas_clean.to_dict(orient='records')
+                stmt = insert(tickers_finanzas_table).values(data)
+                update_dict = {c.name: c for c in stmt.inserted if c.name != 'Ticker'}
                 stmt = stmt.on_duplicate_key_update(update_dict)
                 conn.execute(stmt)
-            print("Datos insertados en nasdaq_tickers_historic_sql correctamente.")
+            print("Datos insertados en nasdaq_tickers_finanzas_sql correctamente.")
         except Exception as e:
-            print(f"Error al insertar datos en nasdaq_tickers_historic_sql: {e}")
+            print(f"Error al insertar datos en nasdaq_tickers_finanzas_sql: {e}")
 
         # Reactiva la clave foránea
         with engine.connect() as connection:
@@ -268,22 +317,30 @@ try:
 except Exception as e:
     print(f'Error en la llamada de históricos: {e}')
 
-# Obtener y limpiar información de los tickers
+# Obtener y limpiar info general de los tickers
 try:
     informacion_tickers = obtener_informacion_tickers(tickers)
     nasdaq_tickers_info_clean = clean_data_info(informacion_tickers)
 except Exception as e:
-    print(f'Error en la llamada de info: {e}')
+    print(f'Error en la llamada de info general: {e}')
+
+# Obtener y limpiar métricas finanzas 
+try:
+    metricas_financieras = obtener_informacion_finanzas_tickers(tickers)
+    nasdaq_tickers_finanzas_clean = clean_data_finanzas(metricas_financieras)
+except Exception as e:
+    print(f'Error en la llamada de métricas financieras: {e}')
 
 # Guardar los DataFrames como archivos CSV
 try:
-    nasdaq_tickers_info_clean.to_csv('nasdaq_tickers_info_clean.csv', index=False)
     nasdaq_tickers_historic_clean.to_csv('nasdaq_tickers_historic_clean.csv', index=False)
+    nasdaq_tickers_info_clean.to_csv('nasdaq_tickers_info_clean.csv', index=False)
+    nasdaq_tickers_finanzas_clean.to_csv('nasdaq_tickers_finanzas_clean.csv', index=False)
 except Exception as e:
     print(f'Error en la limpieza de los datos: {e}')
 
 # Crear la bbdd y las tablas
 try:
-    creacion_bbdd(nasdaq_tickers_info_clean, nasdaq_tickers_historic_clean)
+    creacion_bbdd(nasdaq_tickers_historic_clean, nasdaq_tickers_info_clean, nasdaq_tickers_finanzas_clean)
 except Exception as e:
     print(f'No se creó la BBDD: {e}')
