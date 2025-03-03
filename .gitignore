@@ -3,7 +3,6 @@ venv/
 entorno/
 env/
 
-connect_engine
 connect_engine.py
 
 .ipynb_checkpoints
@@ -13,4 +12,9 @@ nasdaq_tickers_historic_clean.csv
 nasdaq_tickers_info_clean.csv
 
 __pycache__/
-**/__pycache__/
+
+variaciones año
+
+limpieza_df_inicial.py
+
+obtencion_data_y_bbdd_update_clean.py
