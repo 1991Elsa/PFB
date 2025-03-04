@@ -62,7 +62,7 @@ def mostrar_inicio():
                 - **Exploratory Data Analysis:** Un analísis de datos clave de las empresas del NASDAQ 100 con distintos gráficos y métricas.
                 - **Comparador de Activos:** Herramienta muy útil para comparar distintas empresas entre sí.
                 - **Dashboard Power BI:** Un tablero interactivo en el que profundizar en las tendencias del mercado.
-                - **Modelos de Clasificación y Clustering** para encontrar patrones y clasificar empresas según comportamientos.
+                - **Modelos de Clasificación y Clustering** para identificar patrones y clasificar empresas según comportamientos.
                 - **Esquema de muestra BBDD**: visualización de la estructura de Entidad Relación de las tablas.
                 - **About us:** Un espacio donde se menciona a los integrantes de este proyecto.""")
 
@@ -85,7 +85,7 @@ def main():
     elif st.session_state.seccion == "Diagrama de Entidad-Relación":
         esquema.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
     elif st.session_state.seccion == "About us":
-        esquema.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
+        esquema.mostrar()
 
 if __name__ == "__main__":
     main()
