@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from PIL import Image
 from modules.pfb_page_config_dict import PAGE_CONFIG
-from streamlit_modules import analisis_tecnico1, comparador_activos1,dashboard_func1, esquema1, exploratory_data_analysis, powerbi, tabla_bbdd1
+from streamlit_modules import analisis_tecnico1, comparador_activos1, dashboard_func1, esquema1, exploratory_data_analysis, powerbi, tabla_bbdd1
 from descarga_sql import descargar_data_sql
 
 # Configuración de la página

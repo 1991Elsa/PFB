@@ -3,10 +3,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
-<<<<<<< HEAD:pages/usuario/analisis_tecnico.py
-=======
 from datetime import datetime
->>>>>>> main:streamlit_modules/analisis_tecnico1.py
 #from descarga_sql import nasdaq_tickers_historic, nasdaq_tickers_info
 
 def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
