@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from PIL import Image
 from modules.pfb_page_config_dict import PAGE_CONFIG
-from streamlit_modules import analisis_tecnico1, comparador_activos1,dashboard_func1, esquema1, exploratory_data_analysis, powerbi, tabla_bbdd1
+from streamlit_modules import exploratory_data_analysis, comparador_activos1, powerbi, clustering, esquema, about_us
 from descarga_sql import descargar_data_sql
 
 # Configuración de la página
@@ -28,12 +28,10 @@ def sidebar():
     pages = [
         "Inicio",
         "Exploratory Data Analysis",
-        "Dashboard Interactivo",
         "Comparador de activos",
-        "Análisis técnico",
-        "Tablas BBDD",
         "Dashboard Power BI",
-        "Esquema de tablas",
+        "Clasificación y clustering",
+        "Diagrama de Entidad-Relación",
         "About us"
     ]
   
@@ -48,11 +46,25 @@ def sidebar():
 
 # Función para mostrar la página de Inicio
 def mostrar_inicio():
-    st.markdown("<h1 style='text-align: center;'>Bienvenido a la aplicación de Nasdaq 100.</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>Bienvenido a la applicación de Nasdaq 100.</h1>", unsafe_allow_html=True)
     st.write("")
     st.image("sources/Nasdaq100.png", use_container_width=False)
     st.write("")
-    st.subheader("En esta aplicación podrás visualizar la información de los tickers del NASDAQ 100, así como su evolución en el tiempo y algunas métricas financieras.")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.header("**¿Qué es el NASDAQ 100?**")
+    st.write("El NASDAQ 100 es un índice bursátil que agrupa a las 100 empresas más importantes de EE.UU. fuera del sector financiero, siendo el sector tecnológico el más representativo.")   
+    st.write("")
+    st.write("")
+    st.subheader("¿Qué secciones encontrarás en esta app?")
+    st.markdown(""" 
+                - **Exploratory Data Analysis:** Un analísis de datos clave de las empresas del NASDAQ 100 con distintos gráficos y métricas.
+                - **Comparador de Activos:** Herramienta muy útil para comparar distintas empresas entre sí.
+                - **Dashboard Power BI:** Un tablero interactivo en el que profundizar en las tendencias del mercado.
+                - **Modelos de Clasificación y Clustering** para identificar patrones y clasificar empresas según comportamientos.
+                - **Esquema de muestra BBDD**: visualización de la estructura de Entidad Relación de las tablas.
+                - **About us:** Un espacio donde se menciona a los integrantes de este proyecto.""")
 
 # Función principal
 def main():
@@ -64,21 +76,16 @@ def main():
         mostrar_inicio()
     elif st.session_state.seccion == "Exploratory Data Analysis":
         exploratory_data_analysis.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
-    elif st.session_state.seccion == "Dashboard Interactivo":
-        dashboard_func1.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
-    
     elif st.session_state.seccion == "Comparador de activos":
         comparador_activos1.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
-    elif st.session_state.seccion == "Análisis técnico":
-        analisis_tecnico1.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
-    elif st.session_state.seccion == "Tablas BBDD":
-        tabla_bbdd1.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
     elif st.session_state.seccion == "PowerBI":
-        powerbi.mostrar()
-    elif st.session_state.seccion == "Esquema de tablas":
-        esquema1.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
+        powerbi.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
+    elif st.session_state.seccion == "Clasificación y clustering":
+        clustering.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
+    elif st.session_state.seccion == "Diagrama de Entidad-Relación":
+        esquema.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
     elif st.session_state.seccion == "About us":
-        esquema1.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
+        esquema.mostrar()
 
 if __name__ == "__main__":
     main()
