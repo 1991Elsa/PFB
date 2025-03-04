@@ -113,8 +113,7 @@ Retorna:
                 'ShortName': ticker_info.get('shortName', 'N/A'),      #Nombre empresa
                 'Sector': ticker_info.get('sector', 'N/A'),            #Sector de la empresa
                 'Industry': ticker_info.get('industry', 'N/A'),        #Industria a la que pertenece
-                'Country': ticker_info.get('country', 'N/A'),          #País
-                'Timestamp_extraction': datetime.now()
+                'Country': ticker_info.get('country', 'N/A'),          #País de origen
             }
             df_info = pd.DataFrame([dic_info])
 
@@ -188,7 +187,7 @@ def obtener_informacion_finanzas_tickers(tickers):
 def obtener_timestamp_actual():
     """Obtenemos un df con timestamp actual para llenar la tabla time_stamp_sql."""
     return pd.DataFrame({
-        'Timestamp': [datetime.now()]
+        'Timestamp_extraction': [datetime.now()]
     })
 
 # Función para limpiar los datos historicos
@@ -254,7 +253,7 @@ def clean_data_finanzas_balanza(df):
                 df[columna] = pd.to_numeric(df[columna], errors='coerce')
                 if columna in ['MarketCap', 'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow']:
                     df[columna] = df[columna] / 1_000_000  
-        
+                    
         df = df.replace({np.nan: None})
         
         return df
@@ -356,9 +355,9 @@ def creacion_bbdd(nasdaq_tickers_historic_clean, nasdaq_tickers_info_clean, fina
         # Insertar datos en la tabla `time_stamp_sql`
         try:
             with engine.begin() as conn:
-                timestamp_now = datetime.now()
-                conn.execute(insert(time_stamp_table).values({"Timestamp": timestamp_now}))
-            print("Timestamp de actualización insertado correctamente en time_stamp_sql.")
+                timestamp_value = time_stamp_clean.iloc[0, 0]
+                conn.execute(insert(time_stamp_table).values({"Timestamp_extraction": timestamp_value}))
+            print("Timestamp_extraction insertado correctamente en time_stamp_sql.")
         except Exception as e:
             print(f"Error al insertar el timestamp en time_stamp_sql: {e}")
 
@@ -406,6 +405,7 @@ try:
     time_stamp_clean = obtener_timestamp_actual()  
 except Exception as e:
     print(f'Error al obtener el timestamp: {e}')
+
 
 
 # Crear la bbdd y las tablas

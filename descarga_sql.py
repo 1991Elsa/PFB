@@ -2,13 +2,11 @@ import pandas as pd
 import numpy as np
 import sklearn
 from connect_engine import get_engine_database 
+from datetime import datetime
 
 
 def descargar_data_sql():
-    # Crea el engine y se conecta a la base de datos yahoo_finance
     engine = get_engine_database()
-
-    # Verifica la conexión
     try:
         connection = engine.connect()
         connection.close()
@@ -46,7 +44,19 @@ def descargar_data_sql():
 
 nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
 
-# Guardamos los df en formato CSV
+def guardar_timestamp_sql():
+    engine = get_engine_database()
+    try:
+        df_time_stamp = pd.read_sql_table(table_name="timestamp_sql", con=engine)
+        df_time_stamp_now = df_time_stamp.sort_values(by="Timestamp_extraction", ascending=False).head(1) 
+        df_time_stamp_now.to_csv("timestamp_data.csv", index=False) 
+        print("Último registro de timestamp_sql guardado en timestamp_data.csv.") 
+    except Exception as e:
+        print(f"Error al leer la tabla timestamp_sql o al guardar el CSV: {e}")
+
+guardar_timestamp_sql()
+
+# Generamos los 3 df en formato CSV para powerBI
 nasdaq_tickers_historic.to_csv("nasdaq_tickers_historic.csv", index=False)
 nasdaq_tickers_info.to_csv("nasdaq_tickers_info.csv", index=False)
 
