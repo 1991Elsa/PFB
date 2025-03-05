@@ -2,10 +2,23 @@ import pandas as pd
 import numpy as np
 from descarga_sql import nasdaq_tickers_historic
 
+#print("Valores nulos antes de tratamiento:")
+#print(nasdaq_tickers_historic.isna().sum())
+#print("Información del dataframe antes del tratamiento:")
+#print(nasdaq_tickers_historic.info())
 
 def tratamiento_nans_historic_rf(df):
     """
-  
+    Trata los valores nulos de la tabla nasdaq_tickers_historic previo a ejecutar el modelo de clasificación. 
+    Filtra los datos de los últimos dos años en los que se tienen resultados de clustering.
+    Identifica la linealidad temporal de los datos y elimina los tickers que cumplen con esta característica; porque son 
+    empresas que aún no habían entrado al mercado en el rango de fechas de la descarga. Para los tickers restantes, interpola los valores nulos.
+    Elimina las columnas "Date" y "Ticker" porque no son relevantes para el modelo de clasificación.
+    Cambia el tipo de datos de float64 a float32 para reducir el uso de memoria.
+
+    Parámetro: Dataframe con información historica de los tickers y resultados del modelo de clustering.
+
+    Retorna: Dataframe limpio y listo para usar en el modelo de clasificación.
     """
     try:
         date_limit = df["Date"].max() - pd.DateOffset(years=2)
@@ -38,16 +51,17 @@ def tratamiento_nans_historic_rf(df):
         df = df.reset_index(drop=True)
 
         col_to_float32 = ["Close", "High", "Low", "Open", "Volume", "Cluster"]
-        nasdaq_tickers_historic[col_to_float32] = nasdaq_tickers_historic[col_to_float32].astype("float32")
+        df[col_to_float32] = df[col_to_float32].astype("float32")
+        df.drop(columns=["Date", "Ticker"], axis=1,  inplace=True)
 
-        print("Valores nulos después de tratamiento:")
+        print("Valores nulos después del tratamiento:")
         print(df.isna().sum())
         print("Información del dataframe después del tratamiento:")
-        print(nasdaq_tickers_historic.info())
+        print(df.info())
 
     except Exception as e:
         print(f'Fallo el tratamiento de nans historic cluster {e}')
-    return nasdaq_tickers_historic
+    return df
 
 nasdaq_tickers_historic = tratamiento_nans_historic_rf(nasdaq_tickers_historic)
 
