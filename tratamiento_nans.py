@@ -72,6 +72,13 @@ def tratamiento_nans_historic(df):
         print("Valores nulos después de tratamiento:")
         print(df.isna().sum())
 
+        #print(nasdaq_tickers_historic.info())
+
+        col_to_float32 = ["Close", "High", "Low", "Open", "Volume"]
+        nasdaq_tickers_historic[col_to_float32] = nasdaq_tickers_historic[col_to_float32].astype("float32")
+        #print(nasdaq_tickers_historic.info())
+
+
     except Exception as e:
         print(f'Fallo la limpieza de historic {e}')
     return df
