@@ -7,6 +7,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import pickle
 from tratamiento_nans_clasificacion import nasdaq_tickers_historic
+from sklearn.metrics import confusion_matrix
+import plotly.express as px
+import plotly.graph_objects as go
+import plotly.figure_factory as ff
 
 
 def modelo_clasification(df, target_colum):
@@ -45,6 +49,42 @@ def modelo_clasification(df, target_colum):
     with open('modelo_clasification.pkl', 'wb') as file:
         pickle.dump(rf_model, file)
 
+
+        # Matriz de confusión
+    y_pred = rf_model.predict(X_test)
+    conf_matrix = confusion_matrix(y_test, y_pred)
+    fig = ff.create_annotated_heatmap(
+        z=conf_matrix,
+        x=[f"Clase {i}" for i in range(conf_matrix.shape[1])],
+        y=[f"Clase {i}" for i in range(conf_matrix.shape[0])],
+        colorscale='Viridis'
+    )
+    fig.update_layout(
+        title_text='Matriz de confusión',
+        xaxis_title="Predicciones",
+        yaxis_title="Datos reales",
+    )
+    fig.show()
+
+    # Gráfico de importancia de las variables
+
+    importances = rf_model.feature_importances_
+    features = X.columns
+
+    fig = go.Figure([
+        go.Bar(x=features, y=importances, marker_color='rgb(55,83,109)')
+    ])
+
+    fig.update_layout(
+        title_text='Importancia de las variables',
+        xaxis_title="Variables",
+        yaxis_title="Importancia",
+        xaxis_tickangle=-45
+    )
+    fig.show()
+
+
     return rf_model, scaler
 
 rf_model, scaler = modelo_clasification(nasdaq_tickers_historic, "Cluster")
+
