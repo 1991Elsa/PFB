@@ -2,10 +2,12 @@ import pandas as pd
 import numpy as np
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
-from descarga_sql import nasdaq_tickers_historic
-from connect_engine import *
+from tratamiento_nans import nasdaq_tickers_historic
+from connect_engine import get_engine_database
 from tablas_metadata import *
 from sqlalchemy.dialects.mysql import insert
+
+engine = get_engine_database()
 
 """
 Para definir un algoritmo de clustering que agrupe acciones 
@@ -77,4 +79,5 @@ def clustering_process(engine, nasdaq_tickers_historic):
 
     except Exception as e:
         print(f"Error en el proceso de clustering: {e}")
-    
+
+nasdaq_tickers_historic = clustering_process(engine, nasdaq_tickers_historic)
