@@ -85,7 +85,7 @@ def main():
     elif st.session_state.seccion == "Diagrama de Entidad-Relación":
         esquema.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
     elif st.session_state.seccion == "About us":
-        esquema.mostrar()
+        about_us.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
 
 if __name__ == "__main__":
     main()

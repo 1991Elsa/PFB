@@ -10,9 +10,16 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     # nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
     #nasdaq_tickers_historic = pd.read_csv("nasdaq_tickers_historic_clean.csv")
 
-    st.title("🔄 Comparador de Rendimiento y Correlación de Acciones")
-    st.write("Usa esta herramienta para comparar el rendimiento y la correlación de acciones del NASDAQ 100.")
-
+    #st.title("🔄 Comparador de Rendimiento y Correlación de Acciones")
+    #st.write("Usa esta herramienta para comparar el rendimiento y la correlación de acciones del NASDAQ 100.")
+    st.header("- 🔄 Comparador de Activos")
+    st.write("\n")
+    st.markdown("""
+    En esta sección podrás comparar el rendimiento de varias acciones del Nasdaq 100 de forma interactiva. 
+    Selecciona múltiples tickers y el período temporal para ver cómo se comportan las acciones de diferentes empresas a lo largo del tiempo, 
+    tanto en términos absolutos como en rendimiento porcentual.
+    También podrás explorar la correlación entre las acciones seleccionadas.
+    """)
     st.write("\n")
     st.write("\n")
 

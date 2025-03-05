@@ -8,6 +8,7 @@ import time
 from connect_engine import *
 from tablas_metadata_5 import *
 from sqlalchemy.dialects.mysql import insert
+from clustering_dbscan import clustering_process
 
 # Función para obtener los tickers de NASDAQ 100 (scrapping)
 def tickers_nasdaq():
@@ -369,12 +370,14 @@ def creacion_bbdd(nasdaq_tickers_historic_clean, nasdaq_tickers_info_clean, fina
     except Exception as e:
         print(f"Error al procesar los datos: {e}")
 
+
 # Ejecución de las funciones
 try:
     tickers = tickers_nasdaq()
 except Exception as e:
     print(f'Error en la función de scrapping: {e}')
     
+
 # Obtener y limpiar datos históricos
 try:
     datos_historicos = get_datos_historicos(tickers)
@@ -382,12 +385,14 @@ try:
 except Exception as e:
     print(f'Error en la llamada de históricos: {e}')
 
+
 # Obtener y limpiar info general de los tickers
 try:
     informacion_tickers = obtener_informacion_tickers(tickers)
     nasdaq_tickers_info_clean = clean_data_info(informacion_tickers)
 except Exception as e:
     print(f'Error en la llamada de info general: {e}')
+
 
 # Obtener y limpiar las 3 métricas financieras
 try:
@@ -407,9 +412,14 @@ except Exception as e:
     print(f'Error al obtener el timestamp: {e}')
 
 
-
 # Crear la bbdd y las tablas
 try:
     creacion_bbdd(nasdaq_tickers_historic_clean, nasdaq_tickers_info_clean, finanzas_operativas_clean, finanzas_balanza_clean, finanzas_dividendos_clean,time_stamp_clean)
 except Exception as e:
     print(f'No se creó la BBDD: {e}')
+
+#Funcion para realizar el clustering
+try:
+    clustering_process(get_engine_database(), nasdaq_tickers_historic_clean)
+except Exception as e:
+    print(f'Error al realizar el clustering: {e}')
