@@ -76,6 +76,5 @@ def tratamiento_nans_historic(df):
         print(f'Fallo la limpieza de historic {e}')
     return df
 
-nasdaq_tickers_info_ml = tratamiento_nans_info(nasdaq_tickers_info)
-nasdaq_tickers_historic_ml = tratamiento_nans_historic(nasdaq_tickers_historic)
-
+#nasdaq_tickers_info = tratamiento_nans_info(nasdaq_tickers_info)
+nasdaq_tickers_historic = tratamiento_nans_historic(nasdaq_tickers_historic)
