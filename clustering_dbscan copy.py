@@ -10,6 +10,8 @@ from sklearn.neighbors import NearestNeighbors
 from matplotlib import pyplot as plt
 import seaborn as sns
 from collections import Counter
+import plotly.express as px
+
 
 
 engine = get_engine_database()
@@ -92,10 +94,32 @@ def clustering_process(engine, nasdaq_tickers_historic):
                                 conn.execute(stmt, {"cluster": int(row['Cluster']), "ticker": row['Ticker'], "date": row['Date']})
                         
                 print("Clustering actualizado en la base de datos correctamente.")
-        
 
+                fig = px.scatter(nasdaq_tickers_historic,
+                                 x="Date",
+                                 y="Ticker",
+                                 color="Cluster",
+                                 title="Cluster de acciones",
+                                 labels={
+                                         "Date": "Fecha",
+                                         "Ticker": "Ticker",
+                                         "Cluster": "Cluster"
+                                 },
+                                 category_orders={"Cluster": sorted(nasdaq_tickers_historic["Cluster"].unique())},
+                                 hover_data=["Ticker","Date", "Cluster"])
+                
+                fig.update_layout(
+                        xaxis_title="Fecha",
+                        yaxis_title="Ticker",
+                        legend_title="Cluster",
+                        showlegend=True
+                )
+                fig.show()
+
+        
         except Exception as e:
                 print(f"Error en el proceso de clustering: {e}")
+
 
 nasdaq_tickers_historic = clustering_process(engine, nasdaq_tickers_historic)
 
