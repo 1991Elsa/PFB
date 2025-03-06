@@ -1,102 +1,102 @@
 Ticker,ShortName,Sector,Industry,Country,ReturnOnAssets,ReturnOnEquity,OperatingMargins,GrossMargins,ProfitMargins,ebitdaMargins,MarketCap,TotalRevenue,NetIncomeToCommon,DebtToEquity,FreeCashflow,DividendRate,DividendYield,PayoutRatio
-AAPL,Apple Inc.,Technology,Consumer Electronics,United States,0.22519,1.3652,0.34459,0.46519,0.24295,0.34706,3568200.0,395760.0,96150.0,145.0,93833.9,1.0,0.42,0.1571
-ABNB,"Airbnb, Inc.",Consumer Cyclical,Travel Services,United States,0.07671,0.31948,0.17339,0.83084,0.23852,0.23275,86279.3,11102.0,2648.0,27.271,3145.62,,,0.0
-ADBE,Adobe Inc.,Technology,Software - Application,United States,0.16287,0.36313,0.363,0.89035,0.25854,0.39079,196086.0,21505.0,5560.0,42.935,7953.25,,,0.0
-ADI,"Analog Devices, Inc.",Technology,Semiconductors,United States,0.02616,0.04429,0.22912,0.57163,0.16748,0.44028,113395.0,9337.63,1563.86,21.725,2997.51,3.96,1.73,1.1757
-ADP,"Automatic Data Processing, Inc.",Technology,Software - Application,United States,0.05457,0.83716,0.25901,0.48231,0.19764,0.29439,124191.0,19903.4,3933.7,86.202,4454.92,6.16,1.98,0.5985
-ADSK,"Autodesk, Inc.",Technology,Software - Application,United States,0.08249,0.49687,0.23246,0.91959,0.18137,0.23879,57359.9,6131.0,1112.0,97.634,2077.62,,,0.0
-AEP,American Electric Power Company,Utilities,Utilities - Regulated Electric,United States,0.02861,0.11386,0.26299,0.47321,0.15045,0.39671,54323.5,19721.3,2967.1,170.451,-2010.39,3.72,3.6,0.6398
-AMAT,"Applied Materials, Inc.",Technology,Semiconductor Equipment & Materials,United States,0.15558,0.35186,0.30352,0.47726,0.22953,0.30689,125083.0,27635.0,6343.0,35.372,3825.75,1.6,1.03,0.1987
-AMD,"Advanced Micro Devices, Inc.",Technology,Semiconductors,United States,0.01902,0.02893,0.13803,0.53019,0.06364,0.19973,163660.0,25785.0,1641.0,4.032,3506.25,,,0.0
-AMGN,Amgen Inc.,Healthcare,Drug Manufacturers - General,United States,0.064,0.67553,0.51805,0.68711,0.12237,0.45348,169550.0,33424.0,4090.0,1035.89,13725.9,9.52,3.01,1.1905
-AMZN,"Amazon.com, Inc.",Consumer Cyclical,Internet Retail,United States,0.07438,0.2429,0.11291,0.48854,0.09287,0.18883,2175600.0,637959.0,59248.0,54.342,44635.9,,,0.0
-ANSS,"ANSYS, Inc.",Technology,Software - Application,United States,0.05837,0.10032,0.40309,0.92484,0.22622,0.33816,28698.1,2544.81,575.692,14.222,670.905,,,0.0
-APP,Applovin Corporation,Technology,Software - Application,United States,0.20866,1.3467,0.44353,0.75223,0.33546,0.49329,101528.0,4709.25,1577.06,326.33,1668.74,,,0.0
-ARM,Arm Holdings plc,Technology,Semiconductors,United Kingdom,0.03543,0.14112,0.17803,0.96372,0.21819,0.16243,129790.0,3694.0,806.0,4.222,648.562,,,0.0
-ASML,ASML Holding N.V. - New York Re,Technology,Semiconductor Equipment & Materials,Netherlands,0.12737,0.47427,0.36224,0.51276,0.2679,0.34892,286698.0,28262.9,7571.6,27.41,6713.0,7.68,1.04,0.3254
-AVGO,Broadcom Inc.,Technology,Semiconductors,United States,0.08126,0.13458,0.31765,0.75205,0.1143,0.4918,874311.0,51574.0,6168.0,166.032,28315.4,2.36,1.23,1.6318
-AXON,"Axon Enterprise, Inc.",Industrials,Aerospace & Defense,United States,0.01218,0.19122,-0.0166,0.59639,0.18105,0.06015,40163.2,2082.53,377.034,31.41,392.341,,,0.0
-AZN,Astrazeneca PLC,Healthcare,Drug Manufacturers - General,United Kingdom,0.07878,0.17594,0.22718,0.82176,0.1301,0.32488,240276.0,54073.0,7035.0,74.527,8460.75,1.55,1.99,0.66
-BIIB,Biogen Inc.,Healthcare,Drug Manufacturers - General,United States,0.05289,0.10358,0.21506,0.76122,0.16869,0.3096,21035.6,9675.9,1632.2,40.181,3266.93,,,0.0
-BKNG,Booking Holdings Inc. Common St,Consumer Cyclical,Travel Services,United States,0.18225,,0.30579,0.85871,0.24778,0.34458,159299.0,23739.0,5882.0,,7449.75,38.4,0.78,0.2027
-BKR,Baker Hughes Company,Energy,Oil & Gas Equipment & Services,United States,0.05748,0.18469,0.14028,0.21248,0.10705,0.16526,41381.7,27829.0,2979.0,39.261,1967.5,0.92,2.18,0.2819
-CCEP,Coca-Cola Europacific Partners ,Consumer Defensive,Beverages - Non-Alcoholic,United Kingdom,0.04844,0.17027,0.11065,0.35635,0.06938,0.16009,40067.6,20438.0,1418.0,127.902,1756.88,2.09,2.47,0.6396
-CDNS,"Cadence Design Systems, Inc.",Technology,Software - Application,United States,0.11858,0.26133,0.33714,0.86049,0.22741,0.34173,67186.6,4641.26,1055.48,56.202,1004.66,,,0.0
-CDW,CDW Corporation,Technology,Information Technology Services,United States,0.07495,0.49044,0.08185,0.21918,0.05133,0.09296,22746.2,20998.7,1077.8,271.148,1079.38,2.5,1.45,0.3118
-CEG,Constellation Energy Corporatio,Utilities,Utilities - Renewable,United States,0.05151,0.30115,0.16481,0.25416,0.15907,0.29587,69086.0,23568.0,3749.0,66.438,4225.38,1.55,0.68,0.1186
-CHTR,"Charter Communications, Inc.",Communication Services,Telecom Services,United States,0.05561,0.34004,0.24609,0.39789,0.09228,0.39748,54296.5,55085.0,5083.0,493.104,2851.62,,,0.0
-CMCSA,Comcast Corporation,Communication Services,Telecom Services,United States,0.05484,0.18707,0.15648,0.70075,0.13086,0.30793,135795.0,123731.0,16192.0,122.184,7656.5,1.32,3.71,0.2246
-COST,Costco Wholesale Corporation,Consumer Defensive,Discount Stores,United States,0.0807,0.29946,0.03533,0.12672,0.02927,0.04552,462689.0,258805.0,7576.0,33.25,3041.62,4.64,0.44,0.2644
-CPRT,"Copart, Inc.",Industrials,Specialty Business Services,United States,0.12133,0.19185,0.36638,0.45533,0.32273,0.40605,52246.3,4506.4,1454.34,1.434,700.636,,,0.0
-CRWD,"CrowdStrike Holdings, Inc.",Technology,Software - Infrastructure,United States,-0.00443,-0.00587,-0.05934,0.74922,-0.00487,0.04037,91046.4,3953.62,-19.271,23.77,1290.69,,,0.0
-CSCO,"Cisco Systems, Inc.",Technology,Communication Equipment,United States,0.06556,0.20019,0.22321,0.65132,0.16958,0.26929,253477.0,54176.0,9187.0,71.21,13290.5,1.64,2.56,0.7018
-CSGP,"CoStar Group, Inc.",Real Estate,Real Estate Services,United States,0.00032,0.01863,0.05639,0.79588,0.05069,0.05541,33066.2,2736.2,138.7,14.928,-202.062,,,0.0
-CSX,CSX Corporation,Industrials,Railroads,United States,0.07967,0.28336,0.35377,0.48652,0.23865,0.48652,58477.4,14540.0,3470.0,153.394,2142.0,0.52,1.68,0.2682
-CTAS,Cintas Corporation,Industrials,Specialty Business Services,United States,0.15269,0.41325,0.23085,0.49617,0.17227,0.25767,81768.1,9940.48,1706.27,66.308,1651.92,1.56,0.76,0.3508
-CTSH,Cognizant Technology Solutions ,Technology,Information Technology Services,United States,0.09838,0.16211,0.15742,0.34343,0.1135,0.1783,41473.6,19736.0,2240.0,10.432,2127.5,1.24,1.47,0.2661
-DASH,"DoorDash, Inc.",Communication Services,Internet Content & Information,United States,0.00274,0.016,0.04246,0.49422,0.01147,0.02751,80746.6,10722.0,123.0,6.863,1864.5,,,0.0
-DDOG,"Datadog, Inc.",Technology,Software - Application,United States,0.00698,0.07753,0.01273,0.80811,0.06845,0.03859,39427.7,2684.27,183.746,67.868,703.912,,,0.0
-DXCM,"DexCom, Inc.",Healthcare,Medical Devices,United States,0.05883,0.27628,0.16965,0.60456,0.14287,0.20275,31760.0,4033.0,576.2,123.362,552.725,,,0.0
-EA,Electronic Arts Inc.,Communication Services,Electronic Gaming & Multimedia,United States,0.07121,0.14038,0.20074,0.79379,0.14278,0.25806,35627.8,7347.0,1049.0,30.747,1651.12,0.76,0.57,0.1934
-EXC,Exelon Corporation,Utilities,Utilities - Regulated Electric,United States,0.02545,0.0934,0.19905,0.40842,0.10683,0.31219,42948.0,23028.0,2460.0,174.232,-2026.62,1.6,3.69,0.6204
-FANG,"Diamondback Energy, Inc.",Energy,Oil & Gas E&P,United States,0.06336,0.1292,0.42205,0.75731,0.31607,0.73203,40689.6,10561.0,3317.0,32.861,-5120.38,6.21,4.35,0.5338
-FAST,Fastenal Company,Industrials,Industrial Distribution,United States,0.20604,0.33039,0.18898,0.45082,0.15248,0.22335,43983.7,7546.0,1150.6,13.423,747.788,1.72,2.31,0.78
-FTNT,"Fortinet, Inc.",Technology,Software - Infrastructure,United States,0.13209,3.38742,0.3451,0.80563,0.29303,0.32264,81515.1,5955.8,1745.2,71.857,1834.85,,,0.0
-GEHC,GE HealthCare Technologies Inc.,Healthcare,Health Information Services,United States,0.05771,0.25686,0.16657,0.41709,0.10131,0.18331,38918.3,19672.0,1993.0,108.368,1864.88,0.14,0.17,0.0276
-GFS,GlobalFoundries Inc.,Technology,Semiconductors,United States,0.02612,-0.02385,0.12842,0.24459,-0.03926,0.34015,21107.0,6750.0,-265.0,20.602,1238.0,,,0.0
-GILD,"Gilead Sciences, Inc.",Healthcare,Drug Manufacturers - General,United States,0.11029,0.02286,0.33069,0.7826,0.01669,0.4679,143900.0,28754.0,480.0,141.962,10130.8,3.16,2.74,8.1053
-GOOG,Alphabet Inc.,Communication Services,Internet Content & Information,United States,0.1674,0.32908,0.33967,0.582,0.28604,0.36997,2136580.0,350018.0,100118.0,8.655,56580.8,0.8,0.46,0.0746
-GOOGL,Alphabet Inc.,Communication Services,Internet Content & Information,United States,0.1674,0.32908,0.33967,0.582,0.28604,0.36997,2137900.0,350018.0,100118.0,8.655,56580.8,0.8,0.46,0.0746
-HON,Honeywell International Inc.,Industrials,Conglomerates,United States,0.07499,0.32245,0.18735,0.38085,0.14819,0.2477,136655.0,38498.0,5705.0,168.18,4256.0,4.52,2.16,0.5017
-IDXX,"IDEXX Laboratories, Inc.",Healthcare,Diagnostics & Research,United States,0.22695,0.57657,0.27422,0.61037,0.2278,0.33862,35614.4,3897.5,887.867,61.865,734.987,,,0.0
-INTC,Intel Corporation,Technology,Semiconductors,United States,-0.01233,-0.17891,-0.18548,0.3432,-0.35321,0.14173,91189.8,53101.0,-18756.0,48.277,-13195.4,0.5,2.24,2.0833
-INTU,Intuit Inc.,Technology,Software - Application,United States,0.08257,0.17425,0.15697,0.79822,0.17691,0.2746,173010.0,17167.0,3037.0,,4621.75,4.16,0.67,0.363
-ISRG,"Intuitive Surgical, Inc.",Healthcare,Medical Instruments & Supplies,United States,0.08667,0.15621,0.31328,0.67458,0.27809,0.33833,198867.0,8352.1,2322.6,0.883,1197.11,,,0.0
-KDP,Keurig Dr Pepper Inc.,Consumer Defensive,Beverages - Non-Alcoholic,United States,0.04021,0.05773,0.21327,0.5556,0.09387,0.26897,45037.3,15351.0,1441.0,75.609,1293.12,0.92,2.76,0.8476
-KHC,The Kraft Heinz Company,Consumer Defensive,Packaged Foods,United States,0.03862,0.05545,0.21366,0.34729,0.10617,0.25021,36990.9,25846.0,2744.0,41.46,2179.38,1.6,5.16,0.708
-KLAC,KLA Corporation,Technology,Semiconductor Equipment & Materials,United States,0.17689,0.96809,0.40371,0.59682,0.29578,0.41891,94529.2,10847.0,3208.36,169.411,2469.03,6.8,0.95,0.2546
-LIN,Linde plc,Basic Materials,Specialty Chemicals,United Kingdom,0.06903,0.16721,0.27928,0.48059,0.19891,0.38385,220982.0,33005.0,6565.0,57.255,3075.25,6.0,1.28,0.4082
-LRCX,Lam Research Corporation,Technology,Semiconductor Equipment & Materials,United States,0.15589,0.50422,0.30481,0.47731,0.26489,0.31991,100690.0,16209.1,4293.57,56.565,3125.59,0.92,1.16,0.2614
-LULU,lululemon athletica inc.,Consumer Cyclical,Apparel Retail,Canada,0.22699,0.46213,0.20473,0.58853,0.17047,0.27462,44145.5,10181.7,1735.68,37.988,1476.89,,,0.0
-MAR,Marriott International,Consumer Cyclical,Lodging,United States,0.09341,,0.48406,0.81868,0.35887,0.6434,73964.8,6618.0,2375.0,,1950.5,2.52,0.93,0.2893
-MCHP,Microchip Technology Incorporat,Technology,Semiconductors,United States,0.02521,0.0471,0.03353,0.57952,0.06492,0.29896,32229.3,4756.9,308.8,112.476,1363.16,1.82,3.05,3.1772
+AAPL,Apple Inc.,Technology,Consumer Electronics,United States,0.22519,1.3652,0.34459,0.46519,0.24295,0.34706,3529290.0,395760.0,96150.0,145.0,93833.9,1.0,0.42,0.1571
+ABNB,"Airbnb, Inc.",Consumer Cyclical,Travel Services,United States,0.07671,0.31948,0.17339,0.83084,0.23852,0.23275,85254.1,11102.0,2648.0,27.271,3145.62,,,0.0
+ADBE,Adobe Inc.,Technology,Software - Application,United States,0.16287,0.36313,0.363,0.89035,0.25854,0.39079,194880.0,21505.0,5560.0,42.935,7953.25,,,0.0
+ADI,"Analog Devices, Inc.",Technology,Semiconductors,United States,0.02616,0.04429,0.22912,0.57163,0.16748,0.44028,111391.0,9337.63,1563.86,21.725,2997.51,3.96,1.73,1.1757
+ADP,"Automatic Data Processing, Inc.",Technology,Software - Application,United States,0.05457,0.83716,0.25901,0.48231,0.19764,0.29439,123925.0,19903.4,3933.7,86.202,4454.92,6.16,1.98,0.5985
+ADSK,"Autodesk, Inc.",Technology,Software - Application,United States,0.08249,0.49687,0.23246,0.91959,0.18137,0.23879,56903.0,6131.0,1112.0,97.634,2077.62,,,0.0
+AEP,American Electric Power Company,Utilities,Utilities - Regulated Electric,United States,0.02861,0.11386,0.26299,0.47321,0.15045,0.39671,54552.8,19721.3,2967.1,170.451,-2010.39,3.72,3.6,0.6398
+AMAT,"Applied Materials, Inc.",Technology,Semiconductor Equipment & Materials,United States,0.15558,0.35186,0.30352,0.47726,0.22953,0.30689,122966.0,27635.0,6343.0,35.372,3825.75,1.6,1.03,0.1987
+AMD,"Advanced Micro Devices, Inc.",Technology,Semiconductors,United States,0.01902,0.02893,0.13803,0.53019,0.06364,0.19973,160752.0,25785.0,1641.0,4.032,3506.25,,,0.0
+AMGN,Amgen Inc.,Healthcare,Drug Manufacturers - General,United States,0.064,0.67553,0.51805,0.68711,0.12237,0.45348,169434.0,33424.0,4090.0,1035.89,13725.9,9.52,3.01,1.1905
+AMZN,"Amazon.com, Inc.",Consumer Cyclical,Internet Retail,United States,0.07438,0.2429,0.11291,0.48854,0.09287,0.18883,2147620.0,637959.0,59248.0,54.342,44635.9,,,0.0
+ANSS,"ANSYS, Inc.",Technology,Software - Application,United States,0.05837,0.10032,0.40309,0.92484,0.22622,0.33816,28527.2,2544.81,575.692,14.222,670.905,,,0.0
+APP,Applovin Corporation,Technology,Software - Application,United States,0.20866,1.3467,0.44353,0.75223,0.33546,0.49329,97003.6,4709.25,1577.06,326.33,1668.74,,,0.0
+ARM,Arm Holdings plc,Technology,Semiconductors,United Kingdom,0.03543,0.14112,0.17803,0.96372,0.21819,0.16243,127334.0,3694.0,806.0,4.222,648.562,,,0.0
+ASML,ASML Holding N.V. - New York Re,Technology,Semiconductor Equipment & Materials,Netherlands,0.12737,0.47427,0.36224,0.51276,0.2679,0.34892,283021.0,28262.9,7571.6,27.41,6713.0,7.68,1.04,0.3254
+AVGO,Broadcom Inc.,Technology,Semiconductors,United States,0.08126,0.13458,0.31765,0.75205,0.1143,0.4918,854764.0,51574.0,6168.0,166.032,28315.4,2.36,1.23,1.6318
+AXON,"Axon Enterprise, Inc.",Industrials,Aerospace & Defense,United States,0.01218,0.19122,-0.0166,0.59639,0.18105,0.06015,39614.2,2082.53,377.034,31.41,392.341,,,0.0
+AZN,Astrazeneca PLC,Healthcare,Drug Manufacturers - General,United Kingdom,0.07878,0.17594,0.22718,0.82176,0.1301,0.32488,240508.0,54073.0,7035.0,74.527,8460.75,1.55,1.99,0.66
+BIIB,Biogen Inc.,Healthcare,Drug Manufacturers - General,United States,0.05289,0.10358,0.21506,0.76122,0.16869,0.3096,21159.2,9675.9,1632.2,40.181,3266.93,,,0.0
+BKNG,Booking Holdings Inc. Common St,Consumer Cyclical,Travel Services,United States,0.18225,,0.30579,0.85871,0.24778,0.34458,157375.0,23739.0,5882.0,,7449.75,38.4,0.78,0.2027
+BKR,Baker Hughes Company,Energy,Oil & Gas Equipment & Services,United States,0.05748,0.18469,0.14028,0.21248,0.10705,0.16526,41520.3,27829.0,2979.0,39.261,1967.5,0.92,2.18,0.2819
+CCEP,Coca-Cola Europacific Partners ,Consumer Defensive,Beverages - Non-Alcoholic,United Kingdom,0.04844,0.17027,0.11065,0.35635,0.06938,0.16009,40096.0,20438.0,1418.0,127.902,1756.88,2.09,2.47,0.6396
+CDNS,"Cadence Design Systems, Inc.",Technology,Software - Application,United States,0.11858,0.26133,0.33714,0.86049,0.22741,0.34173,66549.3,4641.26,1055.48,56.202,1004.66,,,0.0
+CDW,CDW Corporation,Technology,Information Technology Services,United States,0.07495,0.49044,0.08185,0.21918,0.05133,0.09296,22549.5,20998.7,1077.8,271.148,1079.38,2.5,1.45,0.3118
+CEG,Constellation Energy Corporatio,Utilities,Utilities - Renewable,United States,0.05151,0.30115,0.16481,0.25416,0.15907,0.29587,68117.7,23568.0,3749.0,66.438,4225.38,1.55,0.68,0.1186
+CHTR,"Charter Communications, Inc.",Communication Services,Telecom Services,United States,0.05561,0.34004,0.24609,0.39789,0.09228,0.39748,53933.1,55085.0,5083.0,493.104,2851.62,,,0.0
+CMCSA,Comcast Corporation,Communication Services,Telecom Services,United States,0.05484,0.18707,0.15648,0.70075,0.13086,0.30793,135361.0,123731.0,16192.0,122.184,7656.5,1.32,3.71,0.2246
+COST,Costco Wholesale Corporation,Consumer Defensive,Discount Stores,United States,0.0807,0.29946,0.03533,0.12672,0.02927,0.04552,459969.0,258805.0,7576.0,33.25,3041.62,4.64,0.44,0.2644
+CPRT,"Copart, Inc.",Industrials,Specialty Business Services,United States,0.12133,0.19185,0.36638,0.45533,0.32273,0.40605,52159.4,4506.4,1454.34,1.434,700.636,,,0.0
+CRWD,"CrowdStrike Holdings, Inc.",Technology,Software - Infrastructure,United States,-0.00443,-0.00587,-0.05934,0.74922,-0.00487,0.04037,90042.7,3953.62,-19.271,23.77,1290.69,,,0.0
+CSCO,"Cisco Systems, Inc.",Technology,Communication Equipment,United States,0.06556,0.20019,0.22321,0.65132,0.16958,0.26929,252920.0,54176.0,9187.0,71.21,13290.5,1.64,2.56,0.7018
+CSGP,"CoStar Group, Inc.",Real Estate,Real Estate Services,United States,0.00032,0.01863,0.05639,0.79588,0.05069,0.05541,32733.0,2736.2,138.7,14.928,-202.062,,,0.0
+CSX,CSX Corporation,Industrials,Railroads,United States,0.07967,0.28336,0.35377,0.48652,0.23865,0.48652,58155.4,14540.0,3470.0,153.394,2142.0,0.52,1.68,0.2682
+CTAS,Cintas Corporation,Industrials,Specialty Business Services,United States,0.15269,0.41325,0.23085,0.49617,0.17227,0.25767,81467.5,9940.48,1706.27,66.308,1651.92,1.56,0.76,0.3508
+CTSH,Cognizant Technology Solutions ,Technology,Information Technology Services,United States,0.09838,0.16211,0.15742,0.34343,0.1135,0.1783,41248.5,19736.0,2240.0,10.432,2127.5,1.24,1.47,0.2661
+DASH,"DoorDash, Inc.",Communication Services,Internet Content & Information,United States,0.00274,0.016,0.04246,0.49422,0.01147,0.02751,79362.4,10722.0,123.0,6.863,1864.5,,,0.0
+DDOG,"Datadog, Inc.",Technology,Software - Application,United States,0.00698,0.07753,0.01273,0.80811,0.06845,0.03859,39222.5,2684.27,183.746,67.868,703.912,,,0.0
+DXCM,"DexCom, Inc.",Healthcare,Medical Devices,United States,0.05883,0.27628,0.16965,0.60456,0.14287,0.20275,31693.6,4033.0,576.2,123.362,552.725,,,0.0
+EA,Electronic Arts Inc.,Communication Services,Electronic Gaming & Multimedia,United States,0.07121,0.14038,0.20074,0.79379,0.14278,0.25806,35621.3,7347.0,1049.0,30.747,1651.12,0.76,0.57,0.1934
+EXC,Exelon Corporation,Utilities,Utilities - Regulated Electric,United States,0.02545,0.0934,0.19905,0.40842,0.10683,0.31219,43058.6,23028.0,2460.0,174.232,-2026.62,1.6,3.69,0.6204
+FANG,"Diamondback Energy, Inc.",Energy,Oil & Gas E&P,United States,0.06336,0.1292,0.42205,0.75731,0.31607,0.73203,40840.1,10561.0,3317.0,32.861,-5120.38,6.21,4.35,0.5338
+FAST,Fastenal Company,Industrials,Industrial Distribution,United States,0.20604,0.33039,0.18898,0.45082,0.15248,0.22335,43886.2,7546.0,1150.6,13.423,747.788,1.72,2.31,0.78
+FTNT,"Fortinet, Inc.",Technology,Software - Infrastructure,United States,0.13209,3.38742,0.3451,0.80563,0.29303,0.32264,80811.5,5955.8,1745.2,71.857,1834.85,,,0.0
+GEHC,GE HealthCare Technologies Inc.,Healthcare,Health Information Services,United States,0.05771,0.25686,0.16657,0.41709,0.10131,0.18331,38749.1,19672.0,1993.0,108.368,1864.88,0.14,0.17,0.0276
+GFS,GlobalFoundries Inc.,Technology,Semiconductors,United States,0.02612,-0.02385,0.12842,0.24459,-0.03926,0.34015,21000.9,6750.0,-265.0,20.602,1238.0,,,0.0
+GILD,"Gilead Sciences, Inc.",Healthcare,Drug Manufacturers - General,United States,0.11029,0.02286,0.33069,0.7826,0.01669,0.4679,143477.0,28754.0,480.0,141.962,10130.8,3.16,2.74,8.1053
+GOOG,Alphabet Inc.,Communication Services,Internet Content & Information,United States,0.1674,0.32908,0.33967,0.582,0.28604,0.36997,2117350.0,350018.0,100118.0,8.655,56580.8,0.8,0.46,0.0746
+GOOGL,Alphabet Inc.,Communication Services,Internet Content & Information,United States,0.1674,0.32908,0.33967,0.582,0.28604,0.36997,2117740.0,350018.0,100118.0,8.655,56580.8,0.8,0.46,0.0746
+HON,Honeywell International Inc.,Industrials,Conglomerates,United States,0.07499,0.32245,0.18735,0.38085,0.14819,0.2477,135918.0,38498.0,5705.0,168.18,4256.0,4.52,2.16,0.5017
+IDXX,"IDEXX Laboratories, Inc.",Healthcare,Diagnostics & Research,United States,0.22695,0.57657,0.27422,0.61037,0.2278,0.33862,35420.9,3897.5,887.867,61.865,734.987,,,0.0
+INTC,Intel Corporation,Technology,Semiconductors,United States,-0.01233,-0.17891,-0.18548,0.3432,-0.35321,0.14173,90193.9,53101.0,-18756.0,48.277,-13195.4,0.5,2.24,2.0833
+INTU,Intuit Inc.,Technology,Software - Application,United States,0.08257,0.17425,0.15697,0.79822,0.17691,0.2746,170994.0,17167.0,3037.0,,4621.75,4.16,0.67,0.363
+ISRG,"Intuitive Surgical, Inc.",Healthcare,Medical Instruments & Supplies,United States,0.08667,0.15621,0.31328,0.67458,0.27809,0.33833,197422.0,8352.1,2322.6,0.883,1197.11,,,0.0
+KDP,Keurig Dr Pepper Inc.,Consumer Defensive,Beverages - Non-Alcoholic,United States,0.04021,0.05773,0.21327,0.5556,0.09387,0.26897,45173.0,15351.0,1441.0,75.609,1293.12,0.92,2.76,0.8476
+KHC,The Kraft Heinz Company,Consumer Defensive,Packaged Foods,United States,0.03862,0.05545,0.21366,0.34729,0.10617,0.25021,37002.9,25846.0,2744.0,41.46,2179.38,1.6,5.16,0.708
+KLAC,KLA Corporation,Technology,Semiconductor Equipment & Materials,United States,0.17689,0.96809,0.40371,0.59682,0.29578,0.41891,92755.1,10847.0,3208.36,169.411,2469.03,6.8,0.95,0.2546
+LIN,Linde plc,Basic Materials,Specialty Chemicals,United Kingdom,0.06903,0.16721,0.27928,0.48059,0.19891,0.38385,221328.0,33005.0,6565.0,57.255,3075.25,6.0,1.28,0.4082
+LRCX,Lam Research Corporation,Technology,Semiconductor Equipment & Materials,United States,0.15589,0.50422,0.30481,0.47731,0.26489,0.31991,99002.3,16209.1,4293.57,56.565,3125.59,0.92,1.16,0.2614
+LULU,lululemon athletica inc.,Consumer Cyclical,Apparel Retail,Canada,0.22699,0.46213,0.20473,0.58853,0.17047,0.27462,44029.2,10181.7,1735.68,37.988,1476.89,,,0.0
+MAR,Marriott International,Consumer Cyclical,Lodging,United States,0.09341,,0.48406,0.81868,0.35887,0.6434,73456.2,6618.0,2375.0,,1950.5,2.52,0.93,0.2893
+MCHP,Microchip Technology Incorporat,Technology,Semiconductors,United States,0.02521,0.0471,0.03353,0.57952,0.06492,0.29896,31559.2,4756.9,308.8,112.476,1363.16,1.82,3.05,3.1772
 MDB,"MongoDB, Inc.",Technology,Software - Infrastructure,United States,-0.04287,-0.06703,-0.03385,0.73321,-0.06433,-0.09985,16105.3,2006.44,-129.072,1.312,-249.297,,,0.0
-MDLZ,"Mondelez International, Inc.",Consumer Defensive,Confectioners,United States,0.05756,0.16712,0.17191,0.39124,0.12653,0.21251,85683.4,36441.0,4611.0,68.788,2744.0,1.88,2.84,0.5234
-MELI,"MercadoLibre, Inc.",Consumer Cyclical,Internet Retail,Uruguay,0.07683,0.51496,0.13534,0.52674,0.09198,0.15633,106480.0,20777.0,1911.0,158.102,346.25,,,0.0
-META,"Meta Platforms, Inc.",Communication Services,Internet Content & Information,United States,0.16863,0.37141,0.45278,0.81684,0.37909,0.50891,1644920.0,164501.0,62360.0,27.25,36095.0,2.1,0.32,0.0838
-MNST,Monster Beverage Corporation,Consumer Defensive,Beverages - Non-Alcoholic,United States,0.14775,0.21274,0.28053,0.54038,0.2014,0.28532,53835.2,7492.71,1509.05,7.295,1314.84,,,0.0
-MRVL,"Marvell Technology, Inc.",Technology,Semiconductors,United States,-0.01105,-0.06264,0.12254,0.41305,-0.15345,0.17174,65434.0,5767.3,-885.0,30.266,887.625,0.24,0.27,0.1101
-MSFT,Microsoft Corporation,Technology,Software - Infrastructure,United States,0.14649,0.34291,0.45458,0.69409,0.35428,0.54255,2983550.0,261802.0,92750.0,33.998,51958.1,3.32,0.83,0.2482
-MSTR,MicroStrategy Incorporated,Technology,Software - Application,United States,-0.07568,-0.11441,-8.4312,0.72065,-2.51731,0.0,83216.0,463.456,-1166.66,39.816,-1061.06,,,0.0
-MU,"Micron Technology, Inc.",Technology,Semiconductors,United States,0.04204,0.08657,0.24963,0.3092,0.13343,0.42486,103913.0,29094.0,3882.0,30.863,-11.0,0.46,0.49,0.1318
-NFLX,"Netflix, Inc.",Communication Services,Entertainment,United States,0.12721,0.38435,0.22181,0.46057,0.22337,0.27555,411079.0,39001.0,8711.63,72.726,21253.9,,,0.0
-NVDA,NVIDIA Corporation,Technology,Semiconductors,United States,0.57417,1.19177,0.61107,0.74989,0.55848,0.63846,2810390.0,130497.0,72880.0,12.946,44169.8,0.04,0.03,0.0116
-NXPI,NXP Semiconductors N.V.,Technology,Semiconductors,Netherlands,0.09043,0.27494,0.24783,0.56659,0.19899,0.35048,55542.8,12614.0,2510.0,116.945,1545.0,4.06,1.87,0.4169
-ODFL,"Old Dominion Freight Line, Inc.",Industrials,Trucking,United States,0.17539,0.279,0.24103,0.4001,0.20397,0.32479,37697.0,5814.81,1186.07,3.965,642.773,1.12,0.63,0.1898
-ON,ON Semiconductor Corporation,Technology,Semiconductors,United States,0.0874,0.18954,0.25951,0.4541,0.22207,0.36033,18959.7,7082.3,1572.8,41.331,858.713,,,0.0
-ORLY,"O'Reilly Automotive, Inc.",Consumer Cyclical,Specialty Retail,United States,0.14129,,0.18047,0.51198,0.14284,0.22226,77234.1,16708.5,2386.68,,1533.54,,,0.0
-PANW,"Palo Alto Networks, Inc.",Technology,Software - Infrastructure,United States,0.0357,0.23378,0.11141,0.73857,0.14637,0.15933,121826.0,8570.5,1254.5,15.221,3418.96,,,0.0
-PAYX,"Paychex, Inc.",Technology,Software - Application,United States,0.12255,0.46155,0.40861,0.71803,0.32018,0.44462,54347.0,5369.8,1719.3,21.978,1071.79,3.92,2.58,0.8063
-PCAR,PACCAR Inc.,Industrials,Farm & Heavy Construction Machinery,United States,0.07408,0.24933,0.13046,0.17616,0.12363,0.15936,55497.9,33663.8,4162.0,91.445,3864.55,1.32,1.28,0.1481
-PDD,PDD Holdings Inc.,Consumer Cyclical,Internet Retail,Ireland,0.16841,0.49151,0.2445,0.62059,0.29096,0.282,167045.0,372107.0,108268.0,3.676,112679.0,,,0.0
-PEP,"Pepsico, Inc.",Consumer Defensive,Beverages - Non-Alcoholic,United States,0.08989,0.52304,0.10639,0.5489,0.10427,0.18879,209324.0,91854.0,9578.0,262.787,6917.75,5.42,3.52,0.7669
-PLTR,Palantir Technologies Inc.,Technology,Software - Infrastructure,United States,0.03572,0.10812,0.01334,0.80248,0.16129,0.11935,203390.0,2865.51,462.19,4.696,924.913,,,0.0
-PYPL,"PayPal Holdings, Inc.",Financial Services,Credit Services,United States,0.04299,0.20001,0.1738,0.40538,0.13042,0.19392,68970.0,31797.0,4147.0,58.074,3494.25,,,0.0
-QCOM,QUALCOMM Incorporated,Technology,Semiconductors,United States,0.12626,0.41968,0.30465,0.55993,0.25936,0.30924,174593.0,40696.0,10479.0,54.23,9738.75,3.4,2.15,0.3614
-REGN,"Regeneron Pharmaceuticals, Inc.",Healthcare,Biotechnology,United States,0.07314,0.15951,0.26905,0.49989,0.3107,0.32587,75273.0,14202.0,4412.6,10.012,2635.89,3.52,0.51,0.0
-ROP,"Roper Technologies, Inc.",Technology,Software - Application,United States,0.04195,0.08533,0.27953,0.69302,0.2201,0.39914,63494.6,7039.2,1549.3,41.468,2178.6,3.3,0.56,0.2091
-ROST,"Ross Stores, Inc.",Consumer Cyclical,Apparel Retail,United States,0.11066,0.40282,0.12365,0.27775,0.09895,0.14352,46074.6,21129.2,2090.73,103.144,1223.01,1.62,1.17,0.2326
-SBUX,Starbucks Corporation,Consumer Cyclical,Restaurants,United States,0.09776,,0.11441,0.26115,0.0973,0.17751,122254.0,36148.7,3517.3,,1967.49,2.44,2.18,0.7484
-SNPS,"Synopsys, Inc.",Technology,Software - Infrastructure,United States,0.06647,0.15951,0.17305,0.81346,0.3475,0.23801,69518.7,6071.76,1299.94,7.147,1037.85,,,0.0
-TEAM,Atlassian Corporation,Technology,Software - Application,Australia,-0.01751,-0.32586,-0.04468,0.81821,-0.07219,-0.00959,71002.0,4794.96,-346.144,102.048,1564.71,,,0.0
+MDLZ,"Mondelez International, Inc.",Consumer Defensive,Confectioners,United States,0.05756,0.16712,0.17191,0.39124,0.12653,0.21251,85709.3,36441.0,4611.0,68.788,2744.0,1.88,2.84,0.5234
+MELI,"MercadoLibre, Inc.",Consumer Cyclical,Internet Retail,Uruguay,0.07683,0.51496,0.13534,0.52674,0.09198,0.15633,106201.0,20777.0,1911.0,158.102,346.25,,,0.0
+META,"Meta Platforms, Inc.",Communication Services,Internet Content & Information,United States,0.16863,0.37141,0.45278,0.81684,0.37909,0.50891,1619030.0,164501.0,62360.0,27.25,36095.0,2.1,0.32,0.0838
+MNST,Monster Beverage Corporation,Consumer Defensive,Beverages - Non-Alcoholic,United States,0.14775,0.21274,0.28053,0.54038,0.2014,0.28532,53737.8,7492.71,1509.05,7.295,1314.84,,,0.0
+MRVL,"Marvell Technology, Inc.",Technology,Semiconductors,United States,-0.01105,-0.06264,0.12254,0.41305,-0.15345,0.17174,64655.2,5767.3,-885.0,30.266,887.625,0.24,0.27,0.1101
+MSFT,Microsoft Corporation,Technology,Software - Infrastructure,United States,0.14649,0.34291,0.45458,0.69409,0.35428,0.54255,2953070.0,261802.0,92750.0,33.998,51958.1,3.32,0.83,0.2482
+MSTR,MicroStrategy Incorporated,Technology,Software - Application,United States,-0.07568,-0.11441,-8.4312,0.72065,-2.51731,0.0,80428.4,463.456,-1166.66,39.816,-1061.06,,,0.0
+MU,"Micron Technology, Inc.",Technology,Semiconductors,United States,0.04204,0.08657,0.24963,0.3092,0.13343,0.42486,101445.0,29094.0,3882.0,30.863,-11.0,0.46,0.49,0.1318
+NFLX,"Netflix, Inc.",Communication Services,Entertainment,United States,0.12721,0.38435,0.22181,0.46057,0.22337,0.27555,407024.0,39001.0,8711.63,72.726,21253.9,,,0.0
+NVDA,NVIDIA Corporation,Technology,Semiconductors,United States,0.57417,1.19177,0.61107,0.74989,0.55848,0.63846,2753540.0,130497.0,72880.0,12.946,44169.8,0.04,0.03,0.0116
+NXPI,NXP Semiconductors N.V.,Technology,Semiconductors,Netherlands,0.09043,0.27494,0.24783,0.56659,0.19899,0.35048,54906.2,12614.0,2510.0,116.945,1545.0,4.06,1.87,0.4169
+ODFL,"Old Dominion Freight Line, Inc.",Industrials,Trucking,United States,0.17539,0.279,0.24103,0.4001,0.20397,0.32479,37361.2,5814.81,1186.07,3.965,642.773,1.12,0.63,0.1898
+ON,ON Semiconductor Corporation,Technology,Semiconductors,United States,0.0874,0.18954,0.25951,0.4541,0.22207,0.36033,18525.7,7082.3,1572.8,41.331,858.713,,,0.0
+ORLY,"O'Reilly Automotive, Inc.",Consumer Cyclical,Specialty Retail,United States,0.14129,,0.18047,0.51198,0.14284,0.22226,76714.1,16708.5,2386.68,,1533.54,,,0.0
+PANW,"Palo Alto Networks, Inc.",Technology,Software - Infrastructure,United States,0.0357,0.23378,0.11141,0.73857,0.14637,0.15933,120698.0,8570.5,1254.5,15.221,3418.96,,,0.0
+PAYX,"Paychex, Inc.",Technology,Software - Application,United States,0.12255,0.46155,0.40861,0.71803,0.32018,0.44462,54412.7,5369.8,1719.3,21.978,1071.79,3.92,2.58,0.8063
+PCAR,PACCAR Inc.,Industrials,Farm & Heavy Construction Machinery,United States,0.07408,0.24933,0.13046,0.17616,0.12363,0.15936,55225.0,33663.8,4162.0,91.445,3864.55,1.32,1.28,0.1481
+PDD,PDD Holdings Inc.,Consumer Cyclical,Internet Retail,Ireland,0.16841,0.49151,0.2445,0.62059,0.29096,0.282,167111.0,372107.0,108268.0,3.676,112679.0,,,0.0
+PEP,"Pepsico, Inc.",Consumer Defensive,Beverages - Non-Alcoholic,United States,0.08989,0.52304,0.10639,0.5489,0.10427,0.18879,209915.0,91854.0,9578.0,262.787,6917.75,5.42,3.52,0.7669
+PLTR,Palantir Technologies Inc.,Technology,Software - Infrastructure,United States,0.03572,0.10812,0.01334,0.80248,0.16129,0.11935,198851.0,2865.51,462.19,4.696,924.913,,,0.0
+PYPL,"PayPal Holdings, Inc.",Financial Services,Credit Services,United States,0.04299,0.20001,0.1738,0.40538,0.13042,0.19392,68188.5,31797.0,4147.0,58.074,3494.25,,,0.0
+QCOM,QUALCOMM Incorporated,Technology,Semiconductors,United States,0.12626,0.41968,0.30465,0.55993,0.25936,0.30924,172060.0,40696.0,10479.0,54.23,9738.75,3.4,2.15,0.3614
+REGN,"Regeneron Pharmaceuticals, Inc.",Healthcare,Biotechnology,United States,0.07314,0.15951,0.26905,0.49989,0.3107,0.32587,75200.3,14202.0,4412.6,10.012,2635.89,3.52,0.51,0.0
+ROP,"Roper Technologies, Inc.",Technology,Software - Application,United States,0.04195,0.08533,0.27953,0.69302,0.2201,0.39914,63058.1,7039.2,1549.3,41.468,2178.6,3.3,0.56,0.2091
+ROST,"Ross Stores, Inc.",Consumer Cyclical,Apparel Retail,United States,0.11066,0.40282,0.12365,0.27775,0.09895,0.14352,46011.9,21129.2,2090.73,103.144,1223.01,1.62,1.17,0.2326
+SBUX,Starbucks Corporation,Consumer Cyclical,Restaurants,United States,0.09776,,0.11441,0.26115,0.0973,0.17751,121545.0,36148.7,3517.3,,1967.49,2.44,2.18,0.7484
+SNPS,"Synopsys, Inc.",Technology,Software - Infrastructure,United States,0.06647,0.15951,0.17305,0.81346,0.3475,0.23801,68843.8,6071.76,1299.94,7.147,1037.85,,,0.0
+TEAM,Atlassian Corporation,Technology,Software - Application,Australia,-0.01751,-0.32586,-0.04468,0.81821,-0.07219,-0.00959,70301.2,4794.96,-346.144,102.048,1564.71,,,0.0
 TMUS,"T-Mobile US, Inc.",Communication Services,Telecom Services,United States,0.05461,0.17934,0.20195,0.63792,0.1393,0.38182,298725.0,81400.0,11339.0,186.194,10796.8,3.52,1.34,0.293
-TSLA,"Tesla, Inc.",Consumer Cyclical,Auto Manufacturers,United States,0.04186,0.1042,0.06158,0.17863,0.07259,0.13335,875028.0,97690.0,7130.0,18.489,-826.875,,,0.0
-TTD,"The Trade Desk, Inc.",Technology,Software - Application,United States,0.04854,0.15374,0.26357,0.80693,0.16078,0.20396,33123.9,2444.83,393.076,10.587,613.516,,,0.0
-TTWO,"Take-Two Interactive Software, ",Communication Services,Electronic Gaming & Multimedia,United States,-0.02478,-0.51451,-0.07891,0.57918,-0.67071,0.06504,37911.3,5450.5,-3655.7,71.971,926.95,,,0.0
-TXN,Texas Instruments Incorporated,Technology,Semiconductors,United States,0.09855,0.28396,0.34864,0.58142,0.30682,0.43846,176386.0,15641.0,4775.0,85.056,-583.75,5.44,2.78,1.0115
-VRSK,"Verisk Analytics, Inc.",Industrials,Consulting Services,United States,0.18275,4.45084,0.42999,0.6873,0.33251,0.47687,41711.1,2881.7,951.4,3091.24,705.15,1.8,0.61,0.2342
-VRTX,Vertex Pharmaceuticals Incorpor,Healthcare,Biotechnology,United States,0.12683,-0.03152,0.44983,0.86112,-0.0486,0.43326,125471.0,11020.1,-535.6,10.661,2725.55,,,0.0
-WBD,"Warner Bros. Discovery, Inc. - ",Communication Services,Entertainment,United States,0.00349,-0.28208,0.07639,0.42583,-0.28766,0.19509,27505.6,39321.0,-11311.0,123.092,20509.1,,,0.0
-WDAY,"Workday, Inc.",Technology,Software - Application,United States,0.01812,0.06146,0.06784,0.75503,0.06228,0.09768,69189.3,8446.0,526.0,37.215,2216.88,,,0.0
-XEL,Xcel Energy Inc.,Utilities,Utilities - Regulated Electric,United States,0.02243,0.10426,0.1125,0.44506,0.14404,0.39298,38966.2,13441.0,1936.0,155.056,-3603.0,2.28,3.32,0.6366
-ZS,"Zscaler, Inc.",Technology,Software - Infrastructure,United States,-0.01409,-0.0121,-0.06195,0.77846,-0.00641,-0.0209,32170.8,2421.92,-15.529,77.043,730.086,,,0.0
+TSLA,"Tesla, Inc.",Consumer Cyclical,Auto Manufacturers,United States,0.04186,0.1042,0.06158,0.17863,0.07259,0.13335,854758.0,97690.0,7130.0,18.489,-826.875,,,0.0
+TTD,"The Trade Desk, Inc.",Technology,Software - Application,United States,0.04854,0.15374,0.26357,0.80693,0.16078,0.20396,32620.3,2444.83,393.076,10.587,613.516,,,0.0
+TTWO,"Take-Two Interactive Software, ",Communication Services,Electronic Gaming & Multimedia,United States,-0.02478,-0.51451,-0.07891,0.57918,-0.67071,0.06504,37630.7,5450.5,-3655.7,71.971,926.95,,,0.0
+TXN,Texas Instruments Incorporated,Technology,Semiconductors,United States,0.09855,0.28396,0.34864,0.58142,0.30682,0.43846,173177.0,15641.0,4775.0,85.056,-583.75,5.44,2.78,1.0115
+VRSK,"Verisk Analytics, Inc.",Industrials,Consulting Services,United States,0.18275,4.45084,0.42999,0.6873,0.33251,0.47687,41469.8,2881.7,951.4,3091.24,705.15,1.8,0.61,0.2342
+VRTX,Vertex Pharmaceuticals Incorpor,Healthcare,Biotechnology,United States,0.12683,-0.03152,0.44983,0.86112,-0.0486,0.43326,125144.0,11020.1,-535.6,10.661,2725.55,,,0.0
+WBD,"Warner Bros. Discovery, Inc. - ",Communication Services,Entertainment,United States,0.00349,-0.28208,0.07639,0.42583,-0.28766,0.19509,27346.0,39321.0,-11311.0,123.092,20509.1,,,0.0
+WDAY,"Workday, Inc.",Technology,Software - Application,United States,0.01812,0.06146,0.06784,0.75503,0.06228,0.09768,68752.6,8446.0,526.0,37.215,2216.88,,,0.0
+XEL,Xcel Energy Inc.,Utilities,Utilities - Regulated Electric,United States,0.02243,0.10426,0.1125,0.44506,0.14404,0.39298,39026.5,13441.0,1936.0,155.056,-3603.0,2.28,3.32,0.6366
+ZS,"Zscaler, Inc.",Technology,Software - Infrastructure,United States,-0.01409,-0.0121,-0.06195,0.77846,-0.00641,-0.0209,32266.5,2421.92,-15.529,77.043,730.086,,,0.0
