@@ -57,6 +57,37 @@ def clustering_process(engine, nasdaq_tickers_historic):
 
                 nasdaq_tickers_historic = pd.concat([tickers_dates, nasdaq_tickers_historic], axis=1)
 
+                summary = nasdaq_tickers_historic.groupby("Cluster").agg({"Ticker": "unique"})
+                print(summary)
+
+                summary_mean_Close = nasdaq_tickers_historic.groupby("Cluster")["Close"].mean()
+                print(summary_mean_Close)
+
+                summary_mean_High = nasdaq_tickers_historic.groupby("Cluster")["High"].mean()
+                print(summary_mean_High)
+
+
+                fig = px.scatter(nasdaq_tickers_historic,
+                        x="Date",
+                        y="Ticker",
+                        color="Cluster",
+                        title="Cluster de acciones",
+                        labels={
+                                         "Date": "Fecha",
+                                         "Ticker": "Ticker",
+                                         "Cluster": "Cluster"
+                        },
+                        category_orders={"Cluster": sorted(nasdaq_tickers_historic["Cluster"].unique())},
+                        hover_data=["Ticker","Date", "Cluster"])
+                
+                fig.update_layout(
+                        xaxis_title="Fecha",
+                        yaxis_title="Ticker",
+                        legend_title="Cluster",
+                        showlegend=True
+                )
+                fig.show()
+
                 # Crear el engine y conectar a la base de datos yahoo_finance
                 engine = get_engine_database()
 
@@ -94,27 +125,6 @@ def clustering_process(engine, nasdaq_tickers_historic):
                                 conn.execute(stmt, {"cluster": int(row['Cluster']), "ticker": row['Ticker'], "date": row['Date']})
                         
                 print("Clustering actualizado en la base de datos correctamente.")
-
-                fig = px.scatter(nasdaq_tickers_historic,
-                                 x="Date",
-                                 y="Ticker",
-                                 color="Cluster",
-                                 title="Cluster de acciones",
-                                 labels={
-                                         "Date": "Fecha",
-                                         "Ticker": "Ticker",
-                                         "Cluster": "Cluster"
-                                 },
-                                 category_orders={"Cluster": sorted(nasdaq_tickers_historic["Cluster"].unique())},
-                                 hover_data=["Ticker","Date", "Cluster"])
-                
-                fig.update_layout(
-                        xaxis_title="Fecha",
-                        yaxis_title="Ticker",
-                        legend_title="Cluster",
-                        showlegend=True
-                )
-                fig.show()
 
         
         except Exception as e:
