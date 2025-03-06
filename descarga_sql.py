@@ -21,6 +21,7 @@ def descargar_data_sql():
         df_operativas = pd.read_sql_table(table_name="finanzas_operativas_sql", con=engine)
         df_balanza = pd.read_sql_table(table_name="finanzas_balanza_sql", con=engine)
         df_dividendos = pd.read_sql_table(table_name="finanzas_dividendos_sql", con=engine)
+        df_timestamp = pd.read_sql_table(table_name="timestamp_sql", con=engine)
         print('Descarga de datos con exito')   
     except Exception as e:
         print(f"Error al leer las tablas SQL: {e}")
@@ -40,25 +41,15 @@ def descargar_data_sql():
     except Exception as e:
         print(f"Error al unir las tablas info y finanzas: {e}")
 
-    return df_historic, df_info
+    return df_historic, df_info, df_timestamp
 
-nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
+nasdaq_tickers_historic, nasdaq_tickers_info, timestamp = descargar_data_sql()
 
-def guardar_timestamp_sql():
-    engine = get_engine_database()
-    try:
-        df_time_stamp = pd.read_sql_table(table_name="timestamp_sql", con=engine)
-        df_time_stamp_now = df_time_stamp.sort_values(by="Timestamp_extraction", ascending=False).head(1) 
-        df_time_stamp_now.to_csv("timestamp_data.csv", index=False) 
-        print("Último registro de timestamp_sql guardado en timestamp_data.csv.") 
-    except Exception as e:
-        print(f"Error al leer la tabla timestamp_sql o al guardar el CSV: {e}")
-
-guardar_timestamp_sql()
 
 # Generamos los 3 df en formato CSV para powerBI
 nasdaq_tickers_historic.to_csv("nasdaq_tickers_historic.csv", index=False)
 nasdaq_tickers_info.to_csv("nasdaq_tickers_info.csv", index=False)
+timestamp.to_csv("timestamp_data.csv", index=False)
 
 """
 En lugar de usar alchemy text y hacer las queries para descargar los datos de SQL como vamos a importar 

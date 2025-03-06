@@ -12,7 +12,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
 
     #st.title("🔄 Comparador de Rendimiento y Correlación de Acciones")
     #st.write("Usa esta herramienta para comparar el rendimiento y la correlación de acciones del NASDAQ 100.")
-    st.header("- 🔄 Comparador de Activos")
+    st.header("🔄 Comparador de Activos")
     st.write("\n")
     st.markdown("""
     En esta sección podrás comparar el rendimiento de varias acciones del Nasdaq 100 de forma interactiva. 
@@ -176,7 +176,7 @@ La <strong>diversificación de portafolios</strong> se puede evaluar observando 
 A la hora de gestionar riesgos, los inversores pueden usar la correlación para evitar una exposición excesiva a inversiones en activos que se comporten de manera similar.
 
 <p style="font-weight: normal;">Este análisis es clave para evaluar cómo interactúan diferentes activos en un portafolio y optimizar la estrategia de inversión. 🚀📈</p>
----
+
 """, unsafe_allow_html=True)
         
     

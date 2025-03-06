@@ -49,13 +49,13 @@ def sortino_ratio(ticker, start_date, end_date, df, risk_free_rate=0):
 def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     st.title("Análisis Exploratorio de Datos")
     st.write("")
-    st.write("Bienvenido al EDA de las empresas que componen el indice bursatil de Nasdaq 100.")
-    st.write("Aquí podrás explorar tanto el análisis financiero como técnico de las empresas, además de otras métricas financieras y visulizar las tablas de datos.")
-    st.write("Interactua y utiliza los selectores de ticker y  período temporal y analisis según tus preferencias.")
-    st.write("")
-
-    # Título del dashboard
     st.header("Índice bursátil - NASDAQ 100")
+    st.write("")
+    st.markdown("""Bienvenido al EDA de las empresas que componen el indice bursatil de Nasdaq 100.  
+    En esta sección dispones de varios tipos de análisis, métricas financieras, gráficos y visualización detallada de las tablas de datos.  
+    Interactúa y utiliza los distintos selectores de ticker, período temporal, sección para configurar los análisis según tus necesidades y preferencias.
+    """)
+    st.write("\n")
     st.write("\n")
 
     # Obtener lista de tickers únicos y ordenarlos alfabéticamente
@@ -65,7 +65,8 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     tickers_opciones = tickers_unicos.apply(lambda row: f"{row['Ticker']} - {row['ShortName']}", axis=1).tolist()
 
     # Selección del ticker
-    st.subheader("🏢 Escoge una empresa del índice por su clave Ticker")
+    st.subheader("🏢 Elige una empresa del índice por su clave Ticker")
+    st.write("\n")  
     ticker_seleccionado = st.selectbox("Elige una empresa",
         tickers_opciones
     )
@@ -86,7 +87,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     st.write("\n")
     cols = st.columns(5)
     labels = ["Nombre", "Sector", "Industria", "País", 'MarketCap']
-    values = [short_name, sector, industry, country, f'{market_cap / 1_000_000:,.0f} $M']
+    values = [short_name, sector, industry, country, f'{market_cap} $M']
 
     for col, label, value in zip(cols, labels, values):
         with col:
@@ -99,7 +100,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     # Selección de período
     st.write("\n")
     st.subheader("📅 Selecciona el período de tiempo para el análisis.")
-
+    st.write("\n")
     # Definimos fecha mínima y máxima para el selector de calendario
     fecha_minima = datetime(2010, 1, 1) 
     fecha_maxima = datetime.today()  
@@ -122,19 +123,20 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
 
     # Definir las opciones del selector para la sección
 
-    opciones_seccion = ["Selecciona una sección:","Análisis Financiero", "Análisis Técnico", "Indicadores y métricas", "Tablas de datos"]
+    opciones_seccion = ["Selecciona una sección:","Análisis Financiero - Balance General", "Análisis Técnico - valores de cierre - SMA - RSI", "Indicadores y métricas - ROI - Sharpe - Sortino", "Tablas:  Información general -  Histórico de precios"]
     st.write("\n")
-    st.subheader("🔍Elige una sección y empieza a explorar!")
+    st.write("\n")
+    st.subheader("🔍Escoge una sección y empieza a explorar!")
+    st.write("\n")
     seccion_seleccionada = st.selectbox("Secciones:", opciones_seccion)
 
     # Verificar si hay datos para el ticker seleccionado
     if not df_filtrado_info.empty and not df_filtrado_historic.empty:
-        if seccion_seleccionada == "Análisis Financiero":
+        if seccion_seleccionada == "Análisis Financiero - Balance General":
             st.header("- 📊 Análisis Financiero")
             st.write("\n")
             st.markdown("""
-            En esta sección podrás explorar el análisis financiero de las empresas del Nasdaq 100.\n
-            Selecciona una empresa para visualizar el balance general, los activos, pasivos y patrimonio neto.
+            En esta sección podrás observar el balance general; activos, pasivos y patrimonio neto de la empresa que seleccionaste.
             """)
 
         
@@ -153,7 +155,6 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
             u_bruta = total_revenue - coste_bienes_vendidos
             u_neta = net_income / 1_000_000
 
-            st.write("\n")
 
             # --- Gráfico del balance general ---
             st.subheader("Balance General")
@@ -165,7 +166,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
             fig_balance = px.bar(balance_general, x='Concepto', y='Monto', text='Monto', title=f"{ticker_seleccionado} de {fecha_inicio.strftime('%d-%m-%Y')} a {fecha_fin.strftime('%d-%m-%Y')}")
             st.plotly_chart(fig_balance)
             st.markdown("""
-            En esta grafica muestra la relación entre activos, pasivos y patrimonio de la empresa.
+            En esta grafica se muestra la relación entre activos, pasivos y patrimonio de la empresa.
 
             - **Activos:** Representan lo que la empresa tiene y su capacidad para generar ingresos.
             - **Pasivos:** Representan las obligaciones financieras de la empresa (la deuda a terceros).
@@ -197,12 +198,15 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
             st.write("\n")
             st.write("\n")
 
-        elif seccion_seleccionada == "Análisis Técnico":
+        elif seccion_seleccionada == "Análisis Técnico - valores de cierre - SMA - RSI":
+            st.write("\n")  
             st.header("- 📈 Análisis Técnico")
             st.write("\n")
+            st.write("\n")
             st.markdown("""
-            Aquí podrás observar gráficos técnicos que muestran la evolución de los precios y la performance de las acciones. 
+            Aquí encontrarás gráficos más técnicos que muestran la evolución de los precios y la performance de las acciones. 
             """)
+            st.write("\n")
 
             # --- Gráfico de análisis técnico, precios historicos---
 
@@ -212,13 +216,16 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
             st.markdown("""
             Nos permite observar cómo ha cambiado el precio de cierre del activo a lo largo del tiempo y analizar tendencias, volatilidad y comportamiento del mercado.     
 
-            Contexto:
+            **Contexto:**
                                 
             - **Análisis técnico:** Son fundamentales para trazar líneas de tendencia, medias móviles y otros indicadores.
             - **Toma de decisiones:** Ayudan a inversores y traders a decidir cuándo comprar, vender o mantener un activo.
             - **Volatilidad:** Muestran cómo ha variado el precio en el tiempo, lo que indica el riesgo asociado al activo.   
             """)
 
+            st.write("\n")
+            st.write("\n")
+            st.write("\n")
             st.write("\n")
 
             # --- Gráfico de análisis técnico, Medias móviles ---
@@ -237,10 +244,11 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
             
             Las medias móviles son indicadores técnicos que suavizan los precios de un activo para identificar **tendencias** y posibles **puntos de entrada o salida**.
 
-            Contexto:
-            -**Media Móvil Simple (SMA):** Promedio de los precios de cierre durante un período específico.
-            -**SMA 50 días:** Refleja la tendencia a corto/medio plazo.
-            -**SMA 200 días:** Refleja la tendencia a largo plazo.
+            **Contexto:**  
+                        
+            - **Media Móvil Simple (SMA):** Promedio de los precios de cierre durante un período específico.
+            - **SMA 50 días:** Refleja la tendencia a corto/medio plazo.
+            - **SMA 200 días:** Refleja la tendencia a largo plazo.
 
             ¿Estas medidas clave cómo se usan?
             - 🟢 **Cruce alcista:** Cuando la SMA de corto plazo (50 días) cruza por encima de la SMA de largo plazo (200 días), puede indicar una tendencia alcista.
@@ -248,6 +256,9 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
             """)
 
             st.write("\n")
+            st.write("\n")
+            st.write("\n")
+            st.write("\n")  
 
             # --- Gráfico de analisis técnico, RSI (Relative Strength Index)---
 
@@ -264,20 +275,23 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
             fig_rsi = px.line(df_filtrado_historic, x='Date', y='RSI', title=f"{ticker_seleccionado}")
             st.plotly_chart(fig_rsi)
             st.markdown("""
-            El RSI mide la fuerza del precio y puede indicar zonas de sobrecompra o sobreventa, se usa generalmente para identificar cambios de tendencia.
-            Contexto:
-            - 🔴 **Sobrecompra:** RSI > 70
-            - 🟢 **Sobreventa:** RSI < 30
+            El RSI mide la fuerza del precio y puede indicar zonas de sobrecompra o sobreventa, se usa generalmente para identificar cambios de tendencia.  
+            
+            **Contexto:**  
+                        
+            - **Sobrecompra = RSI > 70 :** Cuando el RSI supera el 70, indica que el activo podría estar sobrecomprado, lo que sugiere que el precio ha subido demasiado rápido y podría estar a punto de corregirse.  
+            - **Sobreventa = RSI < 30 :** Cuando el RSI cae por debajo del 30, señala que el activo podría estar en una zona de sobreventa, lo que sugiere que el precio ha caído demasiado y podría haber una oportunidad de rebote o recuperación.  
             """)
                 
 
-        elif seccion_seleccionada == "Indicadores y métricas":
-            st.header("- 🔍 Exploración de Indicadores y Métricas")
+        elif seccion_seleccionada == "Indicadores y métricas - ROI - Sharpe - Sortino":
+            st.write("\n")
+            st.header("📉 Indicadores y Métricas ")
             st.write("\n")
             st.markdown("""
-            Esta sección te permite interactuar con gráficos avanzados como las velas japonesas y las bandas de Bollinger. 
-            Estos gráficos te ayudarán a visualizar la volatilidad y la tendencia del precio de las acciones seleccionadas, además de incluir indicadores como el ROI y el Sharpe Ratio.
-            Utiliza los controles para ajustar el período temporal y otros parámetros.
+            Esta sección te permite interactuar con gráficos avanzados como las velas japonesas y las bandas de Bollinger.  
+                         
+            Estos gráficos te ayudarán a visualizar la volatilidad y la tendencia del precio de las acciones seleccionadas, además de incluir indicadores como el ROI, el Sharpe Ratio y Sortino Ratio.
             """)
 
             # Convertir la columna 'Date' a tipo datetime
@@ -314,13 +328,13 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
 
                 # Personalizar el diseño
                 fig.update_layout(
-                    title=f"Gráfico de Velas Japonesas - {ticker_seleccionado} de {fecha_inicio.strftime('%d-%m-%Y')} a {fecha_fin.strftime('%d-%m-%Y')}",
+                    title=f" {ticker_seleccionado} de {fecha_inicio.strftime('%d-%m-%Y')} a {fecha_fin.strftime('%d-%m-%Y')}",
                     xaxis_title="Fecha",
                     yaxis_title="Precio",
                     xaxis_rangeslider_visible=False,
                     template="plotly_dark"
                 )
-
+                st.subheader("Gráfico de Velas Japonesas")
                 # Mostrar el gráfico en Streamlit
                 st.plotly_chart(fig, use_container_width=True)
 
@@ -341,6 +355,11 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
                 Con este gráfico puedes ver la tendencia y la volatilidad del precio del activo.
                 """)
 
+            st.write("\n")  
+            st.write("\n")  
+            st.write("\n")
+            st.write("\n")
+            st.write("\n")
 
             #Grafico de Bandas de Bollinger
             # Filtrar datos según el ticker y el rango de fechas seleccionado
@@ -363,7 +382,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
                 fig_bollinger = go.Figure()
 
                 # Título dinámico con el rango de fechas seleccionado
-                fig_bollinger.update_layout(title=f"Bandas de Bollinger - {ticker_seleccionado} de {fecha_inicio.strftime('%d-%m-%Y')} a {fecha_fin.strftime('%d-%m-%Y')}")
+                fig_bollinger.update_layout(title=f" {ticker_seleccionado} de {fecha_inicio.strftime('%d-%m-%Y')} a {fecha_fin.strftime('%d-%m-%Y')}")
 
                 # Agregar las trazas al gráfico
                 fig_bollinger.add_trace(go.Scatter(x=df_ticker["Date"], y=df_ticker["Close"], mode="lines", name="Precio"))
@@ -371,6 +390,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
                 fig_bollinger.add_trace(go.Scatter(x=df_ticker["Date"], y=df_ticker["Upper"], mode="lines", name="Upper Band", line=dict(dash="dot")))
                 fig_bollinger.add_trace(go.Scatter(x=df_ticker["Date"], y=df_ticker["Lower"], mode="lines", name="Lower Band", line=dict(dash="dot")))
 
+                st.subheader("Bandas de Bollinger")
                 # Mostrar el gráfico en Streamlit
                 st.plotly_chart(fig_bollinger)
 
@@ -384,12 +404,23 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
                 - **Upper Band**: Está dos desviaciones estándar por encima de la SMA, señalando un posible nivel de sobrecompra.
                 - **Lower Band**: Está dos desviaciones estándar por debajo de la SMA, indicando un posible nivel de sobreventa.
 
-                **¿Qué nos indican las bandas?**
-                La distancia entre las bandas nos muestra cuánta volatilidad hay en el mercado. Bandas amplias indican más volatilidad, y más estrechas menos.
+                **¿Qué nos indican las bandas?**  
+                La distancia entre las bandas nos muestra cuánta volatilidad hay en el mercado.  
+                Bandas amplias indican más volatilidad, y más estrechas menos.
                 """)
+
+
+            st.write("\n")
+            st.write("\n")
+            st.write("\n")  
+            st.write("\n")  
+            st.write("\n")
 
             st.subheader("📊 Métricas")
 
+            st.write("\n")
+            st.write("\n")
+            st.write("\n")
             # Estructura ROI + Input de Riesgo
             col_roi, col_risk = st.columns([2, 1]) 
             with col_roi:
@@ -436,6 +467,8 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
                     st.warning('⚠️ Riesgo alto en relación con el retorno')
 
             st.write("\n")
+            st.write("\n")
+            st.write("\n")  
 
             # Explicación de los ratios
             st.markdown("""
@@ -446,7 +479,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
             - **Riesgo personalizado**: Parámetro ajustable para analizar inversiones según tu tolerancia al riesgo.
             """)
 
-        elif seccion_seleccionada == "Tablas de datos":    
+        elif seccion_seleccionada == "Tablas:  Información general -  Histórico de precios":    
             st.header("- 📋 Tablas de Datos")
             st.write("\n")
             st.markdown("""
@@ -466,11 +499,40 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
             # Ajustar el índice para que empiece en 1
             nasdaq_tickers_info.index = nasdaq_tickers_info.index + 1
             
-            st.subheader("- Información de las empresas que forman el índice Nasdaq-100")
+            st.subheader("- Información general de las empresas integrantes del índice Nasdaq-100")
+            st.write("\n")
+            st.write("\n")
             st.dataframe(nasdaq_tickers_info)
             
             st.write("\n")
+            st.write("📖 Glosario de términos financieros de la tabla de información general:")
             st.write("\n")
+            with st.expander("Despliega para entender los términos de la tabla"):
+                st.markdown("""
+                    - **Ticker:** Símbolo de cotización de una empresa en la bolsa.  
+                    - **ShortName:** Nombre corto o abreviado de la empresa.  
+                    - **Sector:** Categoría general de la industria a la que pertenece la empresa.  
+                    - **Industry:** Industria específica dentro del sector en el que opera la empresa.  
+                    - **Country:** País en el que está registrada la empresa.  
+                    - **ReturnOnAssets (ROA):** Rentabilidad sobre activos, mide la eficiencia en el uso de activos para generar ganancias.  
+                    - **ReturnOnEquity (ROE):** Rentabilidad sobre el patrimonio, indica cuánto beneficio genera la empresa en relación con su capital propio.  
+                    - **OperatingMargins:** Margen operativo, mide la rentabilidad después de costos operativos pero antes de intereses e impuestos.  
+                    - **GrossMargins:** Margen bruto, porcentaje de ingresos que queda después de costos de producción.  
+                    - **ProfitMargins:** Margen de beneficio neto, porcentaje de ingresos que queda como ganancia después de todos los gastos.  
+                    - **ebitdaMargins:** Margen EBITDA, mide la rentabilidad antes de intereses, impuestos, depreciación y amortización.  
+                    - **MarketCap:** Capitalización bursátil, valor total de las acciones en circulación de una empresa.  
+                    - **TotalRevenue:** Ingresos totales, dinero generado por la empresa en un periodo determinado.  
+                    - **NetIncomeToCommon:** Beneficio neto atribuible a los accionistas comunes, ganancias después de todos los gastos e impuestos.  
+                    - **DebtToEquity:** Relación deuda-capital, mide cuánto financiamiento proviene de deuda en comparación con el capital propio.  
+                    - **FreeCashflow:** Flujo de caja libre, dinero disponible después de gastos operativos y de capital.  
+                    - **DividendRate:** Tasa de dividendo, cantidad de dividendos pagados por acción en un periodo.  
+                    - **DividendYield:** Rentabilidad por dividendo, porcentaje del dividendo anual en relación con el precio de la acción.  
+                    - **PayoutRatio:** Ratio de pago, porcentaje de las ganancias que la empresa distribuye en dividendos.""")
+
+            st.write("\n")
+            st.write("\n")  
+            st.write("\n")  
+            st.write("\n")  
             
             # Para nasdaq_tickers_historic:
             if nasdaq_tickers_historic.index.name == 'Ticker' or 'Ticker' not in nasdaq_tickers_historic.columns:
@@ -484,11 +546,24 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
             # Ajustar el índice para que empiece en 1
             nasdaq_tickers_historic.index = nasdaq_tickers_historic.index + 1
             
-            st.subheader("- Precios históricos de las empresas que forman el índice Nasdaq-100")
+            st.subheader("- Precios históricos de las empresas integrantes del índice Nasdaq-100")
+            st.write("\n")
+            st.write("\n")
             st.dataframe(nasdaq_tickers_historic)
             
             st.write("\n")
-            st.write("\n")
+            st.write("📖 Glosario de términos de precios históricos del mercado bursátil")
+
+            with st.expander("Despliega para entender los términos de la tabla"):
+                st.markdown("""
+                - **Ticker:** Símbolo de cotización de una empresa en la bolsa.    
+                - **Date:** Fecha específica del registro de los datos.  
+                - **Close:** Precio de cierre de la acción en la sesión de mercado.  
+                - **High:** Precio más alto alcanzado por la acción en la sesión.  
+                - **Low:** Precio más bajo alcanzado por la acción en la sesión.  
+                - **Open:** Precio al que abrió la acción en la sesión de mercado.  
+                - **Volume:** Número total de acciones negociadas en la sesión.  
+                """)
 
 
     else:

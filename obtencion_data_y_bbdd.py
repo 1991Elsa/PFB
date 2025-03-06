@@ -8,7 +8,7 @@ import time
 from connect_engine import *
 from tablas_metadata_5 import *
 from sqlalchemy.dialects.mysql import insert
-from clustering_dbscan import clustering_process
+#from clustering_dbscan import clustering_process
 
 # Función para obtener los tickers de NASDAQ 100 (scrapping)
 def tickers_nasdaq():
@@ -419,7 +419,7 @@ except Exception as e:
     print(f'No se creó la BBDD: {e}')
 
 #Funcion para realizar el clustering
-try:
-    clustering_process(get_engine_database(), nasdaq_tickers_historic_clean)
-except Exception as e:
-    print(f'Error al realizar el clustering: {e}')
+#try:
+    #clustering_process(get_engine_database(), nasdaq_tickers_historic_clean)
+#except Exception as e:
+    #print(f'Error al realizar el clustering: {e}')
