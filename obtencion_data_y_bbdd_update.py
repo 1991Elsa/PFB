@@ -8,6 +8,7 @@ import time
 from connect_engine import *
 from tablas_metadata import *
 from sqlalchemy.dialects.mysql import insert
+from descarga_sql import descargar_data_sql
 
 # Función para obtener los tickers de NASDAQ 100 (scrapping)
 def tickers_nasdaq():
@@ -244,9 +245,6 @@ def creacion_bbdd(nasdaq_tickers_historic_clean, nasdaq_tickers_info_clean, nasd
 
     # Subir los df
     try:
-        #df_nasdaq_tickers_historic_clean = pd.read_csv('nasdaq_tickers_historic_clean.csv')
-        #df_nasdaq_tickers_info_clean = pd.read_csv('nasdaq_tickers_info_clean.csv')
-        #df_nasdaq_tickers_finanzas_clean = pd.read_csv('nasdaq_tickers_finanzas_clean.csv')
 
         # Asegura el type de las columnas 'Timestamp_extraction' y 'Date' 
         nasdaq_tickers_finanzas_clean['Timestamp_extraction'] = pd.to_datetime(nasdaq_tickers_finanzas_clean['Timestamp_extraction'])
