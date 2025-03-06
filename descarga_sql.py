@@ -2,13 +2,11 @@ import pandas as pd
 import numpy as np
 import sklearn
 from connect_engine import get_engine_database 
+from datetime import datetime
 
 
 def descargar_data_sql():
-    # Crea el engine y se conecta a la base de datos yahoo_finance
     engine = get_engine_database()
-
-    # Verifica la conexión
     try:
         connection = engine.connect()
         connection.close()
@@ -23,6 +21,7 @@ def descargar_data_sql():
         df_operativas = pd.read_sql_table(table_name="finanzas_operativas_sql", con=engine)
         df_balanza = pd.read_sql_table(table_name="finanzas_balanza_sql", con=engine)
         df_dividendos = pd.read_sql_table(table_name="finanzas_dividendos_sql", con=engine)
+        df_timestamp = pd.read_sql_table(table_name="timestamp_sql", con=engine)
         print('Descarga de datos con exito')   
     except Exception as e:
         print(f"Error al leer las tablas SQL: {e}")
@@ -42,13 +41,15 @@ def descargar_data_sql():
     except Exception as e:
         print(f"Error al unir las tablas info y finanzas: {e}")
 
-    return df_historic, df_info
+    return df_historic, df_info, df_timestamp
 
-nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
+nasdaq_tickers_historic, nasdaq_tickers_info, timestamp = descargar_data_sql()
 
-# Guardamos los df en formato CSV
-nasdaq_tickers_historic.to_csv("nasdaq_tickers_historic.csv", index=False)
-nasdaq_tickers_info.to_csv("nasdaq_tickers_info.csv", index=False)
+
+# Generamos los 3 df en formato CSV para powerBI
+nasdaq_tickers_historic.to_csv("nasdaq_tickers_historic_clean.csv", index=False)
+nasdaq_tickers_info.to_csv("nasdaq_tickers_info_clean.csv", index=False)
+timestamp.to_csv("timestamp_data_clean.csv", index=False)
 
 """
 En lugar de usar alchemy text y hacer las queries para descargar los datos de SQL como vamos a importar 
