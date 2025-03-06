@@ -52,9 +52,10 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     st.header("Índice bursátil - NASDAQ 100")
     st.write("")
     st.markdown("""Bienvenido al EDA de las empresas que componen el indice bursatil de Nasdaq 100.  
-    En esta sección dispones de varios tipos de análisis, métricas financieras, gráficos y visualización detallada de las tablas de datos.  
-    Interactúa y utiliza los distintos selectores de ticker, período temporal, sección para configurar los análisis según tus necesidades y preferencias.
-    """)
+    En esta sección dispones de varios tipos de análisis, métricas financieras, gráficos y visualización detallada de las tablas de datos.""")
+
+    st.write("Interactúa y utiliza los distintos selectores de ticker, período temporal, sección para configurar los análisis según tus necesidades y preferencias.")
+    
     st.write("\n")
     st.write("\n")
 
@@ -564,7 +565,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
                 - **Open:** Precio al que abrió la acción en la sesión de mercado.  
                 - **Volume:** Número total de acciones negociadas en la sesión.  
                 """)
-
+        
 
     else:
     # Si no hay datos para el ticker seleccionado

@@ -15,9 +15,10 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     st.header("🔄 Comparador de Activos")
     st.write("\n")
     st.markdown("""
-    En esta sección podrás comparar el rendimiento de varias acciones del Nasdaq 100 de forma interactiva. 
-    Selecciona múltiples tickers y el período temporal para ver cómo se comportan las acciones de diferentes empresas a lo largo del tiempo, 
-    tanto en términos absolutos como en rendimiento porcentual.
+    En esta sección podrás comparar el rendimiento de varias acciones del Nasdaq 100 de forma interactiva.""")
+    st.write("\n")
+    st.markdown("""Selecciona múltiples tickers y el período temporal para ver cómo se comportan las acciones de diferentes empresas a lo largo del tiempo, 
+    tanto en términos absolutos como en rendimiento porcentual.  
     También podrás explorar la correlación entre las acciones seleccionadas.
     """)
     st.write("\n")
@@ -101,7 +102,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
         st.plotly_chart(fig_rendimientos)
 
         st.markdown("""
-📘Explicación del Gráfico de Comparación de Rendimientos.
+**Contexto:**
 
 Este gráfico muestra como han cambiado los rendimientos de diferentes activos a lo largo del tiempo en la misma escala porcentual.
 
@@ -120,7 +121,7 @@ En general, se observa:
 
 
         st.markdown("""
-📘Explicación del Rendimiento Acumulado.
+**Contexto:**
                     
 - Se refiere a la ganancia o pérdida total de una inversión durante un período determinado, expresado en porcentaje.
 - En color amarillo se muestra el valor más alto obtenido de rendimiento acumulado.
@@ -161,7 +162,7 @@ En general, se observa:
         st.plotly_chart(fig_correlacion)
 
         st.markdown("""
-📘 Explicación del Gráfico de Correlación.
+**Contexto:**
 
 Este gráfico muestra la relación entre los precios de cierre de los tickers seleccionados.
 

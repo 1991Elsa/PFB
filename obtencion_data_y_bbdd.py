@@ -357,11 +357,12 @@ def creacion_bbdd(nasdaq_tickers_historic_clean, nasdaq_tickers_info_clean, fina
         try:
             with engine.begin() as conn:
                 timestamp_value = time_stamp_clean.iloc[0, 0]
-                conn.execute(insert(time_stamp_table).values({"Timestamp_extraction": timestamp_value}))
-            print("Timestamp_extraction insertado correctamente en time_stamp_sql.")
+                stmt = insert(time_stamp_table).values({"Timestamp_extraction": timestamp_value})
+                stmt = stmt.on_duplicate_key_update({"Timestamp_extraction": timestamp_value})
+                conn.execute(stmt)
+            print("Timestamp_extraction insertado/actualizado correctamente en time_stamp_sql.")
         except Exception as e:
-            print(f"Error al insertar el timestamp en time_stamp_sql: {e}")
-
+            print(f"Error al insertar/actualizar el timestamp en time_stamp_sql: {e}")
 
         # Reactiva la clave foránea
         with engine.connect() as connection:
