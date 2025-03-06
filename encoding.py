@@ -6,12 +6,10 @@ import sklearn
 from sklearn.model_selection import KFold
 import category_encoders as ce
 from category_encoders.target_encoder import TargetEncoder
+from tratamiento_nans import nasdaq_tickers_info, nasdaq_tickers_historic
 
-from descarga_sql import descargar_data_sql
 
-nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
-
-def encoding_fun(df):
+def encoding_fun_info(df):
     """
     Codifica las columnas categorícas en valores numéricos. 
     Utiliza Target encoding para la columna Industry y One Hot Encoding para las columnas Sector y Country. 
@@ -42,21 +40,24 @@ def encoding_fun(df):
 
     industry_mapping = df_info_encoded.groupby("Industry")["MarketCap"].mean().to_dict()
     
-    df_info_encoded.drop(columns=["Industry","Ticker","ShortName"], axis=1, inplace=True)
+    df_info_encoded.drop(columns=["Industry","Ticker","ShortName","Timestamp_extraction"], axis=1, inplace=True)
+
+    df_info_encoded.columns = [col.replace("_", "") for col in df_info_encoded.columns]
+    #print(df_info_encoded)
 
     df_info_encoded.to_pickle("df_info_encoded.pkl")
 
     return df_info_encoded, industry_mapping
 
 
-df_info_encoded, industry_mapping = encoding_fun(nasdaq_tickers_info)
+df_info_encoded, industry_mapping = encoding_fun_info(nasdaq_tickers_info)
 
 
-with open("df_info_encoded.pkl", "rb") as file:
-   data = pickle.load(file)
-print(data)
+#with open("df_info_encoded.pkl", "rb") as file:
+ #  data = pickle.load(file)
+#print(data)
 
-with open("industry_mapping.pkl", "wb") as file:
-    pickle.dump(industry_mapping, file)
-print(industry_mapping)
+ #with open("industry_mapping.pkl", "wb") as file:
+  #  pickle.dump(industry_mapping, file)
+ #print(industry_mapping)
 
