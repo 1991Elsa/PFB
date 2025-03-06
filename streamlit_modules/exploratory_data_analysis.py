@@ -88,7 +88,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     st.write("\n")
     cols = st.columns(5)
     labels = ["Nombre", "Sector", "Industria", "País", 'MarketCap']
-    values = [short_name, sector, industry, country, f'{market_cap} $M']
+    values = [short_name, sector, industry, country, f'{market_cap/1_000:,.0f} $K']
 
     for col, label, value in zip(cols, labels, values):
         with col:

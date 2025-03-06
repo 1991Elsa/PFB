@@ -43,13 +43,6 @@ def descargar_data_sql():
 
     return df_historic, df_info, df_timestamp
 
-nasdaq_tickers_historic, nasdaq_tickers_info, timestamp = descargar_data_sql()
-
-
-# Generamos los 3 df en formato CSV para powerBI
-nasdaq_tickers_historic.to_csv("nasdaq_tickers_historic.csv", index=False)
-nasdaq_tickers_info.to_csv("nasdaq_tickers_info.csv", index=False)
-timestamp.to_csv("timestamp_data.csv", index=False)
 
 """
 En lugar de usar alchemy text y hacer las queries para descargar los datos de SQL como vamos a importar 

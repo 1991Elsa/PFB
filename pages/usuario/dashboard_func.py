@@ -79,10 +79,80 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
         with col:
             st.write(f"**{label}:** {value}")
 
+<<<<<<< HEAD
+
+
+    ###################################################################################################
+    
+
+    nasdaq_tickers_historic["Date"] = pd.to_datetime(nasdaq_tickers_historic["Date"])
+
+    df_ticker = nasdaq_tickers_historic[nasdaq_tickers_historic["Ticker"] == selected_ticker].sort_values("Date", ascending=False)
+
+    if len(df_ticker) < 2:
+        st.warning("No hay suficientes datos para calcular variaciones.")
+    else:
+     
+        last_close = df_ticker.iloc[0]["Close"]
+        
+        def get_variation(days):
+            if len(df_ticker) > days:
+                past_close = df_ticker.iloc[days]["Close"]
+                if not pd.isna(last_close) and not pd.isna(past_close) and past_close != 0:
+                    return ((last_close - past_close) / past_close) * 100
+            return None
+
+        
+        variaciones = {
+            "24h": get_variation(1),
+            "7 días": get_variation(7),
+            "1 mes": get_variation(30),
+            "1 año": get_variation(365),
+        }
+
+        st.write("\n")
+        st.write("\n")
+
+        st.markdown(f"Evolución de {selected_ticker}")
+
+        columnas = st.columns(len(variaciones))
+
+        for (nombre, valor), col in zip(variaciones.items(), columnas):
+            with col:
+                if valor is None:
+                    st.warning(f"{nombre}: N/A")
+                elif valor > 0:
+                    st.success(f"{nombre}: {valor:.2f} %")
+                elif valor < 0:
+                    st.error(f"{nombre}: {valor:.2f} %")
+                else:
+                    st.warning(f"{nombre}: {valor:.2f} %")
+
+
+
+
+    ###################################################################################################
+
+
+=======
+>>>>>>> main
     st.write('\n')
     st.write('\n')
 
     # Selección de período
+<<<<<<< HEAD
+    st.subheader("📅 Selección de Período")
+    st.write("Selecciona el período de tiempo para el análisis.")
+
+    st.write("\n")
+    st.write("\n")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        fecha_inicio = st.date_input("Fecha de inicio", datetime(2020, 1, 1))
+    with col2:
+        fecha_fin = st.date_input("Fecha de fin", datetime.today())
+=======
     st.subheader("📅 Selecciona el período de tiempo para el análisis.")
     st.write("")
 
@@ -95,12 +165,16 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
         fecha_inicio = st.date_input("Fecha de inicio", datetime(2020, 1, 1), min_value=fecha_minima, max_value=fecha_maxima)
     with col2:
         fecha_fin = st.date_input("Fecha de fin", datetime.today(), min_value=fecha_minima, max_value=fecha_maxima)
+>>>>>>> main
 
     # Convertir las fechas a datetime64[ns] para filtrar el dataframe
     fecha_inicio = pd.to_datetime(fecha_inicio)
     fecha_fin = pd.to_datetime(fecha_fin)
 
+<<<<<<< HEAD
+=======
     #Grafico de velas
+>>>>>>> main
     # Filtrar datos según el ticker y el rango de fechas
     df_filtrado = nasdaq_tickers_historic[
         (nasdaq_tickers_historic["Ticker"] == selected_ticker) &
@@ -136,6 +210,87 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
         # Mostrar el gráfico en Streamlit
         st.plotly_chart(fig, use_container_width=True)
 
+<<<<<<< HEAD
+    df_ticker = nasdaq_tickers_historic[nasdaq_tickers_historic["Ticker"] == selected_ticker].copy()
+    df_ticker["SMA"] = df_ticker["Close"].rolling(20).mean()
+    df_ticker["Upper"] = df_ticker["SMA"] + 2 * df_ticker["Close"].rolling(20).std()
+    df_ticker["Lower"] = df_ticker["SMA"] - 2 * df_ticker["Close"].rolling(20).std()
+
+    fig_bollinger = go.Figure()
+    fig_bollinger.update_layout(title=f"Bandas de Bollinger - {selected_ticker} de {fecha_inicio.strftime('%d-%m-%Y')} a {fecha_fin.strftime('%d-%m-%Y')}")
+    title = f"Bandas de Bollinger - {selected_ticker} de {fecha_inicio.strftime('%d-%m-%Y')} a {fecha_fin.strftime('%d-%m-%Y')}"
+    fig_bollinger.add_trace(go.Scatter(x=df_ticker["Date"], y=df_ticker["Close"], mode="lines", name="Precio"))
+    fig_bollinger.add_trace(go.Scatter(x=df_ticker["Date"], y=df_ticker["SMA"], mode="lines", name="SMA"))
+    fig_bollinger.add_trace(go.Scatter(x=df_ticker["Date"], y=df_ticker["Upper"], mode="lines", name="Upper Band", line=dict(dash="dot")))
+    fig_bollinger.add_trace(go.Scatter(x=df_ticker["Date"], y=df_ticker["Lower"], mode="lines", name="Lower Band", line=dict(dash="dot")))
+    st.plotly_chart(fig_bollinger)
+
+    st.write('\n')
+    st.write('\n')
+
+    st.subheader("Métricas")
+    
+    # Calcular el ROI
+    roi_value = roi(selected_ticker, fecha_inicio, fecha_fin, df=nasdaq_tickers_historic)
+    st.write(f"**ROI:**")
+    if roi_value > 0:
+        st.success(f'Invertir en esa acción durante ese período habría generado una ganancia del {roi_value}%')
+    elif roi_value < 0:
+        st.error(f'Si hubieras invertido en esa acción, habrías perdido un {roi_value}% de tu inversión.')
+    st.write('\n')
+
+    # Calcular Sharpe Ratio
+    col_risk1, col_risk2, col_risk3, col_risk4, col_risk5 = st.columns(5)
+    with col_risk5:
+        risk = st.number_input("Introducir riesgo personalizado (%)", min_value=0.0, max_value=100.0, value=20.00, step=0.01)
+        risk = risk / 100
+
+    col_sortino, col_sharpe = st.columns(2)
+
+    with col_sharpe:
+        sharpe_value = sharpe_ratio(selected_ticker, fecha_inicio, fecha_fin, df=nasdaq_tickers_historic, risk_free_rate=risk)
+        st.write(f"**Sharpe Ratio:** {sharpe_value}")
+        if sharpe_value > 1:
+            st.success('Buena inversión ajustada al riesgo')
+        elif sharpe_value < 1:
+            st.warning('Riesgo alto en relación con el retorno')
+        elif sharpe_value > 2:
+            st.success('Excelente inversión')
+        elif sharpe_value > 3:
+            st.success('Inversión excepcional')
+
+    with col_sortino:
+        sortino_ratio_value = sortino_ratio(selected_ticker, fecha_inicio, fecha_fin, df = nasdaq_tickers_historic, risk_free_rate=risk)
+        st.write(f"**Sortino Ratio:** {sortino_ratio_value}")
+        if sortino_ratio_value > 1:
+            st.success('Buena inversión ajustada al riesgo')
+        elif sortino_ratio_value < 1:
+            st.warning('Riesgo alto en relación con el retorno')
+        elif sortino_ratio_value > 2:
+            st.success('Excelente inversión')
+        elif sortino_ratio_value > 3:
+            st.success('Inversión excepcional')
+
+    st.write('\n')   
+    st.write('\n')  
+    st.write('\n')
+    
+    st.subheader(f"**Explicación de los ratios**")
+   
+    st.write(f'''**ROI**:  mide cuánto ganas en relación con lo que has invertido. Se expresa en porcentaje y responde a la pregunta: "¿Por cada euro invertido, cuánto he ganado o perdido?"
+        Si es positivo indica ganancias (cuanto mayor, mejor); negativo indica pérdidas.''')
+    st.write('\n')
+    st.write(f'''**Sharpe Ratio**: Mide cuánto rendimiento obtienes por cada unidad de riesgo asumido. Se usa para evaluar si los beneficios justifican la volatilidad.  
+        Si es alto (>1), indica buena rentabilidad en relación con el riesgo; si es bajo (<1), el riesgo puede ser demasiado alto para la ganancia obtenida; si es negativo, el rendimiento es peor que una inversión sin riesgo.''')
+    st.write('\n')
+    st.write(f'''**Sortino Ratio**: Similar al Sharpe Ratio, pero solo tiene en cuenta el riesgo de caídas (pérdidas) y no la volatilidad total.  
+        Si es alto, indica buena rentabilidad con pocas caídas; si es bajo, sugiere muchas pérdidas o rendimientos inestables.''')
+    st.write('\n')
+    st.write(f'''**Riesgo**: Representa la incertidumbre o variabilidad de los rendimientos de una inversión.  
+        Si es alto, hay posibilidad de grandes ganancias, pero también de grandes pérdidas; si es bajo, la inversión es más estable y con menor probabilidad de pérdidas significativas.''')
+
+
+=======
         st.markdown("""
         **Interpretacion:** 
 
@@ -258,3 +413,4 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     - **Sortino Ratio**: Similar al Sharpe Ratio, pero solo tiene en cuenta la volatilidad negativa (riesgo a la baja).  
     - **Riesgo personalizado**: Parámetro ajustable para analizar inversiones según tu tolerancia al riesgo.
     """)
+>>>>>>> main
