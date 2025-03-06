@@ -28,10 +28,14 @@ def clustering_process(engine, nasdaq_tickers_historic):
 
         features = ['Close', 'High', 'Low', 'Open']
 
+        # Reemplazar NaN con la media de cada columna antes de normalizar
+        nasdaq_tickers_historic[features] = nasdaq_tickers_historic[features].apply(lambda x: x.fillna(x.mean()), axis=0)
+        
+        
         # Normalizar los datos usando StandardScaler:
 
         scaler = StandardScaler()
-        nasdaq_tickers_historic[features] = scaler.fit_transform(nasdaq_tickers_historic[features])
+        nasdaq_tickers_historic.loc[:, features] = scaler.fit_transform(nasdaq_tickers_historic[features])
 
 
         # Aplicar DBSCAN clustering:

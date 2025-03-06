@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 
 DATABASE_CONFIG = {
     "username": "root",
-    "password": "Dunidu",
+    "password": "marinadl",
     "hostname": "localhost", 
     "port": 3306
 }
