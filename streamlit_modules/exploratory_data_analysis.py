@@ -4,9 +4,6 @@ import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
 from datetime import datetime
-#from descarga_sql import descargar_data_sql
-
-#nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
 
 # Definir las funciones
 
@@ -52,21 +49,14 @@ def sortino_ratio(ticker, start_date, end_date, df, risk_free_rate=0):
 def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     st.title("Analisis Exploratorio de Datos")
     st.write("\n")
-    st.markdown("""
-    Bienvenido al EDA de las empresas que componen el indice bursatil de Nasdaq 100.\n
-    Aquí podrás explorar tanto el análisis financiero como técnico de las empresas, además de comparar el rendimiento de distintas acciones.\n
-    Interactua y utiliza los selectores de ticker y  período temporal y analiza distintos gráficos según tus preferencias.
-    """)
-    
-    st.header("- 📊 Análisis Financiero")
+    st.write("Bienvenido al EDA de las empresas que componen el indice bursatil de Nasdaq 100.")
+    st.write("Aquí podrás explorar tanto el análisis financiero como técnico de las empresas, además otrás metricas financieras y tablas de datos.")
     st.write("\n")
-    st.markdown("""
-    En esta sección podrás explorar el análisis financiero de las empresas del Nasdaq 100.\n
-    Selecciona una empresa para visualizar el balance general, los activos, pasivos y patrimonio neto.
-    """)
+    st.write("Interactua y utiliza los selectores de ticker y  período temporal y analisis según tus preferencias.")
+    
 
     # Título del dashboard
-    st.subheader("Empresas que forman el índice bursátil  - Nasdaq 100")
+    st.header("Empresas que forman el índice bursátil  - Nasdaq 100")
 
     # Obtener lista de tickers únicos y ordenarlos alfabéticamente
     tickers_unicos =  nasdaq_tickers_info[['Ticker', 'ShortName']]
@@ -76,10 +66,32 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
 
 
     # Selección del ticker
-    ticker_seleccionado = st.selectbox(
-        "Selecciona una empresa por su Ticker",
+    ticker_seleccionado = st.selectbox("Selecciona una empresa por su Ticker",
         tickers_opciones
     )
+
+    # Extraer solo el ticker seleccionado (separa el texto antes del " - ")
+    ticker_seleccionado = ticker_seleccionado.split(" - ")[0]
+
+    # Obtener la información completa del ticker seleccionado
+    info = nasdaq_tickers_info[nasdaq_tickers_info["Ticker"] == ticker_seleccionado]
+
+    # Extraer los valores de las columnas
+    short_name, sector, industry, country, market_cap = [
+        info[col].values[0] if not info[col].empty else "No disponible"
+        for col in ["ShortName", "Sector", "Industry", "Country", "MarketCap"]
+    ]
+
+    # Mostrar la información adicional en columnas
+    st.write("\n")
+    cols = st.columns(5)
+    labels = ["Nombre", "Sector", "Industria", "País", 'MarketCap']
+    values = [short_name, sector, industry, country, f'{market_cap / 1_000_000:,.0f} $M']
+
+    for col, label, value in zip(cols, labels, values):
+        with col:
+            st.write(f"**{label}:** {value}")
+
 
     # Extraer solo el ticker seleccionado (separa el texto antes del " - ")
     ticker_seleccionado = ticker_seleccionado.split(" - ")[0]
@@ -110,6 +122,14 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
 
     # Verificar si hay datos para el ticker seleccionado
     if not df_filtrado_info.empty and not df_filtrado_historic.empty:
+        st.header("- 📊 Análisis Financiero")
+        st.write("\n")
+        st.markdown("""
+        En esta sección podrás explorar el análisis financiero de las empresas del Nasdaq 100.\n
+        Selecciona una empresa para visualizar el balance general, los activos, pasivos y patrimonio neto.
+        """)
+
+    
         # --- Cálculos para el balance general y estado de resultados ---
         net_income = df_filtrado_info['NetIncomeToCommon'].values[0]
         roe = df_filtrado_info['ReturnOnEquity'].values[0]
@@ -149,21 +169,21 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
         st.write("\n")
 
         # --- Gráfico del estado de resultados ---
-        st.subheader("Estado de Resultados")
-        estado_resultados = pd.DataFrame({
-                'Concepto': ['Utilidad Bruta', 'Utilidad Neta'],
-                'Monto': [u_bruta, u_neta]
-            })
-        fig_resultados = px.bar(estado_resultados, x='Concepto', y='Monto', text='Monto', title=f"{ticker_seleccionado} de {fecha_inicio.strftime('%d-%m-%Y')} a {fecha_fin.strftime('%d-%m-%Y')}") 
-        st.plotly_chart(fig_resultados)
-        st.markdown("""
-        Rentabilidad de la empresa en diferentes niveles brutos y netos.
+        #st.subheader("Estado de Resultados")
+        #estado_resultados = pd.DataFrame({
+        #       'Concepto': ['Utilidad Bruta', 'Utilidad Neta'],
+        #       'Monto': [u_bruta, u_neta]
+        #   })
+        #fig_resultados = px.bar(estado_resultados, x='Concepto', y='Monto', text='Monto', title=f"{ticker_seleccionado} de {fecha_inicio.strftime('%d-%m-%Y')} a {fecha_fin.strftime('%d-%m-%Y')}") 
+        #st.plotly_chart(fig_resultados)
+        #st.markdown("""
+        #Rentabilidad de la empresa en diferentes niveles brutos y netos.
 
-        - Rentabilidad **bruta**: Indica las ganancias después de los costes de venta (costes directos).
-        - Rentabilidad **neta**: Indica las ganancias después de deducir todos los gastos del negocio (costes directos, costes operativos e impuestos).
+        #- Rentabilidad **bruta**: Indica las ganancias después de los costes de venta (costes directos).
+        #- Rentabilidad **neta**: Indica las ganancias después de deducir todos los gastos del negocio (costes directos, costes operativos e impuestos).
 
-        Ambas son importantes para entender la eficiencia y salud financiera del negocio.
-        """)
+        #Ambas son importantes para entender la eficiencia y salud financiera del negocio.
+        #""")
 
         st.write("\n")
         st.write("\n")
@@ -178,7 +198,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
         # --- Gráfico de análisis técnico, precios historicos---
 
         st.subheader("**Precios Históricos de cierre.**")
-        fig_precios = px.line(df_filtrado_historic, x='Date', y='Close', title=f"{ticker_seleccionado}")
+        fig_precios = px.line(df_filtrado_historic, x='Date', y='Close', title=f"{ticker_seleccionado} de {fecha_inicio.strftime('%d-%m-%Y')} a {fecha_fin.strftime('%d-%m-%Y')}")
         st.plotly_chart(fig_precios)
         st.markdown("""
         Nos permite observar cómo ha cambiado el precio de cierre del activo a lo largo del tiempo y analizar tendencias, volatilidad y comportamiento del mercado.     
@@ -264,22 +284,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     st.write("\n")
     st.write("\n")
 
-    selected_ticker = st.selectbox("Selecciona el ticker a mostrar", options=tickers_nasdaq)
-    info = nasdaq_tickers_info[nasdaq_tickers_info["Ticker"] == selected_ticker]
-    short_name, sector, industry, country, MarketCap = [
-        info[col].values[0] if not info[col].empty else "No disponible"
-        for col in ["ShortName", "Sector", "Industry", "Country", "MarketCap"]
-    ]
 
-    st.write("\n")
-
-    cols = st.columns(5)
-    labels = ["Nombre", "Sector", "Industria", "País", 'MarketCap']
-    values = [short_name, sector, industry, country, f'{MarketCap / 1_000_000:,.0f} $M']
-
-    for col, label, value in zip(cols, labels, values):
-        with col:
-            st.write(f"**{label}:** {value}")
 
     st.write('\n')
     st.write('\n')
@@ -290,7 +295,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     #Grafico de velas
     # Filtrar datos según el ticker y el rango de fechas
     df_filtrado = nasdaq_tickers_historic[
-        (nasdaq_tickers_historic["Ticker"] == selected_ticker) &
+        (nasdaq_tickers_historic["Ticker"] == ticker_seleccionado) &
         (nasdaq_tickers_historic["Date"] >= fecha_inicio) &
         (nasdaq_tickers_historic["Date"] <= fecha_fin)
     ]
@@ -307,13 +312,13 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
                 high=df_filtrado["High"],
                 low=df_filtrado["Low"],
                 close=df_filtrado["Close"],
-                name=selected_ticker
+                name=ticker_seleccionado
             )
         ])
 
         # Personalizar el diseño
         fig.update_layout(
-            title=f"Gráfico de Velas Japonesas - {selected_ticker} de {fecha_inicio.strftime('%d-%m-%Y')} a {fecha_fin.strftime('%d-%m-%Y')}",
+            title=f"Gráfico de Velas Japonesas - {ticker_seleccionado} de {fecha_inicio.strftime('%d-%m-%Y')} a {fecha_fin.strftime('%d-%m-%Y')}",
             xaxis_title="Fecha",
             yaxis_title="Precio",
             xaxis_rangeslider_visible=False,
@@ -344,7 +349,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     #Grafico de Bandas de Bollinger
     # Filtrar datos según el ticker y el rango de fechas seleccionado
     df_ticker = nasdaq_tickers_historic[
-        (nasdaq_tickers_historic["Ticker"] == selected_ticker) & 
+        (nasdaq_tickers_historic["Ticker"] == ticker_seleccionado) & 
         (nasdaq_tickers_historic["Date"] >= fecha_inicio) & 
         (nasdaq_tickers_historic["Date"] <= fecha_fin)
     ].copy()
@@ -362,7 +367,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
         fig_bollinger = go.Figure()
 
         # Título dinámico con el rango de fechas seleccionado
-        fig_bollinger.update_layout(title=f"Bandas de Bollinger - {selected_ticker} de {fecha_inicio.strftime('%d-%m-%Y')} a {fecha_fin.strftime('%d-%m-%Y')}")
+        fig_bollinger.update_layout(title=f"Bandas de Bollinger - {ticker_seleccionado} de {fecha_inicio.strftime('%d-%m-%Y')} a {fecha_fin.strftime('%d-%m-%Y')}")
 
         # Agregar las trazas al gráfico
         fig_bollinger.add_trace(go.Scatter(x=df_ticker["Date"], y=df_ticker["Close"], mode="lines", name="Precio"))
@@ -393,7 +398,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     # Estructura ROI + Input de Riesgo
     col_roi, col_risk = st.columns([2, 1]) 
     with col_roi:
-        roi_value = roi(selected_ticker, fecha_inicio, fecha_fin, df=nasdaq_tickers_historic)
+        roi_value = roi(ticker_seleccionado, fecha_inicio, fecha_fin, df=nasdaq_tickers_historic)
         st.write("**ROI:**")
         if roi_value > 0:
             st.success(f'📈 Invertir en esta acción habría generado una ganancia del {roi_value:.2f}%')
@@ -412,7 +417,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     col_sharpe, col_sortino = st.columns(2)
 
     with col_sharpe:
-        sharpe_value = sharpe_ratio(selected_ticker, fecha_inicio, fecha_fin, df=nasdaq_tickers_historic, risk_free_rate=risk)
+        sharpe_value = sharpe_ratio(ticker_seleccionado, fecha_inicio, fecha_fin, df=nasdaq_tickers_historic, risk_free_rate=risk)
         st.write(f"**Sharpe Ratio:** {sharpe_value:.2f}")
         if sharpe_value > 3:
             st.success('🚀 Inversión excepcional')
@@ -424,7 +429,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
             st.warning('⚠️ Riesgo alto en relación con el retorno')
 
     with col_sortino:
-        sortino_ratio_value = sortino_ratio(selected_ticker, fecha_inicio, fecha_fin, df=nasdaq_tickers_historic, risk_free_rate=risk)
+        sortino_ratio_value = sortino_ratio(ticker_seleccionado, fecha_inicio, fecha_fin, df=nasdaq_tickers_historic, risk_free_rate=risk)
         st.write(f"**Sortino Ratio:** {sortino_ratio_value:.2f}")
         if sortino_ratio_value > 3:
             st.success('🚀 Inversión excepcional')
@@ -475,7 +480,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     nasdaq_tickers_info.index = nasdaq_tickers_info.index + 1
     
     st.subheader("- Información de las empresas que forman el índice Nasdaq-100")
-    st.dataframe(nasdaq_tickers_info.style.highlight_max(axis=0))
+    st.dataframe(nasdaq_tickers_info)
     
     st.write("\n")
     st.write("\n")
