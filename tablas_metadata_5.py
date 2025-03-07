@@ -1,4 +1,4 @@
-from sqlalchemy import MetaData, Table, Column, String, Float, DateTime, Date, ForeignKey, text, insert
+from sqlalchemy import MetaData, Table, Column, String, Integer, Float, DateTime, Date, ForeignKey, text, insert
 
 tablas = MetaData()
 
@@ -9,7 +9,8 @@ tickers_historic_table = Table('nasdaq_tickers_historic_sql', tablas,
     Column('High', Float),
     Column('Low', Float),
     Column('Open', Float),
-    Column('Volume', Float)
+    Column('Volume', Float),
+    Column("Cluster", Integer, nullable=True, default=None)
 )
 
 tickers_info_table = Table('nasdaq_tickers_info_sql', tablas,
@@ -47,5 +48,5 @@ finanzas_dividendos_table = Table('finanzas_dividendos_sql', tablas,
 )
 
 time_stamp_table= Table('timestamp_sql', tablas,
-    Column('Timestamp_extraction', DateTime, primary_key=True)
+    Column('TimestampExtraction', DateTime, primary_key=True)
 )
