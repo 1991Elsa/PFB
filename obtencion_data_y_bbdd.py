@@ -8,6 +8,7 @@ import time
 from connect_engine import *
 from tablas_metadata_5 import *
 from sqlalchemy.dialects.mysql import insert
+from descarga_sql import descargar_data_sql
 #from clustering_dbscan import clustering_process
 
 # Función para obtener los tickers de NASDAQ 100 (scrapping)
@@ -307,6 +308,7 @@ def creacion_bbdd(nasdaq_tickers_historic_clean, nasdaq_tickers_info_clean, fina
     # Asegura que Datetime solo se use date
     try:
         nasdaq_tickers_historic_clean['Date'] = pd.to_datetime(nasdaq_tickers_historic_clean['Date']).dt.date
+        nasdaq_tickers_historic_clean["Cluster"] = None
         
         # Desactivar las restricciones de clave foránea temporalmente para el llenado
         with engine.connect() as connection:
@@ -357,12 +359,13 @@ def creacion_bbdd(nasdaq_tickers_historic_clean, nasdaq_tickers_info_clean, fina
         try:
             with engine.begin() as conn:
                 timestamp_value = time_stamp_clean.iloc[0, 0]
-                stmt = insert(time_stamp_table).values({"Timestamp_extraction": timestamp_value})
-                stmt = stmt.on_duplicate_key_update({"Timestamp_extraction": timestamp_value})
+                stmt = insert(time_stamp_table).values({"TimestampExtraction": timestamp_value})
+                stmt = stmt.on_duplicate_key_update({"TimestampExtraction": timestamp_value})
                 conn.execute(stmt)
-            print("Timestamp_extraction insertado/actualizado correctamente en time_stamp_sql.")
+            print("TimestampExtraction insertado/actualizado correctamente en time_stamp_sql.")
         except Exception as e:
             print(f"Error al insertar/actualizar el timestamp en time_stamp_sql: {e}")
+            raise e
 
         # Reactiva la clave foránea
         with engine.connect() as connection:
@@ -424,3 +427,11 @@ except Exception as e:
     #clustering_process(get_engine_database(), nasdaq_tickers_historic_clean)
 #except Exception as e:
     #print(f'Error al realizar el clustering: {e}')
+
+nasdaq_tickers_historic, nasdaq_tickers_info, timestamp = descargar_data_sql()
+
+
+# Generamos los 3 df en formato CSV para powerBI
+nasdaq_tickers_historic.to_csv("nasdaq_tickers_historic_clean.csv", index=False)
+nasdaq_tickers_info.to_csv("nasdaq_tickers_info_clean.csv", index=False)
+timestamp.to_csv("timestamp_data_clean.csv", index=False)

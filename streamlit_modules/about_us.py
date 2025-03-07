@@ -3,7 +3,7 @@ import numpy as np
 import streamlit as st
 
 
-def mostrar():
+def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     st.title("About Us")
 
     st.write("\n")
