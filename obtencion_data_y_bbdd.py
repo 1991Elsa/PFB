@@ -9,7 +9,7 @@ from connect_engine import *
 from tablas_metadata_5 import *
 from sqlalchemy.dialects.mysql import insert
 from descarga_sql import descargar_data_sql
-#from clustering_dbscan import clustering_process
+from clustering_dbscan import clustering_process
 
 # Función para obtener los tickers de NASDAQ 100 (scrapping)
 def tickers_nasdaq():
@@ -423,15 +423,16 @@ except Exception as e:
     print(f'No se creó la BBDD: {e}')
 
 #Funcion para realizar el clustering
-#try:
-    #clustering_process(get_engine_database(), nasdaq_tickers_historic_clean)
-#except Exception as e:
-    #print(f'Error al realizar el clustering: {e}')
+try:
+    clustering_process(nasdaq_tickers_historic_clean)
+except Exception as e:
+    print(f'Error al realizar el clustering: {e}')
 
-nasdaq_tickers_historic, nasdaq_tickers_info, timestamp = descargar_data_sql()
+
+
 
 
 # Generamos los 3 df en formato CSV para powerBI
-nasdaq_tickers_historic.to_csv("nasdaq_tickers_historic_clean.csv", index=False)
-nasdaq_tickers_info.to_csv("nasdaq_tickers_info_clean.csv", index=False)
-timestamp.to_csv("timestamp_data_clean.csv", index=False)
+nasdaq_tickers_historic_clean.to_csv("nasdaq_tickers_historic_clean.csv", index=False)
+nasdaq_tickers_info_clean.to_csv("nasdaq_tickers_info_clean.csv", index=False)
+time_stamp_clean.to_csv("timestamp_data_clean.csv", index=False)

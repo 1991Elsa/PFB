@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from descarga_sql import descargar_data_sql
 
-nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
+nasdaq_tickers_historic, nasdaq_tickers_info, df_timestamp = descargar_data_sql()
 
 def tratamiento_nans_info(df):
     """

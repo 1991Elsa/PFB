@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
-from descarga_sql import nasdaq_tickers_historic
+from tratamiento_nans_cluster import nasdaq_tickers_historic
 from connect_engine import *
 from tablas_metadata import *
 from sqlalchemy.dialects.mysql import insert
@@ -37,7 +37,7 @@ def clustering_process(nasdaq_tickers_historic):
         features = ['Close', 'High', 'Low', 'Open']
 
         # Reemplazar NaN con la media de cada columna antes de normalizar
-        nasdaq_tickers_historic[features] = nasdaq_tickers_historic[features].apply(lambda x: x.fillna(x.mean()), axis=0)
+        #nasdaq_tickers_historic[features] = nasdaq_tickers_historic[features].apply(lambda x: x.fillna(x.mean()), axis=0)
         
         
         # Normalizar los datos usando StandardScaler:
