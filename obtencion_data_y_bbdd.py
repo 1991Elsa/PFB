@@ -308,6 +308,7 @@ def creacion_bbdd(nasdaq_tickers_historic_clean, nasdaq_tickers_info_clean, fina
     # Asegura que Datetime solo se use date
     try:
         nasdaq_tickers_historic_clean['Date'] = pd.to_datetime(nasdaq_tickers_historic_clean['Date']).dt.date
+        nasdaq_tickers_historic_clean["Cluster"] = None
         
         # Desactivar las restricciones de clave foránea temporalmente para el llenado
         with engine.connect() as connection:
@@ -358,12 +359,13 @@ def creacion_bbdd(nasdaq_tickers_historic_clean, nasdaq_tickers_info_clean, fina
         try:
             with engine.begin() as conn:
                 timestamp_value = time_stamp_clean.iloc[0, 0]
-                stmt = insert(time_stamp_table).values({"Timestamp_extraction": timestamp_value})
-                stmt = stmt.on_duplicate_key_update({"Timestamp_extraction": timestamp_value})
+                stmt = insert(time_stamp_table).values({"TimestampExtraction": timestamp_value})
+                stmt = stmt.on_duplicate_key_update({"TimestampExtraction": timestamp_value})
                 conn.execute(stmt)
-            print("Timestamp_extraction insertado/actualizado correctamente en time_stamp_sql.")
+            print("TimestampExtraction insertado/actualizado correctamente en time_stamp_sql.")
         except Exception as e:
             print(f"Error al insertar/actualizar el timestamp en time_stamp_sql: {e}")
+            raise e
 
         # Reactiva la clave foránea
         with engine.connect() as connection:
