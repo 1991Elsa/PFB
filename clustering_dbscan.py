@@ -6,6 +6,8 @@ from descarga_sql import nasdaq_tickers_historic
 from connect_engine import *
 from tablas_metadata import *
 from sqlalchemy.dialects.mysql import insert
+from sqlalchemy import create_engine
+
 
 """
 Para definir un algoritmo de clustering que agrupe acciones 
@@ -21,7 +23,13 @@ nasdaq_tickers_historic
 
 """
 
-def clustering_process(engine, nasdaq_tickers_historic):
+def clustering_process(nasdaq_tickers_historic):
+
+    # Crear el engine y conectar a la base de datos yahoo_finance
+    engine = get_engine_database()
+
+    # with engine.connect() as connection:
+    #     nasdaq_tickers_historic = pd.read_sql_table("nasdaq_tickers_historic_sql", con=connection)
 
     try:
         # Seleccionar características para el clustering:
@@ -37,48 +45,50 @@ def clustering_process(engine, nasdaq_tickers_historic):
         scaler = StandardScaler()
         nasdaq_tickers_historic.loc[:, features] = scaler.fit_transform(nasdaq_tickers_historic[features])
 
-
+        # Sample
+        random_indices = np.random.choice(nasdaq_tickers_historic.index.values, size=10_000, replace=False)
+        print(random_indices)
         # Aplicar DBSCAN clustering:
 
         dbscan = DBSCAN(eps= 0.5, min_samples= 5)
-        nasdaq_tickers_historic.loc[:, 'Cluster'] = dbscan.fit_predict(nasdaq_tickers_historic[features])
-
-        #Mostrar algunos resultados para comprobar(dejar siempre comentada despues)
-        #nasdaq_tickers_historic[['ticker', 'date', 'cluster']].head()
+        nasdaq_tickers_historic.loc[random_indices, 'Cluster'] = dbscan.fit_predict(nasdaq_tickers_historic.loc[random_indices,features])
 
 
-        # Crear el engine y conectar a la base de datos yahoo_finance
-        engine = get_engine_database()
+        # Using a context manager to handle the connection
+        with engine.connect() as connection:
+            # Begin a transaction
+            with connection.begin() as transaction:
+                try:
+                    for index, row in nasdaq_tickers_historic.dropna(subset="Cluster").iterrows():
+                        stmt = text("""
+                            UPDATE nasdaq_tickers_historic_sql 
+                            SET cluster = :cluster 
+                            WHERE ticker = :ticker AND date = :date
+                        """)
+                        connection.execute(stmt, {"cluster": int(row['Cluster']), "ticker": row['Ticker'], "date": row['Date']})
+                    # If everything is successful, commit the transaction
+                    transaction.commit()
+                except Exception as e:
+                    # If there is an error, rollback the transaction
+                    transaction.rollback()
+                    print(f"An error occurred: {e}")
 
-        # Verificar la conexión
-        try:
-            connection = engine.connect()
-            connection.close()
-            print("Conexión establecida con éxito a la base de datos yahoo_finance.")
-        except Exception as e:
-            print(f"Error al establecer la conexión: {e}")
+                # Verificar la conexión
+                try:
+                    connection = engine.connect()
+                    connection.close()
+                    print("Conexión establecida con éxito a la base de datos yahoo_finance.")
+                except Exception as e:
+                    print(f"Error al establecer la conexión: {e}")
 
-
-        # Añadir la columna 'Cluster' a la estructura de la tabla si no existe:
-
-        with engine.connect() as conn:
-                conn.execute(text("""
-                    ALTER TABLE nasdaq_tickers_historic_sql ADD COLUMN cluster INT;
-                """))
-            
-        # Insertar/actualizar los valores en la base de datos
-        with engine.begin() as conn:
-            for index, row in nasdaq_tickers_historic.iterrows():
-                stmt = text("""
-                    UPDATE nasdaq_tickers_historic_sql 
-                    SET cluster = :cluster 
-                    WHERE ticker = :ticker AND date = :date
-                """)
-                conn.execute(stmt, {"cluster": int(row['Cluster']), "ticker": row['Ticker'], "date": row['Date']})
             
         print("Clustering actualizado en la base de datos correctamente.")
         
 
     except Exception as e:
         print(f"Error en el proceso de clustering: {e}")
-    
+        raise e
+
+if __name__ == "__main__":
+    print(nasdaq_tickers_historic.shape)
+    clustering_process(nasdaq_tickers_historic)
