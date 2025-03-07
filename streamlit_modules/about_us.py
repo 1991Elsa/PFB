@@ -13,13 +13,6 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     st.header("Tecnologías Utilizadas:")
 
     st.write("\n")
-<<<<<<< HEAD
-    st.write("Python(Pandas, Numpy, Plotly, Scikit-learn, Pyspark)")
-    st.write("MySQL Workbench")
-    st.write("Streamlit")
-    st.write("Power BI")
-
-=======
     st.write("\n")
 
     col1, col2, col3, col4 = st.columns(4)
@@ -44,38 +37,26 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
 
     st.write("\n")
     st.write("\n")
->>>>>>> main
 
     st.header("Proceso de Desarrollo:")
         
     st.write("\n")
-<<<<<<< HEAD
-=======
     st.write("\n")
->>>>>>> main
     st.write("1. Extracción y tratamiento de datos:")
     st.write("2. Creación de base de datos:")
     st.write("3. Modelado de datos MySQL.")
     st.write("4. Análisis de datos y visualización.")
     st.write("5. Creación de aplicación interactiva.")
-<<<<<<< HEAD
-    st.write("6. Desarrollo de algotirmos de Clustering y Clasificación.")
-    st.write("7. Integración de Power BI para vista usuario.")
-    st.write("\n")
-=======
     st.write("6. Desarrollo de Modelos de Machine Learning - Clustering y Clasificación.")
     st.write("7. Integración de Power BI para vista usuario.")
     st.write("\n")
     st.write("\n")
->>>>>>> main
         
     st.header("Equipo de Desarrollo:")
 
     st.write("\n")
     st.write("\n")
 
-<<<<<<< HEAD
-=======
     col1, col2 = st.columns(2)
 
     with col1:
@@ -103,7 +84,3 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
 
     st.write("\n")
     st.write("\n")
-
-
-
->>>>>>> main
