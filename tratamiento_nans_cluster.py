@@ -33,12 +33,14 @@ def tratamiento_nans_info(df):
 
 def tratamiento_nans_historic(df):
     """
-    Trata los valores nulos identificando la linealidad temporal de los datos y eliminando los tickers que cumplen con esta característica; porque son 
+    Trata los valores nulos de la tabla nasdaq_tickers_historic previo a ejecutar el modelo de clustering. 
+    Identifica la linealidad temporal de los datos y elimina los tickers que cumplen con esta característica; porque son 
     empresas que aún no habían entrado al mercado en el rango de fechas de la descarga. Para los tickers restantes, interpola los valores nulos.
+    Cambia el tipo de datos de float64 a float32 para reducir el uso de memoria.
 
     Parámetro: Dataframe con información historica de los tickers.
 
-    Retorna: Dataframe limpio.
+    Retorna: Dataframe limpio y listo para usar en el modelo de clustering.
     """
     
     try:
@@ -72,10 +74,16 @@ def tratamiento_nans_historic(df):
         print("Valores nulos después de tratamiento:")
         print(df.isna().sum())
 
+        #print(df.info())
+
+        col_to_float32 = ["Close", "High", "Low", "Open", "Volume"]
+        df[col_to_float32] = df[col_to_float32].astype("float32")
+        print(df.info())
+
+
     except Exception as e:
         print(f'Fallo la limpieza de historic {e}')
     return df
 
-nasdaq_tickers_info_ml = tratamiento_nans_info(nasdaq_tickers_info)
-nasdaq_tickers_historic_ml = tratamiento_nans_historic(nasdaq_tickers_historic)
-
+#nasdaq_tickers_info = tratamiento_nans_info(nasdaq_tickers_info)
+nasdaq_tickers_historic = tratamiento_nans_historic(nasdaq_tickers_historic)
