@@ -61,26 +61,26 @@ def mostrar():
 
     with col1:
         st.markdown("**Elsa Melara**")
-        st.write("[LindedIn](www.linkedin.com/in/elsa-m-356055b9) | [GitHub](https://github.com/1991Elsa)")
+        st.write("[LindedIn](https://www.linkedin.com/in/elsa-m-356055b9) | [GitHub](https://github.com/1991Elsa)")
         
         st.write("\n")
         st.write("\n")
         
         st.markdown("**Guadalupe Peña**")
-        st.write("[LindedIn](www.linkedin.com/in/guadalupe-peña-egea-3aaa8b329) | [GitHub](https://github.com/AdaXana)")
+        st.write("[LindedIn](https://www.linkedin.com/in/guadalupe-peña-egea-3aaa8b329) | [GitHub](https://github.com/AdaXana)")
 
     st.write("\n")
     st.write("\n")
 
     with col2:
         st.markdown("**Marina Dominguez**")
-        st.write("[LindedIn](https://www.linkedin.com/in/elsa-melara-7b1b1b1b1/) | [GitHub](https://github.com/ElsaMelara)")
+        st.write("[LindedIn](https://www.linkedin.com/in/marina-dominguez-28639b325) | [GitHub]https://github.com/Marina90d)")
 
         st.write("\n")
         st.write("\n")
 
         st.markdown("**Mikel **")
-        st.write("[LindedIn](https://www.linkedin.com/in/elsa-melara-7b1b1b1b1/) | [GitHub](https://github.com/ElsaMelara)")
+        st.write("[LindedIn](https://www.linkedin.com/in/mikel-alonso-alvarez-187776328) | [GitHub](https://github.com/Wantumaka)")
 
     st.write("\n")
     st.write("\n")
