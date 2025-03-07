@@ -9,7 +9,6 @@ from connect_engine import *
 from tablas_metadata_5 import *
 from sqlalchemy.dialects.mysql import insert
 from descarga_sql import descargar_data_sql
-#from clustering_dbscan import clustering_process
 
 # Función para obtener los tickers de NASDAQ 100 (scrapping)
 def tickers_nasdaq():
@@ -115,7 +114,8 @@ Retorna:
                 'ShortName': ticker_info.get('shortName', 'N/A'),      #Nombre empresa
                 'Sector': ticker_info.get('sector', 'N/A'),            #Sector de la empresa
                 'Industry': ticker_info.get('industry', 'N/A'),        #Industria a la que pertenece
-                'Country': ticker_info.get('country', 'N/A'),          #País de origen
+                'Country': ticker_info.get('country', 'N/A'),          #País
+                'Timestamp_extraction': datetime.now()
             }
             df_info = pd.DataFrame([dic_info])
 
@@ -189,7 +189,7 @@ def obtener_informacion_finanzas_tickers(tickers):
 def obtener_timestamp_actual():
     """Obtenemos un df con timestamp actual para llenar la tabla time_stamp_sql."""
     return pd.DataFrame({
-        'Timestamp_extraction': [datetime.now()]
+        'Timestamp': [datetime.now()]
     })
 
 # Función para limpiar los datos historicos
@@ -255,7 +255,7 @@ def clean_data_finanzas_balanza(df):
                 df[columna] = pd.to_numeric(df[columna], errors='coerce')
                 if columna in ['MarketCap', 'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow']:
                     df[columna] = df[columna] / 1_000_000  
-                    
+        
         df = df.replace({np.nan: None})
         
         return df
@@ -357,13 +357,12 @@ def creacion_bbdd(nasdaq_tickers_historic_clean, nasdaq_tickers_info_clean, fina
         # Insertar datos en la tabla `time_stamp_sql`
         try:
             with engine.begin() as conn:
-                timestamp_value = time_stamp_clean.iloc[0, 0]
-                stmt = insert(time_stamp_table).values({"Timestamp_extraction": timestamp_value})
-                stmt = stmt.on_duplicate_key_update({"Timestamp_extraction": timestamp_value})
-                conn.execute(stmt)
-            print("Timestamp_extraction insertado/actualizado correctamente en time_stamp_sql.")
+                timestamp_now = datetime.now()
+                conn.execute(insert(time_stamp_table).values({"Timestamp": timestamp_now}))
+            print("Timestamp de actualización insertado correctamente en time_stamp_sql.")
         except Exception as e:
-            print(f"Error al insertar/actualizar el timestamp en time_stamp_sql: {e}")
+            print(f"Error al insertar el timestamp en time_stamp_sql: {e}")
+
 
         # Reactiva la clave foránea
         with engine.connect() as connection:
@@ -372,14 +371,12 @@ def creacion_bbdd(nasdaq_tickers_historic_clean, nasdaq_tickers_info_clean, fina
     except Exception as e:
         print(f"Error al procesar los datos: {e}")
 
-
 # Ejecución de las funciones
 try:
     tickers = tickers_nasdaq()
 except Exception as e:
     print(f'Error en la función de scrapping: {e}')
     
-
 # Obtener y limpiar datos históricos
 try:
     datos_historicos = get_datos_historicos(tickers)
@@ -387,14 +384,12 @@ try:
 except Exception as e:
     print(f'Error en la llamada de históricos: {e}')
 
-
 # Obtener y limpiar info general de los tickers
 try:
     informacion_tickers = obtener_informacion_tickers(tickers)
     nasdaq_tickers_info_clean = clean_data_info(informacion_tickers)
 except Exception as e:
     print(f'Error en la llamada de info general: {e}')
-
 
 # Obtener y limpiar las 3 métricas financieras
 try:

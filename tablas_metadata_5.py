@@ -18,6 +18,7 @@ tickers_info_table = Table('nasdaq_tickers_info_sql', tablas,
     Column('Sector', String(50)),
     Column('Industry', String(50)),
     Column('Country', String(50)),
+    Column('Timestamp_extraction', DateTime)
 )
 
 finanzas_operativas_table = Table('finanzas_operativas_sql', tablas,
@@ -47,5 +48,15 @@ finanzas_dividendos_table = Table('finanzas_dividendos_sql', tablas,
 )
 
 time_stamp_table= Table('timestamp_sql', tablas,
-    Column('Timestamp_extraction', DateTime, primary_key=True)
+    Column('Timestamp', DateTime, primary_key=True)
 )
+
+
+
+
+
+
+
+
+
+

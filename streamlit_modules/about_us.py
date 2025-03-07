@@ -3,7 +3,11 @@ import numpy as np
 import streamlit as st
 
 
+<<<<<<< HEAD
 def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
+=======
+def mostrar():
+>>>>>>> parent of 24b62be7 (Merge branch 'feature-Guadalupe')
     st.title("About Us")
 
     st.write("\n")

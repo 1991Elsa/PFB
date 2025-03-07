@@ -2,11 +2,13 @@ import pandas as pd
 import numpy as np
 import sklearn
 from connect_engine import get_engine_database 
-from datetime import datetime
 
 
 def descargar_data_sql():
+    # Crea el engine y se conecta a la base de datos yahoo_finance
     engine = get_engine_database()
+
+    # Verifica la conexión
     try:
         connection = engine.connect()
         connection.close()
@@ -21,7 +23,6 @@ def descargar_data_sql():
         df_operativas = pd.read_sql_table(table_name="finanzas_operativas_sql", con=engine)
         df_balanza = pd.read_sql_table(table_name="finanzas_balanza_sql", con=engine)
         df_dividendos = pd.read_sql_table(table_name="finanzas_dividendos_sql", con=engine)
-        df_timestamp = pd.read_sql_table(table_name="timestamp_sql", con=engine)
         print('Descarga de datos con exito')   
     except Exception as e:
         print(f"Error al leer las tablas SQL: {e}")
@@ -41,7 +42,7 @@ def descargar_data_sql():
     except Exception as e:
         print(f"Error al unir las tablas info y finanzas: {e}")
 
-    return df_historic, df_info, df_timestamp
+    return df_historic, df_info
 
 
 """
