@@ -99,7 +99,7 @@ def tratamiento_nans_historic_rf(df):
 
     return df
 
-nasdaq_tickers_historic = tratamiento_nans_historic_rf(nasdaq_tickers_historic)
+#nasdaq_tickers_historic = tratamiento_nans_historic_rf(nasdaq_tickers_historic)
 
 print("nulos")
 print(nasdaq_tickers_historic.isna().sum())
