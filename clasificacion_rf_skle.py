@@ -12,9 +12,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
 from clustering_dbscan import clustering_process
-
-cluster_labels = clustering_process(nasdaq_tickers_historic)
-
+from sklearn.metrics import classification_report
 
 def modelo_clasification(df, target_colum):
     """
@@ -46,6 +44,8 @@ def modelo_clasification(df, target_colum):
 
     y_pred = rf_model.predict(X_test)
 
+    print(classification_report(y_test, y_pred))
+
     accuracy = accuracy_score(y_test, y_pred)
     print(f"Accuracy: {accuracy:.4f}")
 
@@ -71,23 +71,23 @@ def modelo_clasification(df, target_colum):
 
     # Gráfico de importancia de las variables
 
-    importances = rf_model.feature_importances_
-    features = X.columns
+    #importances = rf_model.feature_importances_
+    #features = X.columns
 
-    fig = go.Figure([
-        go.Bar(x=features, y=importances, marker_color='rgb(55,83,109)')
-    ])
+    #fig = go.Figure([
+    #    go.Bar(x=features, y=importances, marker_color='rgb(55,83,109)')
+    #])
 
-    fig.update_layout(
-        title_text='Importancia de las variables',
-        xaxis_title="Variables",
-        yaxis_title="Importancia",
-        xaxis_tickangle=-45
-    )
-    fig.show()
+    #fig.update_layout(
+    #    title_text='Importancia de las variables',
+    #    xaxis_title="Variables",
+    #    yaxis_title="Importancia",
+    #    xaxis_tickangle=-45
+    #)
+    #fig.show()
 
 
     return rf_model, scaler
 
-rf_model, scaler = modelo_clasification(nasdaq_tickers_historic, "Cluster")
+#rf_model, scaler = modelo_clasification(nasdaq_tickers_historic, "Cluster")
 
