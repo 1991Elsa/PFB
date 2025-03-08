@@ -11,6 +11,9 @@ from sklearn.metrics import confusion_matrix
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
+from clustering_dbscan import clustering_process
+
+cluster_labels = clustering_process(nasdaq_tickers_historic)
 
 
 def modelo_clasification(df, target_colum):
@@ -38,7 +41,7 @@ def modelo_clasification(df, target_colum):
 
     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
-    rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
+    rf_model = RandomForestClassifier(n_estimators=100, random_state=42, class_weight='balanced')
     rf_model.fit(X_train, y_train)
 
     y_pred = rf_model.predict(X_test)
@@ -51,20 +54,20 @@ def modelo_clasification(df, target_colum):
 
 
         # Matriz de confusión
-    y_pred = rf_model.predict(X_test)
-    conf_matrix = confusion_matrix(y_test, y_pred)
-    fig = ff.create_annotated_heatmap(
-        z=conf_matrix,
-        x=[f"Clase {i}" for i in range(conf_matrix.shape[1])],
-        y=[f"Clase {i}" for i in range(conf_matrix.shape[0])],
-        colorscale='Viridis'
-    )
-    fig.update_layout(
-        title_text='Matriz de confusión',
-        xaxis_title="Predicciones",
-        yaxis_title="Datos reales",
-    )
-    fig.show()
+    #class_dbscan = list(cluster_labels.keys())
+    #conf_matrix = confusion_matrix(y_test, y_pred)
+    #fig = ff.create_annotated_heatmap(
+    #    z=conf_matrix,
+    #    x=[f"Clase {i}" for i in class_dbscan],
+    #    y=[f"Clase {i}" for i in class_dbscan],
+    #    colorscale='Viridis'
+    #)
+    #fig.update_layout(
+    #    title_text='Matriz de confusión',
+    #    xaxis_title="Predicciones",
+    #    yaxis_title="Datos reales",
+    #)
+    #fig.show()
 
     # Gráfico de importancia de las variables
 
