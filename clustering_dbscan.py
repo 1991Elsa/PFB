@@ -3,13 +3,14 @@ import numpy as np
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
 from tratamiento_nans_cluster import nasdaq_tickers_historic
-from connect_engine import *
+from connect_engine import get_engine_database, get_engine
 from tablas_metadata import *
 from sqlalchemy.dialects.mysql import insert
 from sqlalchemy import create_engine
 from collections import Counter
 from sklearn.metrics import silhouette_score
 
+engine = get_engine_database()
 
 """
 Para definir un algoritmo de clustering que agrupe acciones 
@@ -25,7 +26,7 @@ nasdaq_tickers_historic
 
 """
 
-def clustering_process(nasdaq_tickers_historic):
+def clustering_process(engine, nasdaq_tickers_historic):
 
     # Crear el engine y conectar a la base de datos yahoo_finance
     engine = get_engine_database()
@@ -97,4 +98,4 @@ def clustering_process(nasdaq_tickers_historic):
 
 if __name__ == "__main__":
 
-    clustering_process(nasdaq_tickers_historic)
+ modelo_clustering = clustering_process(engine, nasdaq_tickers_historic)
