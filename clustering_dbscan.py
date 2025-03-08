@@ -2,11 +2,13 @@ import pandas as pd
 import numpy as np
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
-from descarga_sql import nasdaq_tickers_historic
+from tratamiento_nans_cluster import nasdaq_tickers_historic
 from connect_engine import *
 from tablas_metadata import *
 from sqlalchemy.dialects.mysql import insert
 from sqlalchemy import create_engine
+from collections import Counter
+from sklearn.metrics import silhouette_score
 
 
 """
@@ -36,10 +38,6 @@ def clustering_process(nasdaq_tickers_historic):
 
         features = ['Close', 'High', 'Low', 'Open']
 
-        # Reemplazar NaN con la media de cada columna antes de normalizar
-        nasdaq_tickers_historic[features] = nasdaq_tickers_historic[features].apply(lambda x: x.fillna(x.mean()), axis=0)
-        
-        
         # Normalizar los datos usando StandardScaler:
 
         scaler = StandardScaler()
@@ -50,9 +48,15 @@ def clustering_process(nasdaq_tickers_historic):
         print(random_indices)
         # Aplicar DBSCAN clustering:
 
-        dbscan = DBSCAN(eps= 0.5, min_samples= 5)
+        dbscan = DBSCAN(eps= 1.8, min_samples= 10)
         nasdaq_tickers_historic.loc[random_indices, 'Cluster'] = dbscan.fit_predict(nasdaq_tickers_historic.loc[random_indices,features])
 
+        clusters_labels = Counter(dbscan.labels_)
+        print(clusters_labels)
+
+        # Resultado de 0.98 es excelente y sugiere no cambiar eps ni minsample.  significa que el punto i está bien separado de otros clústeres y cercano a los puntos de su propio clúster. Esto indica una buena calidad de agrupación.
+        sil_score = silhouette_score(nasdaq_tickers_historic.loc[random_indices,features], dbscan.labels_)
+        print("Silhouette Score:", sil_score)
 
         # Using a context manager to handle the connection
         with engine.connect() as connection:
@@ -89,6 +93,8 @@ def clustering_process(nasdaq_tickers_historic):
         print(f"Error en el proceso de clustering: {e}")
         raise e
 
+    return clusters_labels
+
 if __name__ == "__main__":
-    print(nasdaq_tickers_historic.shape)
+
     clustering_process(nasdaq_tickers_historic)
