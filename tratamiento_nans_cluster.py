@@ -4,39 +4,6 @@ from descarga_sql import descargar_data_sql
 
 nasdaq_tickers_historic, nasdaq_tickers_info, timestamp = descargar_data_sql()
 
-#def tratamiento_nans_info(df):
-#    """
-#    Trata los valores nulos de las columnas numéricas, rellenando con la mediana de la columna agrupada por Sector o con 0 en caso de DividendRate y DividendYield.
-
-#    Parámetro: Dataframe con información de los tickers.
-
-#    Retorna: Dataframe limpio.
-#    """
-#    try:
-#        columnas_a_procesar = [
-#            'ReturnOnAssets', 'ReturnOnEquity', 'DebtToEquity', 'MarketCap',
-#            'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow', 'DividendRate',
-#            'DividendYield', 'PayoutRatio', 'ebitdaMargins'
-#       ]
-   
-#        df = df.fillna({"DividendRate" : 0, "DividendYield" : 0})
-
-#        df[columnas_a_procesar] = df.groupby("Sector")[columnas_a_procesar].transform(lambda x: x.fillna(x.median()))
-
-#        print("Valores nulos después del tratamiento:")
-#        print(df.isna().sum())
-    
-#    except Exception as e:
-#        print(f'Fallo la limpieza de info {e}')
-    
-#    return df
-
-
-#transform = ["Close", "High", "Low", "Open", "Volume"]
-
-#for col in transform:
-#        nasdaq_tickers_historic[col] = nasdaq_tickers_historic[col].apply(lambda x: np.log(x+1))
-
 def tratamiento_nans_historic(df):
     """
     Trata los valores nulos de la tabla nasdaq_tickers_historic previo a ejecutar el modelo de clustering. 
