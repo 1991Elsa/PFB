@@ -178,6 +178,50 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
 
             st.write("\n")
 
+            # --- Cálculos de variaciones ---
+            # Filtrar datos para el ticker seleccionado
+            df_ticker = nasdaq_tickers_historic[nasdaq_tickers_historic["Ticker"] == ticker_seleccionado].sort_values("Date", ascending=False)
+
+            # Verificar si hay datos suficientes
+            if len(df_ticker) < 2:
+                st.warning("No hay suficientes datos para calcular variaciones.")
+            else:
+                # Obtener el precio de cierre más reciente
+                last_close = df_ticker.iloc[0]["Close"]
+
+                # Función para calcular la variación porcentual
+                def get_variation(days):
+                    if len(df_ticker) > days:
+                        past_close = df_ticker.iloc[days]["Close"]
+                        if not pd.isna(last_close) and not pd.isna(past_close) and past_close != 0:
+                            return ((last_close - past_close) / past_close) * 100
+                    return None
+
+                # Cálculo de variaciones
+                variaciones = {
+                    "24h": get_variation(1),
+                    "7 días": get_variation(7),
+                    "1 mes": get_variation(30),
+                    "1 año": get_variation(365),
+                }
+
+                # Mostrar la evolución
+                st.subheader(f"Evolución de {ticker_seleccionado}")
+
+                columnas = st.columns(len(variaciones))
+
+                for (nombre, valor), col in zip(variaciones.items(), columnas):
+                    with col:
+                        if valor is None:
+                            st.warning(f"{nombre}: N/A")
+                        elif valor > 0:
+                            st.success(f"{nombre}: {valor:.2f} %")
+                        elif valor < 0:
+                            st.error(f"{nombre}: {valor:.2f} %")
+                        else:
+                            st.warning(f"{nombre}: {valor:.2f} %")
+
+
             # --- Gráfico del estado de resultados ---
             #st.subheader("Estado de Resultados")
             #estado_resultados = pd.DataFrame({
@@ -198,6 +242,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
             st.write("\n")
             st.write("\n")
             st.write("\n")
+
 
         elif seccion_seleccionada == "Análisis Técnico - valores de cierre - SMA - RSI":
             st.write("\n")  
