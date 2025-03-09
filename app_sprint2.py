@@ -10,10 +10,11 @@ st.set_page_config(**PAGE_CONFIG)
 
 # Usamos session_state para agilizar la carga de datos entre páginas
 if 'nasdaq_tickers_historic' not in st.session_state or 'nasdaq_tickers_info' not in st.session_state:
-    st.session_state.nasdaq_tickers_historic, st.session_state.nasdaq_tickers_info = descargar_data_sql()
+    st.session_state.nasdaq_tickers_historic, st.session_state.nasdaq_tickers_info, st.session_state.timestamp = descargar_data_sql()
 
 nasdaq_tickers_historic = st.session_state.nasdaq_tickers_historic
 nasdaq_tickers_info = st.session_state.nasdaq_tickers_info
+timestamp = st.session_state.timestamp
 
 # Carga la página por defecto en "Inicio"
 if 'seccion' not in st.session_state:
