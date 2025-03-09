@@ -23,7 +23,7 @@ nasdaq_tickers_historic
 
 """
 
-def clustering_process(nasdaq_tickers_historic):
+def clustering_process(engine, nasdaq_tickers_historic):
 
     # Crear el engine y conectar a la base de datos yahoo_finance
     engine = get_engine_database()
@@ -90,5 +90,6 @@ def clustering_process(nasdaq_tickers_historic):
         raise e
 
 if __name__ == "__main__":
-    print(nasdaq_tickers_historic.shape)
-    clustering_process(nasdaq_tickers_historic)
+    #print(nasdaq_tickers_historic.shape)
+    
+    modelo_clusterig = clustering_process( nasdaq_tickers_historic)
