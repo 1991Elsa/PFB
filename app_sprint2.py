@@ -9,7 +9,7 @@ from descarga_sql import descargar_data_sql
 st.set_page_config(**PAGE_CONFIG)
 
 # Usamos session_state para agilizar la carga de datos entre páginas
-if 'nasdaq_tickers_historic' not in st.session_state or 'nasdaq_tickers_info' not in st.session_state or 'timestamp' not in st.session_state:
+if 'nasdaq_tickers_historic' not in st.session_state or 'nasdaq_tickers_info' not in st.session_state:
     st.session_state.nasdaq_tickers_historic, st.session_state.nasdaq_tickers_info, st.session_state.timestamp = descargar_data_sql()
 
 nasdaq_tickers_historic = st.session_state.nasdaq_tickers_historic
@@ -42,8 +42,8 @@ def sidebar():
         index=pages.index(st.session_state.seccion)
     )
     st.sidebar.markdown("---")
-    if "Timestamp_extraction" in timestamp.columns:
-        st.sidebar.success(f'Última actualización: {timestamp["Timestamp_extraction"].iloc[0]}')
+    if "Timestamp_extraction" in nasdaq_tickers_info:
+        st.sidebar.success(f'Última actualización: {nasdaq_tickers_info["Timestamp_extraction"].iloc[0]}')
 
 # Función para mostrar la página de Inicio
 def mostrar_inicio():
@@ -55,14 +55,13 @@ def mostrar_inicio():
     st.write("")
     st.write("")
     st.header("**¿Qué es el NASDAQ 100?**")
-    st.write("")
     st.write("El NASDAQ 100 es un índice bursátil que agrupa a las 100 empresas más importantes de EE.UU. fuera del sector financiero, siendo el sector tecnológico el más representativo.")   
     st.write("")
     st.write("")
     st.subheader("¿Qué secciones encontrarás en esta app?")
     st.markdown(""" 
                 - **Exploratory Data Analysis:** Un analísis de datos clave de las empresas del NASDAQ 100 con distintos gráficos y métricas.
-                - **Comparador de Activos:** Herramienta muy útil para comparar distintas empresas del índice entre sí.
+                - **Comparador de Activos:** Herramienta muy útil para comparar distintas empresas entre sí.
                 - **Dashboard Power BI:** Un tablero interactivo en el que profundizar en las tendencias del mercado.
                 - **Modelos de Clasificación y Clustering** para identificar patrones y clasificar empresas según comportamientos.
                 - **Esquema de muestra BBDD**: visualización de la estructura de Entidad Relación de las tablas.
@@ -87,7 +86,7 @@ def main():
     elif st.session_state.seccion == "Diagrama de Entidad-Relación":
         esquema.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
     elif st.session_state.seccion == "About us":
-        about_us.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
+        esquema.mostrar()
 
 if __name__ == "__main__":
     main()

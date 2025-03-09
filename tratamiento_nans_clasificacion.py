@@ -10,6 +10,8 @@ from descarga_sql import nasdaq_tickers_historic
 #print("Información del dataframe antes del tratamiento:")
 #print(nasdaq_tickers_historic.info())
 
+
+
 def tratamiento_nans_historic_rf(df):
     """
     Trata los valores nulos de la tabla nasdaq_tickers_historic previo a ejecutar el modelo de clasificación.
@@ -21,6 +23,10 @@ def tratamiento_nans_historic_rf(df):
     Parámetro: Dataframe con información historica de los tickers y resultados del modelo de clustering.
     Retorna: Dataframe limpio y listo para usar en el modelo de clasificación.
     """
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/feature/mikel
     try:
         nans = df[df.isna().any(axis=1)]
         def verificar_linealidad_temporal(df):
@@ -42,9 +48,17 @@ def tratamiento_nans_historic_rf(df):
             df.loc[ticker_sin_linealidad].set_index("Date")[["Close", "High", "Low", "Open", "Volume"]]
             .interpolate(method="time", limit_direction="both").values)
         df = df.reset_index(drop=True)
+<<<<<<< HEAD
         col_to_float32 = ["Close", "High", "Low", "Open", "Volume"]
         df[col_to_float32] = df[col_to_float32].astype("float32")
         df.drop(columns=["Date", "Ticker", "Volume"], axis=1,  inplace=True)
+=======
+
+        col_to_float32 = ["Close", "High", "Low", "Open", "Volume"]
+        df[col_to_float32] = df[col_to_float32].astype("float32")
+        df.drop(columns=["Date", "Ticker", "Volume"], axis=1,  inplace=True)
+
+>>>>>>> origin/feature/mikel
         print("Valores nulos después del tratamiento:")
         print(df.isna().sum())
         print("Información del dataframe después del tratamiento:")
@@ -70,9 +84,50 @@ def tratamiento_nans_historic_rf(df):
         print(df.isna().sum())
         print(df.info())
     except Exception as e:
+        print(f'Fallo el tratamiento de nans historic {e}')
+        raise e
+    
+    # Inferir los clusters faltantes en las filas donde no se generó en el muestreo con DBSCAN
+    try:
+
+        with_cluster = df.dropna(subset=["Cluster"]).copy()
+        without_cluster = df[df["Cluster"].isna()].copy()
+
+        X = with_cluster.drop(columns=["Cluster"])
+        y = with_cluster["Cluster"].astype(int)
+
+        X_prediction = without_cluster.drop(columns=["Cluster"])
+
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+        model = RandomForestClassifier(n_estimators=100, random_state=42, class_weight='balanced')
+        model.fit(X_train, y_train)
+
+        y_prediction = model.predict(X_test)
+
+        print(classification_report(y_test, y_prediction))
+
+        without_cluster["Cluster"] = model.predict(X_prediction)
+
+        df = pd.concat([with_cluster, without_cluster], axis= 0).reset_index(drop=True)
+
+        print(df.isna().sum())
+        print(df.info())
+
+    except Exception as e:
         print(f'Fallo el tratamiento de nans historic cluster {e}')
         raise e
+<<<<<<< HEAD
     return df
 #nasdaq_tickers_historic = tratamiento_nans_historic_rf(nasdaq_tickers_historic)
 print("nulos")
 print(nasdaq_tickers_historic.isna().sum())
+=======
+
+    return df
+
+#nasdaq_tickers_historic = tratamiento_nans_historic_rf(nasdaq_tickers_historic)
+
+print("nulos")
+print(nasdaq_tickers_historic.isna().sum())
+>>>>>>> origin/feature/mikel
