@@ -9,7 +9,7 @@ from connect_engine import *
 from tablas_metadata_5 import *
 from sqlalchemy.dialects.mysql import insert
 from descarga_sql import descargar_data_sql
-from clustering_dbscan import clustering_process
+#from clustering_dbscan import clustering_process
 
 # Función para obtener los tickers de NASDAQ 100 (scrapping)
 def tickers_nasdaq():
@@ -91,25 +91,29 @@ Retorna:
 
     return ticker_info
 
-# Función para obtener la información de los tickers
 
-def obtener_informacion_tickers(tickers):
+# Función para obtenerinformacion general y métricas financieras segmentadas
+
+def obtener_informacion_finanzas_tickers(tickers):
     """
-Obtiene la información especifica y util de los tickers especificados.
+    Obtiene la información general y financiera de los tickers especificados, generando 4 df usando .info de yfinance.
+    
+    Parámetros:
+    - tickers: Lista con los tickers de los cuales se desea obtener la información.
 
-Parámetros:
-- Tickers: Lista con los tickers de los cuales se desea obtener los datos.
-
-Retorna:
-- Un DataFrame con la información de los tickers especificados.
-"""
-
+    Retorna:
+    - Cuatro DataFrames: info_tickers, finanzas_operativas, finanzas_balanza, finanzas_dividendos
+    """
     nasdaq_tickers_info = pd.DataFrame()
+    finanzas_operativas = pd.DataFrame()
+    finanzas_balanza = pd.DataFrame()
+    finanzas_dividendos = pd.DataFrame()
 
     for ticker in tickers:
+        if ticker != 'NDX': 
+            ticker_info = get_ticker_info(ticker)  
 
-        if ticker != 'NDX':
-            ticker_info = get_ticker_info(ticker)
+            # Información general del ticker
             dic_info = {
                 'Ticker': ticker_info.get('symbol', ticker), 
                 'ShortName': ticker_info.get('shortName', 'N/A'),      #Nombre empresa
@@ -118,33 +122,7 @@ Retorna:
                 'Country': ticker_info.get('country', 'N/A'),          #País de origen
             }
             df_info = pd.DataFrame([dic_info])
-
             nasdaq_tickers_info = pd.concat([nasdaq_tickers_info, df_info], ignore_index=True)
-            
-    print('Informacion de los tickers descargada con exito')
-    return nasdaq_tickers_info
-
-
-# Función para obtener distintas métricas financieras segmentadas en 3 df
-
-def obtener_informacion_finanzas_tickers(tickers):
-    """
-    Obtiene la información financiera de los tickers especificados, segmentando en 3 df,
-    y aseguramos Timestamp en cada uno de ellos por si se usa cada df independientemente.
-
-    Parámetros:
-    - tickers: Lista con los tickers de los cuales se desea obtener la información financiera.
-
-    Retorna:
-    - Tres DataFrames: finanzas_operativas, finanzas_balanza, finanzas_dividendos
-    """
-    finanzas_operativas = pd.DataFrame()
-    finanzas_balanza = pd.DataFrame()
-    finanzas_dividendos = pd.DataFrame()
-
-    for ticker in tickers:
-        if ticker != 'NDX': 
-            ticker_info = get_ticker_info(ticker)  
 
             # Méticas financieras operativas
             dic_operativas = {
@@ -181,8 +159,8 @@ def obtener_informacion_finanzas_tickers(tickers):
             df_dividendos = pd.DataFrame([dic_dividendos])
             finanzas_dividendos = pd.concat([finanzas_dividendos, df_dividendos], ignore_index=True)
 
-    print('Información financiera segmentada descargada con éxito')
-    return finanzas_operativas, finanzas_balanza, finanzas_dividendos
+    print('Información general y financiera descargada con éxito')
+    return nasdaq_tickers_info, finanzas_operativas, finanzas_balanza, finanzas_dividendos
 
 # Función para obtener el timestamp
 
@@ -214,74 +192,40 @@ def clean_data_historic(df):
 
 
 # Función para limpiar los datos info general
-def clean_data_info(df):
+def clean_data(df, categoria):
     try:
-        # Este df contiene la información general de cada empresa, solo necesitamos manejar valores nulos.
-        df = df.replace({np.nan: None})
-        return df
-    except Exception as e:
-        print(f'Fallo la limpieza de info general {e}')
-
-
-# Función para limpiar los datos financieros operativos 
-def clean_data_finanzas_operativas(df):
-    try:
-        columnas_a_procesar = [
-            'ReturnOnAssets', 'ReturnOnEquity', 'OperatingMargins', 'GrossMargins',
-            'ProfitMargins', 'ebitdaMargins'
-        ]
-
-        for columna in columnas_a_procesar:
-            if columna in df.columns:
-                df[columna] = pd.to_numeric(df[columna], errors='coerce')
+        columnas_forzado_numerico = {
+            'operativas': [
+                'ReturnOnAssets', 'ReturnOnEquity', 'OperatingMargins', 
+                           'GrossMargins', 'ProfitMargins', 'ebitdaMargins'
+                           ],
+            'balanza': [
+                'MarketCap', 'TotalRevenue', 'NetIncomeToCommon', 
+                        'DebtToEquity', 'FreeCashflow'
+                        ],
+            'dividendos': [
+                'DividendRate', 'DividendYield', 'PayoutRatio'
+                ]
+        }
         
-        df = df.replace({np.nan: None})
-        
-        return df
-    except Exception as e:
-        print(f'Fallo la limpieza de finanzas operativas {e}')
-        return df
+        columnas_a_millones = {
+            'MarketCap', 'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow'}
 
+        if categoria in columnas_forzado_numerico:
+            for columna in columnas_forzado_numerico[categoria]:
+                if columna in df.columns:
+                    df[columna] = pd.to_numeric(df[columna], errors='coerce')
 
-# Función para limpiar los datos financieros de balanza
-def clean_data_finanzas_balanza(df):
-    try:
-        columnas_a_procesar = [
-            'MarketCap', 'TotalRevenue', 'NetIncomeToCommon', 'DebtToEquity', 'FreeCashflow'
-        ]
-
-        for columna in columnas_a_procesar:
-            if columna in df.columns: 
-                df[columna] = pd.to_numeric(df[columna], errors='coerce')
-                if columna in ['MarketCap', 'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow']:
-                    df[columna] = df[columna] / 1_000_000  
-                    
-        df = df.replace({np.nan: None})
-        
-        return df
-    except Exception as e:
-        print(f'Fallo la limpieza de finanzas balanza {e}')
-        return df
-    
-
-# Función para limpiar los datos financieros de dividendos
-def clean_data_finanzas_dividendos(df):
-    try:
-        columnas_a_procesar = [
-            'DividendRate', 'DividendYield', 'PayoutRatio'
-        ]
-
-        for columna in columnas_a_procesar:
-            if columna in df.columns:
-                df[columna] = pd.to_numeric(df[columna], errors='coerce')
+                    if categoria == 'balanza' and columna in columnas_a_millones:
+                        df[columna] = df[columna] / 1_000_000  
         
         df = df.replace({np.nan: None})
-        
-        return df
-    except Exception as e:
-        print(f'Fallo la limpieza de finanzas dividendos {e}')
+
         return df
 
+    except Exception as e:
+        print(f'Error al limpiar datos de {categoria}: {e}')
+        
 
 # Creacion de la BBDD en MySQL
 def creacion_bbdd(nasdaq_tickers_historic_clean, nasdaq_tickers_info_clean, finanzas_operativas_clean, finanzas_balanza_clean, finanzas_dividendos_clean,time_stamp_clean):
@@ -390,24 +334,16 @@ except Exception as e:
     print(f'Error en la llamada de históricos: {e}')
 
 
-# Obtener y limpiar info general de los tickers
+# Obtener y limpiar info general y financiera de los tickers
 try:
-    informacion_tickers = obtener_informacion_tickers(tickers)
-    nasdaq_tickers_info_clean = clean_data_info(informacion_tickers)
+    nasdaq_tickers_info, finanzas_operativas, finanzas_balanza, finanzas_dividendos = obtener_informacion_finanzas_tickers(tickers)
+    nasdaq_tickers_info_clean = clean_data(nasdaq_tickers_info, 'operativas')
+    finanzas_operativas_clean = clean_data(finanzas_operativas, 'operativas')
+    finanzas_balanza_clean = clean_data(finanzas_balanza, 'balanza')
+    finanzas_dividendos_clean = clean_data(finanzas_dividendos, 'dividendos')
+
 except Exception as e:
-    print(f'Error en la llamada de info general: {e}')
-
-
-# Obtener y limpiar las 3 métricas financieras
-try:
-    finanzas_operativas, finanzas_balanza, finanzas_dividendos = obtener_informacion_finanzas_tickers(tickers)
-
-    finanzas_operativas_clean = clean_data_finanzas_operativas(finanzas_operativas)
-    finanzas_balanza_clean = clean_data_finanzas_balanza(finanzas_balanza)
-    finanzas_dividendos_clean = clean_data_finanzas_dividendos(finanzas_dividendos)
-except Exception as e:
-    print(f'Error en la llamada de métricas financieras: {e}')
-
+    print(f'Error en la limpieza de info general y financiera: {e}')
 
 # Obtener el df del timestamp 
 try:
@@ -422,17 +358,25 @@ try:
 except Exception as e:
     print(f'No se creó la BBDD: {e}')
 
+nasdaq_tickers_historic, nasdaq_tickers_info, timestamp = descargar_data_sql()
+
+"""
+#tratamiento nans para clustering
+try:
+    nasdaq_tickers_historic_without_nans = tratamiento_nans_historic(nasdaq_tickers_historic)
+except Exception as e:
+    print(f'Error en el tratamiento de nans: {e}')
+
 #Funcion para realizar el clustering
 try:
-    clustering_process(nasdaq_tickers_historic_clean)
+    engine=get_engine_database()
+    modelo_clustering = clustering_process(engine, nasdaq_tickers_historic_without_nans)
 except Exception as e:
     print(f'Error al realizar el clustering: {e}')
 
+"""
 
-
-
-
-# Generamos los 3 df en formato CSV para powerBI
-nasdaq_tickers_historic_clean.to_csv("nasdaq_tickers_historic_clean.csv", index=False)
-nasdaq_tickers_info_clean.to_csv("nasdaq_tickers_info_clean.csv", index=False)
-time_stamp_clean.to_csv("timestamp_data_clean.csv", index=False)
+#Generamos los 3 df en formato CSV para powerBI
+nasdaq_tickers_historic.to_csv("nasdaq_tickers_historic_clean.csv", index=False)
+nasdaq_tickers_info.to_csv("nasdaq_tickers_info_clean.csv", index=False)
+timestamp.to_csv("timestamp_data_clean.csv", index=False)
