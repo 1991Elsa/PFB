@@ -168,7 +168,6 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
 
         st.write("\n")
 
-<<<<<<< HEAD
             # --- Cálculos de variaciones ---
             # Filtrar datos para el ticker seleccionado
             df_ticker = nasdaq_tickers_historic[nasdaq_tickers_historic["Ticker"] == ticker_seleccionado].sort_values("Date", ascending=False)
@@ -223,18 +222,6 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
             #st.plotly_chart(fig_resultados)
             #st.markdown("""
             #Rentabilidad de la empresa en diferentes niveles brutos y netos.
-=======
-        # --- Gráfico del estado de resultados ---
-        #st.subheader("Estado de Resultados")
-        #estado_resultados = pd.DataFrame({
-        #       'Concepto': ['Utilidad Bruta', 'Utilidad Neta'],
-        #       'Monto': [u_bruta, u_neta]
-        #   })
-        #fig_resultados = px.bar(estado_resultados, x='Concepto', y='Monto', text='Monto', title=f"{ticker_seleccionado} de {fecha_inicio.strftime('%d-%m-%Y')} a {fecha_fin.strftime('%d-%m-%Y')}") 
-        #st.plotly_chart(fig_resultados)
-        #st.markdown("""
-        #Rentabilidad de la empresa en diferentes niveles brutos y netos.
->>>>>>> origin/feature/mikel
 
         #- Rentabilidad **bruta**: Indica las ganancias después de los costes de venta (costes directos).
         #- Rentabilidad **neta**: Indica las ganancias después de deducir todos los gastos del negocio (costes directos, costes operativos e impuestos).
@@ -246,7 +233,6 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
         st.write("\n")
         st.write("\n")
 
-<<<<<<< HEAD
 
         elif seccion_seleccionada == "Análisis Técnico - valores de cierre - SMA - RSI":
             st.write("\n")  
@@ -257,13 +243,6 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
             Aquí encontrarás gráficos más técnicos que muestran la evolución de los precios y la performance de las acciones. 
             """)
             st.write("\n")
-=======
-        st.header("- 📈 Análisis Técnico")
-        st.write("\n")
-        st.markdown("""
-        Aquí podrás observar gráficos técnicos que muestran la evolución de los precios y la performance de las acciones. 
-        """)
->>>>>>> origin/feature/mikel
 
         # --- Gráfico de análisis técnico, precios historicos---
 

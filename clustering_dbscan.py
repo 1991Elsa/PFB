@@ -3,11 +3,7 @@ import numpy as np
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
 from tratamiento_nans_cluster import nasdaq_tickers_historic
-<<<<<<< HEAD
-from connect_engine import get_engine, get_engine_database
-=======
 from connect_engine import get_engine_database, get_engine
->>>>>>> origin/feature/mikel
 from tablas_metadata_5 import *
 from sqlalchemy.dialects.mysql import insert
 from sqlalchemy import create_engine
@@ -35,14 +31,6 @@ def clustering_process(engine, nasdaq_tickers_historic):
     try:
         # Seleccionar características para el clustering:
         features = ['Close', 'High', 'Low', 'Open']
-<<<<<<< HEAD
-
-        # Reemplazar NaN con la media de cada columna antes de normalizar
-        #nasdaq_tickers_historic[features] = nasdaq_tickers_historic[features].apply(lambda x: x.fillna(x.mean()), axis=0)
-        
-        
-=======
->>>>>>> origin/feature/mikel
         # Normalizar los datos usando StandardScaler:
         scaler = StandardScaler()
         nasdaq_tickers_historic.loc[:, features] = scaler.fit_transform(nasdaq_tickers_historic[features])
@@ -94,11 +82,5 @@ def clustering_process(engine, nasdaq_tickers_historic):
     return clusters_labels
 
 if __name__ == "__main__":
-<<<<<<< HEAD
-    #print(nasdaq_tickers_historic.shape)
-    
-    modelo_clusterig = clustering_process( nasdaq_tickers_historic)
-=======
 
  modelo_clustering = clustering_process(engine, nasdaq_tickers_historic)
->>>>>>> origin/feature/mikel

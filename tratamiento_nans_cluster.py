@@ -2,38 +2,7 @@ import pandas as pd
 import numpy as np
 from descarga_sql import descargar_data_sql
 
-<<<<<<< HEAD
-nasdaq_tickers_historic, nasdaq_tickers_info, df_timestamp = descargar_data_sql()
-
-def tratamiento_nans_info(df):
-    """
-    Trata los valores nulos de las columnas numéricas, rellenando con la mediana de la columna agrupada por Sector o con 0 en caso de DividendRate y DividendYield.
-
-    Parámetro: Dataframe con información de los tickers.
-
-    Retorna: Dataframe limpio.
-    """
-    try:
-        columnas_a_procesar = [
-            'ReturnOnAssets', 'ReturnOnEquity', 'DebtToEquity', 'MarketCap',
-            'TotalRevenue', 'NetIncomeToCommon', 'FreeCashflow', 'DividendRate',
-            'DividendYield', 'PayoutRatio', 'ebitdaMargins'
-        ]
-   
-        df = df.fillna({"DividendRate" : 0, "DividendYield" : 0})
-
-        df[columnas_a_procesar] = df.groupby("Sector")[columnas_a_procesar].transform(lambda x: x.fillna(x.median()))
-
-        print("Valores nulos después del tratamiento:")
-        print(df.isna().sum())
-    
-    except Exception as e:
-        print(f'Fallo la limpieza de info {e}')
-    
-    return df
-=======
 nasdaq_tickers_historic, nasdaq_tickers_info, timestamp = descargar_data_sql()
->>>>>>> origin/feature/mikel
 
 def tratamiento_nans_historic(df):
     """

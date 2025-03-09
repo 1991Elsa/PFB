@@ -23,10 +23,6 @@ def tratamiento_nans_historic_rf(df):
     Parámetro: Dataframe con información historica de los tickers y resultados del modelo de clustering.
     Retorna: Dataframe limpio y listo para usar en el modelo de clasificación.
     """
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/feature/mikel
     try:
         nans = df[df.isna().any(axis=1)]
         def verificar_linealidad_temporal(df):
@@ -48,17 +44,11 @@ def tratamiento_nans_historic_rf(df):
             df.loc[ticker_sin_linealidad].set_index("Date")[["Close", "High", "Low", "Open", "Volume"]]
             .interpolate(method="time", limit_direction="both").values)
         df = df.reset_index(drop=True)
-<<<<<<< HEAD
-        col_to_float32 = ["Close", "High", "Low", "Open", "Volume"]
-        df[col_to_float32] = df[col_to_float32].astype("float32")
-        df.drop(columns=["Date", "Ticker", "Volume"], axis=1,  inplace=True)
-=======
 
         col_to_float32 = ["Close", "High", "Low", "Open", "Volume"]
         df[col_to_float32] = df[col_to_float32].astype("float32")
         df.drop(columns=["Date", "Ticker", "Volume"], axis=1,  inplace=True)
 
->>>>>>> origin/feature/mikel
         print("Valores nulos después del tratamiento:")
         print(df.isna().sum())
         print("Información del dataframe después del tratamiento:")
@@ -117,12 +107,6 @@ def tratamiento_nans_historic_rf(df):
     except Exception as e:
         print(f'Fallo el tratamiento de nans historic cluster {e}')
         raise e
-<<<<<<< HEAD
-    return df
-#nasdaq_tickers_historic = tratamiento_nans_historic_rf(nasdaq_tickers_historic)
-print("nulos")
-print(nasdaq_tickers_historic.isna().sum())
-=======
 
     return df
 
@@ -130,4 +114,3 @@ print(nasdaq_tickers_historic.isna().sum())
 
 print("nulos")
 print(nasdaq_tickers_historic.isna().sum())
->>>>>>> origin/feature/mikel
