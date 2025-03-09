@@ -3,8 +3,8 @@ import numpy as np
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
 from tratamiento_nans_cluster import nasdaq_tickers_historic
-from connect_engine import *
-from tablas_metadata import *
+from connect_engine import get_engine, get_engine_database
+from tablas_metadata_5 import *
 from sqlalchemy.dialects.mysql import insert
 from sqlalchemy import create_engine
 
