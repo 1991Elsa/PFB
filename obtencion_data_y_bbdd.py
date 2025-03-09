@@ -336,7 +336,7 @@ except Exception as e:
 # Obtener y limpiar datos históricos
 try:
     datos_historicos = get_datos_historicos(tickers)
-    nasdaq_tickers_historic = clean_data_historic(datos_historicos)
+    nasdaq_tickers_historic_clean = clean_data_historic(datos_historicos)
 except Exception as e:
     print(f'Error en la llamada de históricos: {e}')
 
@@ -362,11 +362,16 @@ except Exception as e:
 
 # Crear la bbdd y las tablas
 try:
-    creacion_bbdd(nasdaq_tickers_historic, nasdaq_tickers_info, finanzas_operativas, finanzas_balanza, finanzas_dividendos,time_stamp_clean)
+    creacion_bbdd(nasdaq_tickers_historic_clean, nasdaq_tickers_info, finanzas_operativas, finanzas_balanza, finanzas_dividendos,time_stamp_clean)
 except Exception as e:
     print(f'No se creó la BBDD: {e}')
 
+nasdaq_tickers_historic, nasdaq_tickers_info, timestamp = descargar_data_sql()
 
+# Generamos los 3 df en formato CSV para powerBI
+nasdaq_tickers_historic.to_csv("nasdaq_tickers_historic_clean.csv", index=False)
+nasdaq_tickers_info.to_csv("nasdaq_tickers_info_clean.csv", index=False)
+timestamp.to_csv("timestamp_data_clean.csv", index=False)
 
 # tratamiento nans para clustering
 try:
@@ -382,7 +387,7 @@ except Exception as e:
     print(f'Error al realizar el clustering: {e}')
 
 #Tratamiento nans clasificación
-
+nasdaq_tickers_historic, nasdaq_tickers_info, timestamp = descargar_data_sql()
 
 try:
     nasdaq_tickers_historic_with_cluster = tratamiento_nans_historic_rf(nasdaq_tickers_historic)
@@ -397,9 +402,3 @@ except Exception as e:
     print(f'Error al realizar el modelo de clasificación: {e}')
 
 
-nasdaq_tickers_historic, nasdaq_tickers_info, timestamp = descargar_data_sql()
-
-# Generamos los 3 df en formato CSV para powerBI
-nasdaq_tickers_historic.to_csv("nasdaq_tickers_historic_clean.csv", index=False)
-nasdaq_tickers_info.to_csv("nasdaq_tickers_info_clean.csv", index=False)
-timestamp.to_csv("timestamp_data_clean.csv", index=False)
