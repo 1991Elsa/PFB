@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from descarga_sql import descargar_data_sql
 
+<<<<<<< HEAD
 nasdaq_tickers_historic, nasdaq_tickers_info, _ = descargar_data_sql()
 
 def tratamiento_nans_info(df):
@@ -30,6 +31,9 @@ def tratamiento_nans_info(df):
         print(f'Fallo la limpieza de info {e}')
     
     return df
+=======
+nasdaq_tickers_historic, nasdaq_tickers_info, timestamp = descargar_data_sql()
+>>>>>>> feature/Elsa
 
 def tratamiento_nans_historic(df):
     """

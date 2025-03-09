@@ -10,6 +10,12 @@ from tablas_metadata_5 import *
 from sqlalchemy.dialects.mysql import insert
 from descarga_sql import descargar_data_sql
 from clustering_dbscan import clustering_process
+<<<<<<< HEAD
+=======
+from tratamiento_nans_cluster import tratamiento_nans_historic
+from tratamiento_nans_clasificacion import tratamiento_nans_historic_rf
+from clasificacion_rf_skle import modelo_clasification
+>>>>>>> feature/Elsa
 
 # Función para obtener los tickers de NASDAQ 100 (scrapping)
 def tickers_nasdaq():
@@ -22,9 +28,6 @@ Parámetros:
 Retorna:
 - Una lista con los tickers de NASDAQ 100.
 """
-
-    
-     
     url = 'https://es.tradingview.com/symbols/NASDAQ-NDX/components/'
 
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
@@ -422,16 +425,48 @@ try:
 except Exception as e:
     print(f'No se creó la BBDD: {e}')
 
+<<<<<<< HEAD
 #Funcion para realizar el clustering
 try:
     clustering_process(get_engine_database(), nasdaq_tickers_historic_clean)
 except Exception as e:
     print(f'Error al realizar el clustering: {e}')
 
+=======
+>>>>>>> feature/Elsa
 nasdaq_tickers_historic, nasdaq_tickers_info, timestamp = descargar_data_sql()
-
 
 # Generamos los 3 df en formato CSV para powerBI
 nasdaq_tickers_historic.to_csv("nasdaq_tickers_historic_clean.csv", index=False)
 nasdaq_tickers_info.to_csv("nasdaq_tickers_info_clean.csv", index=False)
 timestamp.to_csv("timestamp_data_clean.csv", index=False)
+
+# tratamiento nans para clustering
+try:
+    nasdaq_tickers_historic_without_nans = tratamiento_nans_historic(nasdaq_tickers_historic)
+except Exception as e:
+    print(f'Error en el tratamiento de nans: {e}')
+
+#Funcion para realizar el clustering
+try:
+    engine=get_engine_database()
+    modelo_clustering = clustering_process(engine, nasdaq_tickers_historic_without_nans)
+except Exception as e:
+    print(f'Error al realizar el clustering: {e}')
+
+#Tratamiento nans clasificación
+nasdaq_tickers_historic, nasdaq_tickers_info, timestamp = descargar_data_sql()
+
+try:
+    nasdaq_tickers_historic_with_cluster = tratamiento_nans_historic_rf(nasdaq_tickers_historic)
+except Exception as e:
+    print(f'Error en el tratamiento de nans: {e}')
+    
+# Función para realizar modelo de clasificación
+
+try:
+    rf_model, scaler = modelo_clasification(nasdaq_tickers_historic_with_cluster, "Cluster")
+except Exception as e:
+    print(f'Error al realizar el modelo de clasificación: {e}')
+
+

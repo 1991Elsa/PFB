@@ -36,6 +36,13 @@ def descargar_data_sql():
     except Exception as e:
         print(f"Error al unir las tablas info y finanzas: {e}")
     return df_historic, df_info, df_timestamp
+<<<<<<< HEAD
+=======
+
+nasdaq_tickers_historic, nasdaq_tickers_info, timestamp = descargar_data_sql()
+
+
+>>>>>>> feature/Elsa
 """
 En lugar de usar alchemy text y hacer las queries para descargar los datos de SQL como vamos a importar
 las tablas completas, decidimos usar de pandas pd.read_sql ya que es mucho mas práctico.
