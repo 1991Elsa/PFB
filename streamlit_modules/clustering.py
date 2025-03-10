@@ -2,13 +2,18 @@ import pandas as pd
 import numpy as np
 import pickle
 import streamlit as st
+import pandas as pd
+import pickle
+import numpy as np
+from modules.MySQL.descarga_sql import descargar_data_sql
+
 
 def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
-    st.title("Clustering y Clasificación")
+    st.title("📚​ Clustering y Clasificación")
 
-    st.subheader("Clustering")
+    #st.subheader("Clustering")
 
-    st.subheader("Clasificación")
+    #st.subheader("Clasificación")
 
     def cargar_modelo():
         

@@ -8,9 +8,15 @@ connect_engine.py
 
 .ipynb_checkpoints
 
+#CSV
+/nasdaq_tickers_historic_clean.csv
+/nasdaq_tickers_info_clean.csv
+/timestamp_data_clean.csv
+/nasdaq_tickers_finanzas_clean.csv
 
-nasdaq_tickers_historic_clean.csv
-nasdaq_tickers_info_clean.csv
+#pickels
+/scaler_clasification.pkl
+/modelo_clasificacion.pkl
 
 __pycache__/
 **/__pycache__/

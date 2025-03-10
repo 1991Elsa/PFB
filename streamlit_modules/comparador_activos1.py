@@ -10,17 +10,9 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     # nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
     #nasdaq_tickers_historic = pd.read_csv("nasdaq_tickers_historic_clean.csv")
 
-    #st.title("🔄 Comparador de Rendimiento y Correlación de Acciones")
-    #st.write("Usa esta herramienta para comparar el rendimiento y la correlación de acciones del NASDAQ 100.")
-    st.header("🔄 Comparador de Activos")
-    st.write("\n")
-    st.markdown("""
-    En esta sección podrás comparar el rendimiento de varias acciones del Nasdaq 100 de forma interactiva.""")
-    st.write("\n")
-    st.markdown("""Selecciona múltiples tickers y el período temporal para ver cómo se comportan las acciones de diferentes empresas a lo largo del tiempo, 
-    tanto en términos absolutos como en rendimiento porcentual.  
-    También podrás explorar la correlación entre las acciones seleccionadas.
-    """)
+    st.title("🔄 Comparador de activos")
+    st.write("Usa esta herramienta para comparar el rendimiento y la correlación de acciones del NASDAQ 100.")
+
     st.write("\n")
     st.write("\n")
 
@@ -102,7 +94,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
         st.plotly_chart(fig_rendimientos)
 
         st.markdown("""
-**Contexto:**
+📘Explicación del Gráfico de Comparación de Rendimientos.
 
 Este gráfico muestra como han cambiado los rendimientos de diferentes activos a lo largo del tiempo en la misma escala porcentual.
 
@@ -121,7 +113,7 @@ En general, se observa:
 
 
         st.markdown("""
-**Contexto:**
+📘Explicación del Rendimiento Acumulado.
                     
 - Se refiere a la ganancia o pérdida total de una inversión durante un período determinado, expresado en porcentaje.
 - En color amarillo se muestra el valor más alto obtenido de rendimiento acumulado.
@@ -162,7 +154,7 @@ En general, se observa:
         st.plotly_chart(fig_correlacion)
 
         st.markdown("""
-**Contexto:**
+📘 Explicación del Gráfico de Correlación.
 
 Este gráfico muestra la relación entre los precios de cierre de los tickers seleccionados.
 
@@ -177,7 +169,7 @@ La <strong>diversificación de portafolios</strong> se puede evaluar observando 
 A la hora de gestionar riesgos, los inversores pueden usar la correlación para evitar una exposición excesiva a inversiones en activos que se comporten de manera similar.
 
 <p style="font-weight: normal;">Este análisis es clave para evaluar cómo interactúan diferentes activos en un portafolio y optimizar la estrategia de inversión. 🚀📈</p>
-
+---
 """, unsafe_allow_html=True)
         
     
