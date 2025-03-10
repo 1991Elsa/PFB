@@ -3,7 +3,7 @@ import numpy as np
 import streamlit as st
 
 
-def mostrar():
+def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     st.title("About Us")
 
     st.write("\n")
@@ -69,17 +69,17 @@ def mostrar():
     with col2:    
         st.markdown("**Guadalupe Peña**")
         st.write("[LindedIn](https://www.linkedin.com/in/guadalupe-peña-egea-3aaa8b329) | [GitHub](https://github.com/AdaXana)")
-        st.image("https://github.com/AdaXana.png", width=100)
+        st.image("https://ca.slack-edge.com/T01LJTV7F8F-U07PHJDQ2UU-1cd26fc26974-72", width=100)
 
     with col3:
         st.markdown("**Marina Dominguez**")
         st.write("[LindedIn](https://www.linkedin.com/in/marina-dominguez-28639b325) | [GitHub](https://github.com/Marina90d)")
-        st.image("https://github.com/Marina90d.png", width=100)
+        st.image("https://ca.slack-edge.com/T01LJTV7F8F-U07PF3P8GSE-aaba0a24d2c9-72", width=100)
 
     with col4:
         st.markdown("**Mikel Alonso**")
         st.write("[LindedIn](https://www.linkedin.com/in/mikel-alonso-alvarez-187776328) | [GitHub](https://github.com/Wantumaka)")
-        st.image("https://github.com/Wantumaka.png", width=100)
+        st.image("https://media.licdn.com/dms/image/v2/D4E03AQHI8B3GYBXpTA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1726060899129?e=1747267200&v=beta&t=r7sEmfM8nP1vcQz0FUBGXRmu2nfc5dTvTP7x5OHGY9g", width=100)
 
 
 
