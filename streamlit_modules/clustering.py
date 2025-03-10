@@ -2,6 +2,11 @@ import pandas as pd
 import numpy as np
 import pickle
 import streamlit as st
+import pandas as pd
+import pickle
+import numpy as np
+from descarga_sql import descargar_data_sql
+
 
 def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     st.title("Clustering y Clasificación")

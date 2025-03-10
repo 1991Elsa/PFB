@@ -48,5 +48,5 @@ finanzas_dividendos_table = Table('finanzas_dividendos_sql', tablas,
 )
 
 time_stamp_table= Table('timestamp_sql', tablas,
-    Column('TimestampExtraction', DateTime, primary_key=True)
+    Column('TimestampExtraction', DateTime, primary_key=True, nullable=False)
 )
