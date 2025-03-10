@@ -443,7 +443,7 @@ except Exception as e:
     print(f'Error al realizar el clustering: {e}')
 
 #Tratamiento nans clasificación
-nasdaq_tickers_historic, nasdaq_tickers_info, timestamp = descargar_data_sql()
+#nasdaq_tickers_historic, nasdaq_tickers_info, timestamp = descargar_data_sql()
 
 try:
     nasdaq_tickers_historic_with_cluster = tratamiento_nans_historic_rf(nasdaq_tickers_historic)
