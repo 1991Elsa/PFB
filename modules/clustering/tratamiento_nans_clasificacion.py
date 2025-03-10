@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
-from descarga_sql import nasdaq_tickers_historic
+from modules.MySQL.descarga_sql import nasdaq_tickers_historic
 
 #print("Valores nulos antes de tratamiento:")
 #print(nasdaq_tickers_historic.isna().sum())

@@ -2,9 +2,9 @@ import pandas as pd
 import numpy as np
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
-from tratamiento_nans_cluster import nasdaq_tickers_historic
-from connect_engine import get_engine_database, get_engine
-from tablas_metadata_5 import *
+from modules.clustering.tratamiento_nans_cluster import nasdaq_tickers_historic
+from modules.MySQL.connect_engine import get_engine_database, get_engine
+from modules.MySQL.tablas_metadata_5 import *
 from sqlalchemy.dialects.mysql import insert
 from sqlalchemy import create_engine
 from collections import Counter

@@ -47,7 +47,7 @@ def sortino_ratio(ticker, start_date, end_date, df, risk_free_rate=0):
 # Funcion pagina streamlit EDA
 
 def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
-    st.title("Análisis Exploratorio de Datos")
+    st.title("🔍Análisis Exploratorio de Datos")
     st.write("")
     st.header("Índice bursátil - NASDAQ 100")
     st.write("")
@@ -86,9 +86,9 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
 
     # Mostrar la información adicional en columnas
     st.write("\n")
-    cols = st.columns(5)
-    labels = ["Nombre", "Sector", "Industria", "País", 'MarketCap']
-    values = [short_name, sector, industry, country, f'{market_cap/1_000:,.0f} $K']
+    cols = st.columns(4)
+    labels = [ "Sector", "Industria", "País", 'MarketCap']
+    values = [ sector, industry, country, f'{market_cap:,.0f} $M']
 
     for col, label, value in zip(cols, labels, values):
         with col:
@@ -113,6 +113,9 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
             if not pd.isna(last_close) and not pd.isna(past_close) and past_close != 0:
                 return ((last_close - past_close) / past_close) * 100
         return None
+
+    st.write("\n")
+    st.write("\n")
 
     # Cálculo de variaciones
     variaciones = {
@@ -144,6 +147,9 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
 
     # Selección de período
     st.write("\n")
+    st.write("\n")
+    st.write("\n")
+
     st.subheader("📅 Selecciona el período de tiempo para el análisis.")
     st.write("\n")
     # Definimos fecha mínima y máxima para el selector de calendario
@@ -169,6 +175,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     # Definir las opciones del selector para la sección
 
     opciones_seccion = ["Selecciona una sección:","Análisis Financiero - Balance General", "Análisis Técnico - valores de cierre - SMA - RSI", "Indicadores y métricas - ROI - Sharpe - Sortino", "Tablas:  Información general -  Histórico de precios"]
+    st.write("\n")
     st.write("\n")
     st.write("\n")
     st.subheader("🔍Escoge una sección y empieza a explorar!")

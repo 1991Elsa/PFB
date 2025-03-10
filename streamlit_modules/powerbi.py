@@ -1,7 +1,7 @@
 import streamlit as st
 
 def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
-    st.title("Dashboard Power BI")
+    st.title("📑​ Dashboard Power BI")
     st.write("\n")
     powerbi_width = 800
     powerbi_height = 500
