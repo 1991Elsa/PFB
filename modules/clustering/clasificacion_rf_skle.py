@@ -6,12 +6,12 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import pickle
-from tratamiento_nans_clasificacion import nasdaq_tickers_historic
+from modules.clustering.tratamiento_nans_clasificacion import nasdaq_tickers_historic
 from sklearn.metrics import confusion_matrix
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
-from clustering_dbscan import clustering_process
+from modules.clustering.clustering_dbscan import clustering_process
 from sklearn.metrics import classification_report
 
 def modelo_clasification(df, target_colum):

@@ -4,7 +4,7 @@ import streamlit as st
 
 
 def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
-    st.title("About Us")
+    st.title("📍​ About Us")
 
     st.write("\n")
     st.write("Aplicación desarrollada por estudiantes de Hackaboss en el bootcamp de Data Analytics.")

@@ -10,7 +10,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     # nasdaq_tickers_historic, nasdaq_tickers_info = descargar_data_sql()
     #nasdaq_tickers_historic = pd.read_csv("nasdaq_tickers_historic_clean.csv")
 
-    st.title("🔄 Comparador de Rendimiento y Correlación de Acciones")
+    st.title("🔄 Comparador de activos")
     st.write("Usa esta herramienta para comparar el rendimiento y la correlación de acciones del NASDAQ 100.")
 
     st.write("\n")

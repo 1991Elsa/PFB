@@ -3,7 +3,7 @@ import pandas as pd
 from PIL import Image
 from modules.pfb_page_config_dict import PAGE_CONFIG
 from streamlit_modules import exploratory_data_analysis, comparador_activos1, powerbi, clustering, esquema, about_us
-from descarga_sql import descargar_data_sql
+from modules.MySQL.descarga_sql import descargar_data_sql
 
 # Configuración de la página
 st.set_page_config(**PAGE_CONFIG)
@@ -42,12 +42,13 @@ def sidebar():
         index=pages.index(st.session_state.seccion)
     )
     st.sidebar.markdown("---")
-    if "Timestamp_extraction" in nasdaq_tickers_info:
-        st.sidebar.success(f'Última actualización: {nasdaq_tickers_info["Timestamp_extraction"].iloc[0]}')
+    if "TimestampExtraction" in timestamp:
+
+        st.sidebar.success(f'Última actualización: {max(timestamp['TimestampExtraction'])}')
 
 # Función para mostrar la página de Inicio
 def mostrar_inicio():
-    st.markdown("<h1 style='text-align: center;'>Bienvenido a la applicación de Nasdaq 100.</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>Bienvenido a la aplicación de Nasdaq 100</h1>", unsafe_allow_html=True)
     st.write("")
     st.image("sources/Nasdaq100.png", use_container_width=False)
     st.write("")

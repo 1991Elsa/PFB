@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from descarga_sql import descargar_data_sql
+from modules.MySQL.descarga_sql import descargar_data_sql
 
 nasdaq_tickers_historic, nasdaq_tickers_info, timestamp = descargar_data_sql()
 

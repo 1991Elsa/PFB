@@ -5,8 +5,8 @@ from datetime import datetime
 import pandas as pd
 import numpy as np
 import time
-from connect_engine import *
-from tablas_metadata_5 import *
+from modules.MySQL.connect_engine import *
+from modules.MySQL.tablas_metadata_5 import *
 from sqlalchemy.dialects.mysql import insert
 
 
@@ -362,11 +362,11 @@ try:
 except Exception as e:
     print(f'No se creó la BBDD: {e}')
 
-from descarga_sql import descargar_data_sql
-from clustering_dbscan import clustering_process
-from tratamiento_nans_cluster import tratamiento_nans_historic
-from tratamiento_nans_clasificacion import tratamiento_nans_historic_rf
-from clasificacion_rf_skle import modelo_clasification
+from modules.MySQL.descarga_sql import descargar_data_sql
+from modules.clustering.clustering_dbscan import clustering_process
+from modules.clustering.tratamiento_nans_cluster import tratamiento_nans_historic
+from modules.clustering.tratamiento_nans_clasificacion import tratamiento_nans_historic_rf
+from modules.clustering.clasificacion_rf_skle import modelo_clasification
 
 nasdaq_tickers_historic, nasdaq_tickers_info, timestamp = descargar_data_sql()
 
