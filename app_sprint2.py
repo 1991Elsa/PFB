@@ -79,7 +79,7 @@ def main():
         exploratory_data_analysis.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
     elif st.session_state.seccion == "Comparador de activos":
         comparador_activos1.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
-    elif st.session_state.seccion == "PowerBI":
+    elif st.session_state.seccion == "Dashboard Power BI":
         powerbi.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)
     elif st.session_state.seccion == "Clasificación y clustering":
         clustering.mostrar(nasdaq_tickers_historic, nasdaq_tickers_info)

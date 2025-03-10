@@ -76,16 +76,6 @@ def mostrar():
         st.write("[LindedIn](https://www.linkedin.com/in/marina-dominguez-28639b325) | [GitHub](https://github.com/Marina90d)")
         st.image("https://github.com/Marina90d.png", width=100)
 
-<<<<<<< HEAD
-        st.write("\n")
-        st.write("\n")
-
-        st.markdown("**Mikel **")
-        st.write("[LindedIn](https://www.linkedin.com/in/elsa-melara-7b1b1b1b1/) | [GitHub](https://github.com/ElsaMelara)")
-
-    st.write("\n")
-    st.write("\n")
-=======
     with col4:
         st.markdown("**Mikel Alonso**")
         st.write("[LindedIn](https://www.linkedin.com/in/mikel-alonso-alvarez-187776328) | [GitHub](https://github.com/Wantumaka)")
@@ -93,4 +83,3 @@ def mostrar():
 
 
 
->>>>>>> origin/feature/mikel
