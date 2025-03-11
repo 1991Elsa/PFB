@@ -4,6 +4,8 @@ from modules.MySQL.descarga_sql import descargar_data_sql
 
 nasdaq_tickers_historic, nasdaq_tickers_info, timestamp = descargar_data_sql()
 
+print(nasdaq_tickers_historic.isna().sum())
+
 def tratamiento_nans_historic(df):
     """
     Trata los valores nulos de la tabla nasdaq_tickers_historic previo a ejecutar el modelo de clustering. 
@@ -19,6 +21,7 @@ def tratamiento_nans_historic(df):
     try:
 
         nans = df[df.isna().any(axis=1)]
+        print(nans.head())
 
         def verificar_linealidad_temporal(df):
             df["Date"] = pd.to_datetime(df["Date"])
@@ -26,9 +29,12 @@ def tratamiento_nans_historic(df):
             return fechas.isin(df["Date"]).all()
         
         tickers_con_linealidad = (nans.groupby("Ticker").apply(verificar_linealidad_temporal).loc[lambda x: x].index.tolist())
+        print("Tickers con linealidad temporal:")
+        print(tickers_con_linealidad)
 
         sin_linealidad_temporal = list(set(nans["Ticker"]) - set(tickers_con_linealidad))
-
+        print("Tickers sin linealidad temporal:")
+        print(sin_linealidad_temporal)
         # Eliminar las filas en las que  el ticker está en la lista de linealidad temporal
         df = df[~df["Ticker"].isin(tickers_con_linealidad)].reset_index(drop=True)
 
@@ -44,7 +50,7 @@ def tratamiento_nans_historic(df):
 
         df = df.reset_index(drop=True)
 
-        print("Valores nulos después de tratamiento:")
+        print("Valores nulos después de tratamiento nans cluster:")
         print(df.isna().sum())
 
         #print(df.info())
@@ -52,6 +58,7 @@ def tratamiento_nans_historic(df):
         col_to_float32 = ["Close", "High", "Low", "Open", "Volume"]
         df[col_to_float32] = df[col_to_float32].astype("float32")
         print(df.info())
+        print("Finaliza tratamiento nans cluster nans cluster")
 
 
     except Exception as e:

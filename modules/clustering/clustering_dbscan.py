@@ -9,6 +9,7 @@ from sqlalchemy.dialects.mysql import insert
 from sqlalchemy import create_engine
 from collections import Counter
 from sklearn.metrics import silhouette_score
+import plotly.express as px
 
 engine = get_engine_database()
 
@@ -48,6 +49,27 @@ def clustering_process(engine, nasdaq_tickers_historic):
         # Resultado de 0.98 es excelente y sugiere no cambiar eps ni minsample.  significa que el punto i está bien separado de otros clústeres y cercano a los puntos de su propio clúster. Esto indica una buena calidad de agrupación.
         sil_score = silhouette_score(nasdaq_tickers_historic.loc[random_indices,features], dbscan.labels_)
         print("Silhouette Score:", sil_score)
+
+        fig = px.scatter(nasdaq_tickers_historic,
+                        x="Date",
+                        y="Ticker",
+                        color="Cluster",
+                        title="Cluster de acciones",
+                        labels={
+                                         "Date": "Fecha",
+                                         "Ticker": "Ticker",
+                                         "Cluster": "Cluster"
+                        },
+                        category_orders={"Cluster": sorted(nasdaq_tickers_historic["Cluster"].unique())},
+                        hover_data=["Ticker","Date", "Cluster"])
+                
+        fig.update_layout(
+                        xaxis_title="Fecha",
+                        yaxis_title="Ticker",
+                        legend_title="Cluster",
+                        showlegend=True
+                )
+        fig.show()
 
         # Using a context manager to handle the connection
         with engine.connect() as connection:

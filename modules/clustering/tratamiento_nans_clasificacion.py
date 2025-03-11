@@ -4,6 +4,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 from modules.MySQL.descarga_sql import nasdaq_tickers_historic
+from sklearn.preprocessing import LabelEncoder
+
 
 #print("Valores nulos antes de tratamiento:")
 #print(nasdaq_tickers_historic.isna().sum())
@@ -25,6 +27,10 @@ def tratamiento_nans_historic_rf(df):
 
     Retorna: Dataframe limpio y listo para usar en el modelo de clasificación.
     """
+    try: 
+        df["Ticker_encoded"] = LabelEncoder().fit_transform(df["Ticker"])
+    except Exception as e:
+        print(f'Fallo el encoding de ticker {e}')
 
     try:
         nans = df[df.isna().any(axis=1)]
