@@ -1,4 +1,3 @@
-
 import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
@@ -90,4 +89,3 @@ def modelo_clasification(df, target_colum):
     return rf_model, scaler
 
 #rf_model, scaler = modelo_clasification(nasdaq_tickers_historic, "Cluster")
-
