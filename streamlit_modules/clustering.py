@@ -2,52 +2,38 @@ import pandas as pd
 import numpy as np
 import pickle
 import streamlit as st
-import pandas as pd
-import pickle
-import numpy as np
-from modules.MySQL.descarga_sql import descargar_data_sql
-
+from modules.MySQL.descarga_sql import descargar_data_sql  
 
 def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
-    st.title("📚​ Clustering y Clasificación")
+    st.title("📚​ Clustering y Clasificación de Acciones")
 
-    #st.subheader("Clustering")
-
-    #st.subheader("Clasificación")
-
+    # Cargar modelos
     def cargar_modelo():
-        
         with open('scaler_clasification.pkl', 'rb') as file:
             scaler = pickle.load(file)
-
         with open('modelo_clasification.pkl', 'rb') as file:
             modelo = pickle.load(file)
-
         return scaler, modelo
 
     scaler, modelo = cargar_modelo()
 
-    feature_names = ["Close", "High", "Low", "Open"]
-
-    st.markdown("**Predicción de cluster para Acciones**")
-
-    input_data = {}
-    columns = st.columns(4)
-
-    for i, feature in enumerate(feature_names):
-        with columns[i % 4]:
-            input_data[feature] = st.number_input(f"Ingrese el valor de {feature}", value=0.0)
+    st.markdown("### Predicción de clúster para una acción")
+    
+    # Crear un selector de empresas
+    tickers_disponibles = nasdaq_tickers_historic["Ticker"].unique().tolist()
+    ticker_seleccionado = st.selectbox("Seleccione una empresa", tickers_disponibles)
 
     if st.button("Predecir Clúster"):
-        df_input = pd.DataFrame([input_data])
+        # Buscar los valores reales de la empresa seleccionada
+        datos_empresa = nasdaq_tickers_historic[nasdaq_tickers_historic["Ticker"] == ticker_seleccionado].iloc[-1]
+        
+        valores = datos_empresa[["Close", "High", "Low", "Open"]].values.reshape(1, -1)
 
-        try:
+        # Transformar los valores con el scaler
+        valores_escalados = scaler.transform(valores)
 
-            data_scaled = scaler.transform(df_input)
+        # Predecir el clúster
+        cluster_predicho = int(modelo.predict(valores_escalados)[0])
 
-            cluster_predicho = int(modelo.predict(data_scaled)[0])
+        st.success(f"El cluster de {ticker_seleccionado} es: {cluster_predicho}")
 
-            st.success(f"El cluster predicho es: {cluster_predicho}")
-
-        except Exception as e:
-            st.error(f"Error al predecir el cluster: {e}")
