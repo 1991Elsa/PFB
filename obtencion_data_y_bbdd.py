@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 import time
 from modules.MySQL.connect_engine import *
-from modules.MySQL.tablas_metadata_5 import *
+from modules.MySQL.tablas_metadata import *
 from sqlalchemy.dialects.mysql import insert
 
 
