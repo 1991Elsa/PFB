@@ -55,6 +55,9 @@ def tratamiento_nans_historic_analisis(df):
         col_to_float32 = ["Close", "High", "Low", "Open", "Volume"]
         df[col_to_float32] = df[col_to_float32].astype("float32")
 
+        with open('modelo_clustering.pkl', 'wb') as file:
+             pickle.dump(df, file)
+
         print("Finaliza tratamiento nans para análisis de clusters")
 
     except Exception as e:
@@ -151,13 +154,13 @@ def analisis_cluster(df):
             
             conclusion = f"El cluster {cluster} : contiene {count} valores.  El Precio promedio es: {mean_price:.2f}. "
             if volatility > df_sin_outliers["Volatilidad"].mean():
-                conclusion += "  Alta volatilidad  "
+                conclusion += " Son acciones con alta volatilidad "
             else:
-                conclusion += "  Baja volatilidad  "
+                conclusion += " Son acciones con baja volatilidad  "
             if volume > df_sin_outliers["Volume"].mean():
-                conclusion += "  Alto volumen de negociación  "
+                conclusion += " y alto volumen de negociación "
             else:
-                conclusion += "  Bajo volumen de negociación  "
+                conclusion += " y bajo volumen de negociación "
             conclusiones.append(conclusion)
 
         resultados["Conclusiones"] = conclusiones
