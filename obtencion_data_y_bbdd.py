@@ -42,7 +42,6 @@ Retorna:
 
 
 # Función para obtener datos históricos
-
 def get_datos_historicos(tickers, start_date="2020-01-01"):
     """
 Obtiene los datos históricos de los tickers especificados.
@@ -71,7 +70,6 @@ Retorna:
     
 
 # Función para obtener información de un ticker
-
 def get_ticker_info(ticker):
     """
 Obtiene la información de un ticker.
@@ -87,7 +85,7 @@ Retorna:
 
     return ticker_info
 
-# Función para obtener la información de los tickers
+
 # Función para obtenerinformacion general y métricas financieras segmentadas
 def obtener_informacion_finanzas_tickers(tickers):
     """
@@ -151,12 +149,14 @@ def obtener_informacion_finanzas_tickers(tickers):
 
 
 # Función para obtener el timestamp
-
 def obtener_timestamp_actual():
-    """Obtenemos un df con timestamp actual para llenar la tabla time_stamp_sql."""
+    """Obtenemos un DataFrame con el timestamp actual y la fecha para llenar la tabla timestamp_sql."""
+    now = datetime.now()
     return pd.DataFrame({
-        'Timestamp_extraction': [datetime.now()]
+        'TimestampExtraction': [now],
+        'Date': [now.date()] 
     })
+
 
 # Función para limpiar los datos historicos
 def clean_data_historic(df):
@@ -305,14 +305,16 @@ def creacion_bbdd(nasdaq_tickers_historic_clean, nasdaq_tickers_info_clean, fina
         # Insertar datos en la tabla `time_stamp_sql`
         try:
             with engine.begin() as conn:
-                timestamp_value = time_stamp_clean.iloc[0, 0]
-                stmt = insert(time_stamp_table).values({"TimestampExtraction": timestamp_value})
+                now = datetime.now()
+                timestamp_value = now
+                date_value = now.date()
+                stmt = insert(time_stamp_table).values({"TimestampExtraction": timestamp_value, "Date":date_value})
                 stmt = stmt.on_duplicate_key_update({"TimestampExtraction": timestamp_value})
                 conn.execute(stmt)
             print("TimestampExtraction insertado/actualizado correctamente en time_stamp_sql.")
         except Exception as e:
             print(f"Error al insertar/actualizar el timestamp en time_stamp_sql: {e}")
-            raise e
+            
 
         # Reactiva la clave foránea
         with engine.connect() as connection:
