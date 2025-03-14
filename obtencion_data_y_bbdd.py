@@ -273,20 +273,10 @@ def creacion_bbdd(nasdaq_tickers_historic_clean, nasdaq_tickers_info_clean, fina
         except Exception as e:
             print(f"Error al insertar datos en nasdaq_tickers_historic_sql: {e}")
 
-        # Insertar/actualizar los datos en nasdaq_tickers_info_sql
-        try:
-            with engine.begin() as conn:
-                data = nasdaq_tickers_info_clean.to_dict(orient='records')
-                stmt = insert(tickers_info_table).values(data)
-                update_dict = {c.name: c for c in stmt.inserted if c.name != 'Ticker'}
-                stmt = stmt.on_duplicate_key_update(update_dict)
-                conn.execute(stmt)
-            print("Datos insertados en nasdaq_tickers_info_sql correctamente.")
-        except Exception as e:
-            print(f"Error al insertar datos en nasdaq_tickers_info_sql: {e}")
 
-        # Insertar/actualizar los datos en las tablas de finanzas
+        # Insertar/actualizar los datos en las tablas info y finanzas
         for table, data_clean, table_name in [
+            (tickers_info_table, nasdaq_tickers_info_clean, "nasdaq_tickers_info_sql"),
             (finanzas_operativas_table, finanzas_operativas_clean, "finanzas_operativas_sql"),
             (finanzas_balanza_table, finanzas_balanza_clean, "finanzas_balanza_sql"),
             (finanzas_dividendos_table, finanzas_dividendos_clean, "finanzas_dividendos_sql"),
