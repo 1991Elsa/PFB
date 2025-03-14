@@ -169,7 +169,7 @@ La <strong>diversificación de portafolios</strong> se puede evaluar observando 
 A la hora de gestionar riesgos, los inversores pueden usar la correlación para evitar una exposición excesiva a inversiones en activos que se comporten de manera similar.
 
 <p style="font-weight: normal;">Este análisis es clave para evaluar cómo interactúan diferentes activos en un portafolio y optimizar la estrategia de inversión. 🚀📈</p>
----
+
 """, unsafe_allow_html=True)
         
     

@@ -47,6 +47,7 @@ finanzas_dividendos_table = Table('finanzas_dividendos_sql', tablas,
     Column('PayoutRatio', Float)
 )
 
-time_stamp_table= Table('timestamp_sql', tablas,
-    Column('TimestampExtraction', DateTime, primary_key=True, nullable=False)
+time_stamp_table = Table('timestamp_sql', tablas,
+    Column('TimestampExtraction', DateTime, primary_key=True, nullable=False),
+    Column('Date', Date, ForeignKey('nasdaq_tickers_historic_sql.Date'),nullable=False)
 )
