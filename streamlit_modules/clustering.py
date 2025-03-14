@@ -5,7 +5,8 @@ import streamlit as st
 import pandas as pd
 import pickle
 import numpy as np
-from modules.MySQL.descarga_sql import descargar_data_sql
+import plotly.express as px
+#from modules.MySQL.descarga_sql import descargar_data_sql
 
 
 def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
@@ -13,17 +14,37 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
 
     st.write("\n")
     st.subheader("Clustering")
-    st.write("\n")
+  
+    with open('modelo_clustering.pkl', 'rb') as file:
+            modelo = pickle.load(file)
+
+    valid_clusters = sorted(modelo["Cluster"].dropna().unique())
+    valid_clusters = [c for c in valid_clusters if c != -1]
+
+    fig = px.scatter(
+        modelo,
+        x="Date",
+        y = "Ticker",
+        color="Cluster",
+        title="Cluster de acciones",
+        labels={"Date": "Fecha", "Ticker": "Ticker", "Cluster": "Cluster"},
+        category_orders={"Cluster": valid_clusters},
+        hover_data=["Ticker", "Date", "Cluster"]
+    )
+
+    fig.update_layout(
+        xaxis_title="Fecha",
+        yaxis_title="Ticker",
+        legend_title="Cluster",
+        showlegend=True
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
     st.write("\n")
 
     with open('resultados_cluster.pkl', 'rb') as file:
             resultados = pickle.load(file)
-    
-    st.markdown("**Distribución de Clusters**")
-    st.write(resultados["Distribución de Clusters"])
-
-    st.write("\n")
-    st.write("\n")
 
     st.markdown("**Conclusiones**")
     for conclusiones in resultados["Conclusiones"]:
