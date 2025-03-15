@@ -1,7 +1,6 @@
 from sqlalchemy import create_engine
 from secrets import password
 
-
 DATABASE_CONFIG = {
     "username": "root",
     "password": password,
