@@ -6,22 +6,25 @@ import pandas as pd
 import pickle
 import numpy as np
 import plotly.express as px
-
-from modules.MySQL.descarga_sql import descargar_data_sql
+#from modules.MySQL.descarga_sql import descargar_data_sql
 
 
 def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     st.title("📚​ Clustering y Clasificación")
 
-    #st.subheader("Clustering")
-    valid_clusters = sorted(nasdaq_tickers_historic["Cluster"].dropna().unique())
-    valid_clusters = [c for c in valid_clusters if c != -1]  # Eliminar ruido (-1)
+    st.write("\n")
+    st.subheader("Clustering")
+  
+    with open('modelo_clustering.pkl', 'rb') as file:
+            modelo = pickle.load(file)
 
-    #Crear gráfico con Plotly
+    valid_clusters = sorted(modelo["Cluster"].dropna().unique())
+    valid_clusters = [c for c in valid_clusters if c != -1]
+
     fig = px.scatter(
-        nasdaq_tickers_historic,
+        modelo,
         x="Date",
-        y="Ticker",
+        y = "Ticker",
         color="Cluster",
         title="Cluster de acciones",
         labels={"Date": "Fecha", "Ticker": "Ticker", "Cluster": "Cluster"},
@@ -36,9 +39,23 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
         showlegend=True
     )
 
-    #Mostrar gráfico en Streamlit
     st.plotly_chart(fig, use_container_width=True)
-        #st.subheader("Clasificación")
+
+    st.write("\n")
+
+    with open('resultados_cluster.pkl', 'rb') as file:
+            resultados = pickle.load(file)
+
+    st.markdown("**Conclusiones**")
+    for conclusiones in resultados["Conclusiones"]:
+        st.write(conclusiones)
+    
+    st.write("\n")
+    st.write("\n")
+
+    st.subheader("Clasificación")
+
+    st.write("\n")
 
     def cargar_modelo():
         
@@ -56,12 +73,16 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
 
     st.markdown("**Predicción de cluster para Acciones**")
 
+    st.write("\n")
+
     input_data = {}
     columns = st.columns(4)
 
     for i, feature in enumerate(feature_names):
         with columns[i % 4]:
             input_data[feature] = st.number_input(f"Ingrese el valor de {feature}", value=0.0)
+
+    st.write("\n")
 
     if st.button("Predecir Clúster"):
         df_input = pd.DataFrame([input_data])

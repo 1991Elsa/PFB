@@ -28,7 +28,7 @@ def tratamiento_nans_historic(df):
         tickers_con_linealidad = (nans.groupby("Ticker").apply(verificar_linealidad_temporal).loc[lambda x: x].index.tolist())
 
         sin_linealidad_temporal = list(set(nans["Ticker"]) - set(tickers_con_linealidad))
-
+   
         # Eliminar las filas en las que  el ticker está en la lista de linealidad temporal
         df = df[~df["Ticker"].isin(tickers_con_linealidad)].reset_index(drop=True)
 
@@ -44,19 +44,18 @@ def tratamiento_nans_historic(df):
 
         df = df.reset_index(drop=True)
 
-        print("Valores nulos después de tratamiento:")
+        print("Valores nulos después de tratamiento historic:")
         print(df.isna().sum())
 
-        #print(df.info())
+       
 
         col_to_float32 = ["Close", "High", "Low", "Open", "Volume"]
         df[col_to_float32] = df[col_to_float32].astype("float32")
-        print(df.info())
-
+        
+        print("Finaliza tratamiento nans cluster nans cluster")
 
     except Exception as e:
         print(f'Fallo la limpieza de historic {e}')
     return df
 
-#nasdaq_tickers_info = tratamiento_nans_info(nasdaq_tickers_info)
-nasdaq_tickers_historic = tratamiento_nans_historic(nasdaq_tickers_historic)
+
