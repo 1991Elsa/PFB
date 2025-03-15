@@ -5,6 +5,8 @@ import streamlit as st
 import pandas as pd
 import pickle
 import numpy as np
+import plotly.express as px
+
 from modules.MySQL.descarga_sql import descargar_data_sql
 
 
@@ -12,8 +14,31 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     st.title("📚​ Clustering y Clasificación")
 
     #st.subheader("Clustering")
+    valid_clusters = sorted(nasdaq_tickers_historic["Cluster"].dropna().unique())
+    valid_clusters = [c for c in valid_clusters if c != -1]  # Eliminar ruido (-1)
 
-    #st.subheader("Clasificación")
+    #Crear gráfico con Plotly
+    fig = px.scatter(
+        nasdaq_tickers_historic,
+        x="Date",
+        y="Ticker",
+        color="Cluster",
+        title="Cluster de acciones",
+        labels={"Date": "Fecha", "Ticker": "Ticker", "Cluster": "Cluster"},
+        category_orders={"Cluster": valid_clusters},
+        hover_data=["Ticker", "Date", "Cluster"]
+    )
+
+    fig.update_layout(
+        xaxis_title="Fecha",
+        yaxis_title="Ticker",
+        legend_title="Cluster",
+        showlegend=True
+    )
+
+    #Mostrar gráfico en Streamlit
+    st.plotly_chart(fig, use_container_width=True)
+        #st.subheader("Clasificación")
 
     def cargar_modelo():
         

@@ -49,6 +49,8 @@ def clustering_process(engine, nasdaq_tickers_historic):
         sil_score = silhouette_score(nasdaq_tickers_historic.loc[random_indices,features], dbscan.labels_)
         print("Silhouette Score:", sil_score)
 
+        
+
         # Using a context manager to handle the connection
         with engine.connect() as connection:
             # Begin a transaction
