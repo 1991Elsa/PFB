@@ -2,101 +2,59 @@ import pandas as pd
 import numpy as np
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
+from modules.clustering.tratamiento_nans_cluster import nasdaq_tickers_historic
 from modules.MySQL.connect_engine import get_engine_database, get_engine
 from modules.MySQL.tablas_metadata import *
 from sqlalchemy.dialects.mysql import insert
 from sqlalchemy import create_engine
 from collections import Counter
 from sklearn.metrics import silhouette_score
-import plotly.express as px
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
 
 engine = get_engine_database()
 
-def clustering_process(engine, df):
-    """
-    Ejecuta el modelo de clustering con un sampler aleatorio de 10,000 filas. 
-    El modelo agrupa las acciones en función de su similitud o diferencia durante períodos de tiempo, con un enfoque basado en series temporales. 
-    Este enfoque compara cómo evolucionan las acciones a lo largo del tiempo y las agrupa según su comportamiento temporal.
-    Normaliza los datos usando StandardScaler y entrena el modelo DBSCAN. 
-    Posteriormente, infiere los datos faltantes con randomforestclassifier en las filas donde no se generó cluster en el muestreo.
-    Finalmente, la columna cluster se almacena en la tabla nasdaq_tickers_historic_sql de la base de datos yahoo_finance_nasdaq_100 en MySQL.
+"""
+Para definir un algoritmo de clustering que agrupe acciones
+en función de su similitud o diferencia durante períodos de tiempo,
+podemos usar un enfoque basado en series temporales.
+Este enfoque compara cómo evolucionan las acciones a lo largo
+del tiempo y las agrupa según su comportamiento temporal.
+Usaremos las series temporales de los precios historicos contenidos en
+nasdaq_tickers_historic
+"""
 
-    Parámetro: Dataframe limpio con información historica de los tickers.
+def clustering_process(engine, nasdaq_tickers_historic):
 
-    Retorna: Dataframe con la columna "Cluster" que indica a qué cluster pertenece cada ticker.
-    """
-
+    # Crear el engine y conectar a la base de datos yahoo_finance
+    engine = get_engine_database()
+    # with engine.connect() as connection:
+    #     nasdaq_tickers_historic = pd.read_sql_table("nasdaq_tickers_historic_sql", con=connection)
     try:
-        
+        # Seleccionar características para el clustering:
         features = ['Close', 'High', 'Low', 'Open']
-        
+        # Normalizar los datos usando StandardScaler:
         scaler = StandardScaler()
-        df.loc[:, features] = scaler.fit_transform(df[features])
-        
-        random_indices = np.random.choice(df.index.values, size=10_000, replace=False)
+        nasdaq_tickers_historic.loc[:, features] = scaler.fit_transform(nasdaq_tickers_historic[features])
+        # Sample
+        random_indices = np.random.choice(nasdaq_tickers_historic.index.values, size=10_000, replace=False)
         print(random_indices)
-        
+        # Aplicar DBSCAN clustering:
 
         dbscan = DBSCAN(eps= 1.8, min_samples= 10)
-        df.loc[random_indices, 'Cluster'] = dbscan.fit_predict(df.loc[random_indices,features])
+        nasdaq_tickers_historic.loc[random_indices, 'Cluster'] = dbscan.fit_predict(nasdaq_tickers_historic.loc[random_indices,features])
 
         clusters_labels = Counter(dbscan.labels_)
         print(clusters_labels)
 
         # Resultado de 0.98 es excelente y sugiere no cambiar eps ni minsample.  significa que el punto i está bien separado de otros clústeres y cercano a los puntos de su propio clúster. Esto indica una buena calidad de agrupación.
-        sil_score = silhouette_score(df.loc[random_indices,features], dbscan.labels_)
+        sil_score = silhouette_score(nasdaq_tickers_historic.loc[random_indices,features], dbscan.labels_)
         print("Silhouette Score:", sil_score)
-        print("Finaliza clustering sampler")
 
-    except Exception as e:
-        print(f"Error en el proceso de clustering: {e}")
-        raise e
-
-        # Inferir los clusters faltantes en las filas donde no se generó en el muestreo con DBSCAN
-    try:
-        
-        df_inferido = df[['Close', 'High', 'Low', 'Open', "Cluster"]]
-
-        with_cluster = df_inferido.dropna(subset=["Cluster"]).copy()
-        without_cluster = df_inferido[df_inferido["Cluster"].isna()].copy()
-
-        X = with_cluster.drop(columns=["Cluster"])
-        y = with_cluster["Cluster"].astype(int)
-
-        X_prediction = without_cluster.drop(columns=["Cluster"])
-
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-        model = RandomForestClassifier(n_estimators=100, random_state=42, class_weight='balanced')
-        model.fit(X_train, y_train)
-
-        y_prediction = model.predict(X_test)
-
-        #print(classification_report(y_test, y_prediction))
-
-        without_cluster["Cluster"] = model.predict(X_prediction)
-
-        df_inferido = pd.concat([with_cluster, without_cluster], axis= 0).reset_index(drop=True)
-
-        df = pd.concat([df_inferido, df[["Date", "Ticker", "Volume"]]], axis=1).reset_index(drop=True)
-        orden_columnas = ["Date", "Ticker", "Close", "High", "Low", "Open", "Volume", "Cluster"]
-        df = df[orden_columnas]
-
-        print("Finaliza clustering inferido")
-
-    except Exception as e:
-        print(f'Fallo al inferir los clusters faltantes {e}')
-        raise e
-    
-    try:
         # Using a context manager to handle the connection
         with engine.connect() as connection:
             # Begin a transaction
             with connection.begin() as transaction:
                 try:
-                    for index, row in df.dropna(subset="Cluster").iterrows():
+                    for index, row in nasdaq_tickers_historic.dropna(subset="Cluster").iterrows():
                         stmt = text("""
                             UPDATE nasdaq_tickers_historic_sql
                             SET cluster = :cluster
@@ -116,11 +74,13 @@ def clustering_process(engine, df):
                     print("Conexión establecida con éxito a la base de datos yahoo_finance.")
                 except Exception as e:
                     print(f"Error al establecer la conexión: {e}")
-
         print("Clustering actualizado en la base de datos correctamente.")
-
     except Exception as e:
-        print(f"Error en la  actualización de base de datos: {e}")
+        print(f"Error en el proceso de clustering: {e}")
         raise e
 
     return clusters_labels
+
+if __name__ == "__main__":
+
+ modelo_clustering = clustering_process(engine, nasdaq_tickers_historic)
