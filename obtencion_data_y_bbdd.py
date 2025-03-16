@@ -8,7 +8,6 @@ import time
 from modules.MySQL.connect_engine import *
 from modules.MySQL.tablas_metadata import *
 from sqlalchemy.dialects.mysql import insert
-import plotly.express as px
 
 
 # Función para obtener los tickers de NASDAQ 100 (scrapping)
@@ -209,6 +208,11 @@ def clean_data(df, categoria):
     except Exception as e:
         print(f'Error al limpiar datos de {categoria}: {e}')
 
+
+
+
+
+
     try:
         columnas_a_procesar = [
             'DividendRate', 'DividendYield', 'PayoutRatio'
@@ -368,7 +372,7 @@ time_stamp_clean.to_csv("timestamp_data_clean.csv", index=False)
 try:
     nasdaq_tickers_historic_without_nans = tratamiento_nans_historic(nasdaq_tickers_historic)
 except Exception as e:
-    print(f'Error en el tratamiento de nans: {e}')    
+    print(f'Error en el tratamiento de nans: {e}')
 
 #Funcion para realizar el clustering
 try:
@@ -380,22 +384,23 @@ except Exception as e:
 # Descarga de datos con cluster completo
 nasdaq_tickers_historic, nasdaq_tickers_info, timestamp = descargar_data_sql()
 
-
 try:
     nasdaq_tickers_historic_with_cluster = tratamiento_nans_historic(nasdaq_tickers_historic)
 except Exception as e:
     print(f'Error en el tratamiento de nans: {e}')
 
-# análisis clusters
+print(nasdaq_tickers_historic_with_cluster.isna().sum())
+
+
+# Análisis clusters
 try:
     cluster_analisis = analisis_cluster(tratamiento_nans_historic_analisis(nasdaq_tickers_historic))
     for clave, valor in cluster_analisis.items():
         print(f"\n{clave}:\n", valor)
 except Exception as e:
     print(f'Error en el análisis de cluster: {e}')
-
+    
 # Función para realizar modelo de clasificación
-
 try:
     rf_model, scaler = modelo_clasification(nasdaq_tickers_historic_with_cluster, "Cluster")
 except Exception as e:

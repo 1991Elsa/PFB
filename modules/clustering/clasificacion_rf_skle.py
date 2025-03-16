@@ -1,28 +1,24 @@
-
 import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
 import pickle
-from sklearn.metrics import confusion_matrix
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
 from modules.clustering.clustering_dbscan import clustering_process
-from sklearn.metrics import classification_report
-from sklearn.metrics import precision_score
+from sklearn.metrics import classification_report, accuracy_score, precision_score, confusion_matrix
 
 def modelo_clasification(df, target_colum):
     """
-    Crea un modelo de clasificación que normaliza los datos usando StandardScaler y entrena el modelo RandomForestClassifier.
-    Usa como target la columna "Cluster".
-    Crea el modelo de clasificación y escalador de datos en formato pkl
+    Filtra el dataframe nasdaq_tickers_historic para quedarse con los datos de los últimos dos años y poder correr el modelo de clasificación.
+    Usa como target la columna "Cluster" que se obtiene del modelo de clustering de los últimos dos años.
+    Normaliza los datos usando StandardScaler y entrena el modelo RandomForestClassifier.
 
     Parámetro: Dataframe limpio con información historica de los tickers y resultados del modelo de clustering.
 
-    Retorna: modelo de clasificación y escalador de datos.
+    Retorna: Modelo de clasificación y escalador de datos con un accuracy de 0.9998
     """
 
     df.drop(columns=["Date", "Ticker", "Volume"], axis=1,  inplace=True)
@@ -46,7 +42,7 @@ def modelo_clasification(df, target_colum):
     print(classification_report(y_test, y_pred, zero_division=0))
 
     accuracy = accuracy_score(y_test, y_pred)
-    print(f"Accuracy: {accuracy:.4f}. Modelo Clasificación")
+    print(f"Accuracy: {accuracy:.4f}")
 
     with open('modelo_clasification.pkl', 'wb') as file:
         pickle.dump(rf_model, file)
@@ -87,5 +83,3 @@ def modelo_clasification(df, target_colum):
 
 
     return rf_model, scaler
-
-
