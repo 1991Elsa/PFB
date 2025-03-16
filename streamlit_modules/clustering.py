@@ -15,7 +15,7 @@ def mostrar(nasdaq_tickers_historic, nasdaq_tickers_info):
     st.write("\n")
     st.subheader("Clustering")
   
-    with open('modelo_clustering.pkl', 'rb') as file:
+    with open('nasdaq_tickers_historic_cluster.pkl', 'rb') as file:
             modelo = pickle.load(file)
 
     valid_clusters = sorted(modelo["Cluster"].dropna().unique())
