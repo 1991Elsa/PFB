@@ -17,6 +17,8 @@ connect_engine.py
 #pickels
 /scaler_clasification.pkl
 /modelo_clasificacion.pkl
+/nasdaq_ticker_historic_cluster.pkl
+/resultados_cluster.pkl
 
 __pycache__/
 **/__pycache__/
