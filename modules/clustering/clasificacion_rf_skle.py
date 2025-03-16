@@ -4,15 +4,12 @@ import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
 import pickle
-from sklearn.metrics import confusion_matrix
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
 from modules.clustering.clustering_dbscan import clustering_process
-from sklearn.metrics import classification_report
-from sklearn.metrics import precision_score
+from sklearn.metrics import classification_report, accuracy_score, precision_score, confusion_matrix
 
 def modelo_clasification(df, target_colum):
     """
