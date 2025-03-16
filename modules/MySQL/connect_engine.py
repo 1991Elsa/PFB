@@ -20,3 +20,4 @@ def get_engine_database():
     engine = create_engine(connection_string)
     return engine
 
+prueba_engine_database = get_engine_database()
