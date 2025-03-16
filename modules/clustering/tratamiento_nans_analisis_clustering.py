@@ -3,7 +3,6 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
-#from modules.MySQL.descarga_sql import nasdaq_tickers_historic
 from sklearn.preprocessing import LabelEncoder
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -55,7 +54,7 @@ def tratamiento_nans_historic_analisis(df):
         col_to_float32 = ["Close", "High", "Low", "Open", "Volume"]
         df[col_to_float32] = df[col_to_float32].astype("float32")
 
-        with open('modelo_clustering.pkl', 'wb') as file:
+        with open('nasdaq_tickers_historic_cluster.pkl', 'wb') as file:
              pickle.dump(df, file)
 
         print("Finaliza tratamiento nans para análisis de clusters")
