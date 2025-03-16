@@ -357,7 +357,7 @@ except Exception as e:
 from modules.MySQL.descarga_sql import descargar_data_sql
 from modules.clustering.clustering_dbscan import clustering_process
 from modules.clustering.tratamiento_nans_cluster import tratamiento_nans_historic
-from modules.clustering.tratamiento_nans_clasificacion import tratamiento_nans_historic_rf
+from modules.clustering.tratamiento_nans_analisis_clustering import tratamiento_nans_historic_analisis, analisis_cluster
 from modules.clustering.clasificacion_rf_skle import modelo_clasification
 
 nasdaq_tickers_historic, nasdaq_tickers_info, timestamp = descargar_data_sql()
@@ -381,16 +381,26 @@ try:
 except Exception as e:
     print(f'Error al realizar el clustering: {e}')
 
-#Tratamiento nans clasificación
+# Descarga de datos con cluster completo
 nasdaq_tickers_historic, nasdaq_tickers_info, timestamp = descargar_data_sql()
 
 try:
-    nasdaq_tickers_historic_with_cluster = tratamiento_nans_historic_rf(nasdaq_tickers_historic)
+    nasdaq_tickers_historic_with_cluster = tratamiento_nans_historic(nasdaq_tickers_historic)
 except Exception as e:
     print(f'Error en el tratamiento de nans: {e}')
+
+print(nasdaq_tickers_historic_with_cluster.isna().sum())
+
+
+# Análisis clusters
+try:
+    cluster_analisis = analisis_cluster(tratamiento_nans_historic_analisis(nasdaq_tickers_historic))
+    for clave, valor in cluster_analisis.items():
+        print(f"\n{clave}:\n", valor)
+except Exception as e:
+    print(f'Error en el análisis de cluster: {e}')
     
 # Función para realizar modelo de clasificación
-
 try:
     rf_model, scaler = modelo_clasification(nasdaq_tickers_historic_with_cluster, "Cluster")
 except Exception as e:

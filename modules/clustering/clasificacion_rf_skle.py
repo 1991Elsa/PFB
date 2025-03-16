@@ -3,15 +3,12 @@ import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
 import pickle
-from modules.clustering.tratamiento_nans_clasificacion import nasdaq_tickers_historic
-from sklearn.metrics import confusion_matrix
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
 from modules.clustering.clustering_dbscan import clustering_process
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, accuracy_score, precision_score, confusion_matrix
 
 def modelo_clasification(df, target_colum):
     """
@@ -24,8 +21,7 @@ def modelo_clasification(df, target_colum):
     Retorna: Modelo de clasificación y escalador de datos con un accuracy de 0.9998
     """
 
-    print(df.info())
-    print(df.isna().sum())
+    df.drop(columns=["Date", "Ticker", "Volume"], axis=1,  inplace=True)
     
     X = df.drop(columns=[target_colum])
     y = df[target_colum]
@@ -43,7 +39,7 @@ def modelo_clasification(df, target_colum):
 
     y_pred = rf_model.predict(X_test)
 
-    print(classification_report(y_test, y_pred))
+    print(classification_report(y_test, y_pred, zero_division=0))
 
     accuracy = accuracy_score(y_test, y_pred)
     print(f"Accuracy: {accuracy:.4f}")
@@ -87,5 +83,3 @@ def modelo_clasification(df, target_colum):
 
 
     return rf_model, scaler
-
-#rf_model, scaler = modelo_clasification(nasdaq_tickers_historic, "Cluster")
