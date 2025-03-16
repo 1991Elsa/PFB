@@ -1,10 +1,9 @@
 from sqlalchemy import create_engine
-from secrets import password
 
 
 DATABASE_CONFIG = {
     "username": "root",
-    "password": password,
+    "password": 2021,
     "hostname": "localhost", 
     "port": 3306
 }
